@@ -1,0 +1,12 @@
+[submodule "includes/glm"]
+	path = includes/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "includes/GLFW"]
+	path = includes/GLFW
+	url = https://github.com/glfw/glfw.git
+[submodule "includes/assimp"]
+	path = includes/assimp
+	url = https://github.com/assimp/assimp.git
+[submodule "includes/freetype"]
+	path = includes/freetype
+	url = https://gitlab.freedesktop.org/freetype/freetype.git

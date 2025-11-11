@@ -1,0 +1,39 @@
+# vscode
+.dist
+
+# Build folders
+/build/
+bin/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# IDEs
+.vscode/
+.idea/
+*.sln
+*.vcxproj*
+*.user
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Windows binaries (ถ้าเคยมี)
+*.lib
+*.dll
+*.exe
+
+# macOS/Linux binaries
+*.o
+*.a
+*.so
+*.dylib
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
