@@ -37,3 +37,11 @@ Thumbs.db
 # OS files
 .DS_Store
 Thumbs.db
+
+# convert file
+convert.py
+!/convert.py
+
+#zip file
+**.zip
+**.gzip
