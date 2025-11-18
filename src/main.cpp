@@ -92,12 +92,17 @@ int main()
     Shader fireballShader("model_loading_fireball.vs", "model_loading_fireball.fs");
     Model fireballModel(FileSystem::getPath("src/fireball/scene.gltf"));
 
+    Model wallModel(FileSystem::getPath("src/wall/stonewallL.exported.obj"));
+    Shader wallShader("model_loading_stonewall.vs", "model_loading_stonewall.fs");
+    unsigned int wallEmissiveID = TextureFromFile(
+        FileSystem::getPath("src/wall/textures/stonewall_Emissive.png").c_str());
+
     // --------------------------------------------------------------------
     // 🌟 ส่วนที่ 2: สร้าง Demon Object (ส่ง Projectile Model เข้าไปด้วย)
     // --------------------------------------------------------------------
     Demon demon(ourShader, staffModel, staffShader, crystalModel, crystalShader, crystalDiffuseID,
-                 fireballModel, fireballShader); // 👈 เพิ่ม Fireball Model/Shader
-
+                fireballModel, fireballShader, // 👈 เพิ่ม Fireball Model/Shader
+                wallModel, wallShader, wallEmissiveID);
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -188,11 +193,11 @@ void processInput(GLFWwindow *window, Demon &demon)
     {
         demon.Attack();
     }
-    
+
     // 🌟🌟 ส่วนที่ 3: เพิ่มปุ่ม AttackAnim02 โดยตรง (ใช้ปุ่ม J เป็นตัวอย่าง)
     if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
     {
-        demon.AttackAnim02(); 
+        demon.AttackAnim02();
     }
 
     // การบาดเจ็บ/ตาย (สำหรับทดสอบ)

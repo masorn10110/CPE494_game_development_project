@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <cstdlib> // สำหรับ rand()
 #include "projectile/projectile.h"
+#include "wall/stonewall.h"
 
 // --------------------------------------------------------------------------------
 // 🔴 Structs (Crystal)
@@ -118,6 +119,11 @@ private:
     const int FIREBALL_BURST_COUNT = 10;
     const float FIREBALL_SPREAD_ANGLE = 8.0f;
 
+    Model m_wallModel;
+    Shader m_wallShader;
+    unsigned int m_wallEmissiveID;
+    StoneWall m_stoneWallEffect;
+
     glm::mat4 m_rightHandBoneMatrix; // World Space Matrix ของมือขวา
     glm::vec3 m_forwardDirection;
 
@@ -145,7 +151,8 @@ private:
 public:
     Demon(Shader &mainShader, Model &staffModel, Shader &staffShader,
           Model &crystalModel, Shader &crystalShader, unsigned int crystalTexID,
-          Model &fbModel, Shader &fbShader)
+          Model &fbModel, Shader &fbShader,
+          Model &wallModel, Shader &wallShader, unsigned int wallEmissiveID)
         : m_model(FileSystem::getPath("src/demon/object/Whiteclown N Hallin.dae")),
           m_idleAnim(FileSystem::getPath("src/demon/object/standing idle.dae"), &m_model),
           m_walkAnim(FileSystem::getPath("src/demon/object/Standing Walk Forward.dae"), &m_model),
@@ -162,7 +169,9 @@ public:
           m_crystalShader(crystalShader),
           m_crystalDiffuseID(crystalTexID),
           m_fireballModel(fbModel),
-          m_fireballShader(fbShader)
+          m_fireballShader(fbShader),
+          m_wallModel(wallModel), m_wallShader(wallShader), m_wallEmissiveID(wallEmissiveID),
+          m_stoneWallEffect(wallModel, wallShader, 0.3f)
     {
         try
         {
@@ -428,6 +437,24 @@ inline void Demon::Draw(const glm::mat4 &projection, const glm::mat4 &view, cons
     {
         fireball.Draw(projection, view, viewPos);
     }
+
+    if (m_stoneWallEffect.IsActive())
+    {
+        // 1. ตั้งค่า Emissive Texture ก่อนวาด (ต้องเป็น Shader Unit 0)
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_wallEmissiveID);
+        m_wallShader.use(); // ใช้ Shader เฉพาะของ Wall
+        m_wallShader.setInt("texture_emissive", 0);
+
+        // 2. เปิด Blending สำหรับ Alpha Fade
+        glEnable(GL_BLEND);
+        // ใช้ Blending แบบปกติสำหรับการจางหาย
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        m_stoneWallEffect.Draw(projection, view, viewPos);
+
+        glDisable(GL_BLEND);
+    }
 }
 inline void Demon::updateCrystalAttack(float deltaTime, float currentFrame)
 {
@@ -510,6 +537,8 @@ inline void Demon::Update(float deltaTime, float currentFrame)
 
     // 2. จัดการ Crystal Attack Logic
     updateCrystalAttack(deltaTime, currentFrame);
+
+    m_stoneWallEffect.Update(deltaTime);
 
     if (m_isAttacking_Anim02 && m_attackAnim02_Timer > 0.0f)
     {
@@ -710,6 +739,16 @@ inline void Demon::handleStateIdleAttack03()
 
 inline void Demon::handleStateAttack03Idle()
 {
+    if (m_animator.m_CurrentTime >= m_attackAnim03.GetDuration() * 0.5f && m_animator.m_CurrentTime <= m_attackAnim03.GetDuration() * 0.6f && !m_stoneWallEffect.IsActive())
+    {
+        // 🧱 Logic การร่าย Stone Wall
+        int wallCount = 1;         // จำนวน Segment กำแพง
+        float wallDuration = 4.0f; // อยู่ได้ 4 วินาที
+
+        // ใช้ m_position และ m_forward เป็นจุดเริ่มต้นและทิศทาง
+        m_stoneWallEffect.Cast(m_position, m_forward, wallCount, wallDuration);
+    }
+
     if (m_animator.m_CurrentTime >= m_attackAnim03.GetDuration() * 0.99f)
     {
         m_blendAmount += m_blendRate;
