@@ -22,11 +22,11 @@
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window);
+void processInput(GLFWwindow *window, Demon &demon);
 unsigned int TextureFromFile(const char *path);
 
 // --------------------------------------------------------------------------------
-// 🔴 Global Variables (Crystal Logic ถูกลบออกไปหมดแล้ว)
+// 🔴 Global Variables
 // --------------------------------------------------------------------------------
 const unsigned int SCR_WIDTH = 1000;
 const unsigned int SCR_HEIGHT = 800;
@@ -38,8 +38,6 @@ bool firstMouse = true;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-
-// 🔴 ลบ Crystal attack global variables ออก
 
 // --------------------------------------------------------------------------------
 // 🔴 Main Function
@@ -87,7 +85,24 @@ int main()
     Shader crystalShader("model_loading_1.vs", "model_loading_1.fs");
     Model crystalModel(FileSystem::getPath("src/crystal/stylized_crystal_SM.obj"));
 
-    Demon demon;
+    // 🌟 1. สร้าง Demon Object
+    Demon demon(ourShader, staffModel, staffShader, crystalModel, crystalShader, crystalDiffuseID);
+
+    // --------------------------------------------------------------------
+    // 🚀 เพิ่ม: โหลดโมเดล Meteor
+    // --------------------------------------------------------------------
+    Shader meteorShader("model_loading_1.vs", "model_loading_1.fs");
+    Model meteorModel(FileSystem::getPath("src/fireball/scene.gltf"));
+
+    // ตั้งค่า Transform เริ่มต้นสำหรับ Meteor (เพื่อให้มันลอยอยู่ข้างบนและมองเห็นได้ชัด)
+    // 🌟🌟 ปรับตำแหน่ง (Y) ให้สูงขึ้น และ Z ให้ไกลขึ้น เพื่อรองรับขนาดที่ใหญ่ขึ้น
+    glm::vec3 meteorPosition = glm::vec3(0.0f, 10.0f, -30.0f);
+
+    // 🌟🌟 แก้ไข: ปรับ Scale เป็น 50 เท่า
+    float meteorScale = 1.0f;
+
+    float meteorRotation = 0.0f;
+    // --------------------------------------------------------------------
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -96,21 +111,11 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        processInput(window);
+        processInput(window, demon);
+        demon.Update(deltaTime, currentFrame);
 
-        // 🌟🌟 Logic การสั่ง Attack Demon (ง่ายขึ้นมาก) 🌟🌟
-        // Logic การสั่งโจมตีถูกย้ายเข้าไปใน Demon::Update แล้ว แต่ยังคงความสามารถในการสั่งโจมตีจากภายนอก
-        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !demon.IsCastingAttack())
-        {
-            demon.Attack();
-        }
-
-        // 🔴 ส่ง currentFrame ให้ Demon.Update เพื่อใช้ในการหมุน Crystal
-        demon.Update(window, deltaTime, currentFrame);
-
-        // --------------------------------------------------
-        // 🔴 Logic การจัดการ Crystal Attack (Generation) ถูกย้ายไปอยู่ใน demon.Update แล้ว
-        // --------------------------------------------------
+        // 🚀 เพิ่ม: Animation หมุน Meteor เพื่อให้ดูน่าสนใจ
+        meteorRotation += 50.0f * deltaTime;
 
         // render
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
@@ -120,81 +125,38 @@ int main()
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
 
-        ourShader.use();
+        // --------------------------------------------------------------------
+        // 🚀 เพิ่ม: Draw Meteor
+        // --------------------------------------------------------------------
+        meteorShader.use();
+        meteorShader.setMat4("projection", projection);
+        meteorShader.setMat4("view", view);
 
+        glm::mat4 meteorModelMatrix = glm::mat4(1.0f);
+        meteorModelMatrix = glm::translate(meteorModelMatrix, meteorPosition);
+        meteorModelMatrix = glm::rotate(meteorModelMatrix, glm::radians(meteorRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+        meteorModelMatrix = glm::scale(meteorModelMatrix, glm::vec3(meteorScale));
+
+        meteorShader.setMat4("model", meteorModelMatrix);
+        meteorShader.setVec3("lightPos", glm::vec3(5.0f, 5.0f, 5.0f)); // สมมติ LightPos
+        meteorShader.setVec3("viewPos", camera.Position);
+
+        meteorModel.Draw(meteorShader);
+        // --------------------------------------------------------------------
+
+        // Draw DEMON (Animated Model)
+        ourShader.use();
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
+        ourShader.setMat4("model", demon.GetModelMatrix()); // ใช้ Getter ของ Demon
 
-        // Demon Transform Setup
+        // Demon Bone Transform Setup
         auto transforms = demon.GetFinalBoneMatrices();
         for (int i = 0; i < transforms.size(); ++i)
             ourShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f));
-        model = glm::rotate(model, glm::radians(demon.GetRotationY()), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(.5f, .5f, .5f));
-        ourShader.setMat4("model", model);
-
-        demon.Draw(ourShader);
-
-        // ----------------------------------------------
-        // --- Crystal Render Logic (เรียกใช้ Getter) ---
-        // ----------------------------------------------
-        crystalShader.use();
-        crystalShader.setMat4("projection", projection);
-        crystalShader.setMat4("view", view);
-        crystalShader.setVec3("lightPos", glm::vec3(5.0f, 5.0f, 5.0f));
-        crystalShader.setVec3("viewPos", camera.Position);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, crystalDiffuseID);
-        crystalShader.setInt("texture_diffuse1", 0);
-
-        if (demon.IsCastingAttack()) // 🔴 ตรวจสอบสถานะจาก Demon
-        {
-            const auto &activeAttack = demon.GetActiveAttackCrystals(); // 🔴 ดึง Crystal Data
-            for (const auto &layer : activeAttack)
-            {
-                for (const auto &crystal : layer.crystals)
-                {
-                    glm::mat4 crystalModelMatrix = glm::mat4(1.0f);
-                    crystalModelMatrix = glm::translate(crystalModelMatrix, crystal.Position);
-                    crystalModelMatrix = glm::rotate(crystalModelMatrix, glm::radians(crystal.RotationY), glm::vec3(0.0f, 1.0f, 0.0f));
-
-                    float baseScale = 1.5f;
-                    float scale = baseScale + (layer.layer * 0.05f);
-
-                    crystalModelMatrix = glm::scale(crystalModelMatrix, glm::vec3(scale));
-
-                    crystalShader.setMat4("model", crystalModelMatrix);
-                    crystalModel.Draw(crystalShader);
-                }
-            }
-        }
-        int handBoneID = demon.GetHandBoneID();
-
-        glm::mat4 handBoneTransform = transforms[handBoneID];
-        glm::mat4 worldHandMatrix = model * handBoneTransform;
-
-        glm::mat4 staffOffset = glm::mat4(1.0f);
-        
-        staffOffset = glm::translate(staffOffset, glm::vec3(-95.0f, 178.0f, -190.0f)); 
-        staffOffset = glm::rotate(staffOffset, glm::radians(90.0f), glm::vec3(1, 0, 0)); 
-        staffOffset = glm::scale(staffOffset, glm::vec3(50.0f)); 
-        
-        glm::mat4 staffModelMatrix = worldHandMatrix * staffOffset;
-
-        staffShader.use();
-
-        staffShader.setMat4("projection", projection);
-        staffShader.setMat4("view", view);
-        staffShader.setMat4("model", staffModelMatrix);
-
-        staffShader.setVec3("lightPos", glm::vec3(5.0f, 5.0f, 5.0f));
-        staffShader.setVec3("viewPos", camera.Position);
-
-        // 5. วาด Staff
-        staffModel.Draw(staffShader);
+        // Draw Demon, Staff และ Crystal (ผ่าน Demon::Draw)
+        demon.Draw(projection, view, camera.Position);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -204,14 +166,17 @@ int main()
     return 0;
 }
 
-// ... (ส่วน Implementations ของ Global Functions)
 // --------------------------------------------------------------------------------
 // 🔴 ฟังก์ชัน OpenGL/GLFW Callbacks และ TextureFromFile (Implementations)
 // --------------------------------------------------------------------------------
-void processInput(GLFWwindow *window)
+
+void processInput(GLFWwindow *window, Demon &demon)
 {
+    // ... (ฟังก์ชัน processInput เดิม) ...
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    // Camera Movement
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -220,6 +185,44 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+
+    // Demon Movement & Actions (ใช้ Public Methods ของ Demon)
+
+    // การเคลื่อนที่
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    {
+        demon.Move(deltaTime, true);
+    }
+    else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
+        demon.Move(deltaTime, false);
+    }
+
+    // การหมุน
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    {
+        demon.Rotate(deltaTime, 1.0f);
+    }
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    {
+        demon.Rotate(deltaTime, -1.0f);
+    }
+
+    // การโจมตี (Attack)
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+    {
+        demon.Attack();
+    }
+
+    // การบาดเจ็บ/ตาย (สำหรับทดสอบ)
+    if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS)
+    {
+        demon.TakeDamage();
+    }
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+    {
+        demon.TriggerDeath();
+    }
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)

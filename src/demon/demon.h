@@ -3,11 +3,10 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#define GLM_ENABLE_EXPERIMENTAL // 🔴 ต้องรวม
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
 #include <learnopengl/filesystem.h>
@@ -18,8 +17,11 @@
 #include <vector>
 #include <stdexcept>
 #include <algorithm>
+#include <cstdlib> // สำหรับ rand()
 
-// 🔴 โครงสร้าง Crystal Attack ถูกย้ายเข้ามาใน Header
+// --------------------------------------------------------------------------------
+// 🔴 Structs (Crystal)
+// --------------------------------------------------------------------------------
 struct Crystal
 {
     glm::vec3 Position;
@@ -31,7 +33,6 @@ struct CrystalLayer
     std::vector<Crystal> crystals;
     int layer;
 };
-// --------------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------------
 // 🔴 Enum
@@ -39,10 +40,15 @@ struct CrystalLayer
 enum class AnimState
 {
     IDLE = 1,
-    IDLE_CAST,
-    CAST_IDLE,
+
     IDLE_ATTACK01,
     ATTACK01_IDLE,
+
+    IDLE_ATTACK02,
+    ATTACK02_IDLE,
+
+    IDLE_ATTACK03,
+    ATTACK03_IDLE,
 
     IDLE_WALK,
     WALK_IDLE,
@@ -53,19 +59,28 @@ enum class AnimState
 };
 
 // --------------------------------------------------------------------------------
-// 🔴 Class Declaration (รวม Implementation บางส่วน)
+// 🔴 Class Declaration (Demon)
 // --------------------------------------------------------------------------------
 class Demon
 {
 private:
     Model m_model;
     Animator m_animator;
+    Shader m_shader;
+
+    // 🌟 2. Staff & Crystal Models (เพิ่มเข้ามา)
+    Model m_staffModel;
+    Shader m_staffShader;
+    Model m_crystalModel;
+    Shader m_crystalShader;
+    unsigned int m_crystalDiffuseID;
 
     // Animations
     Animation m_idleAnim;
     Animation m_walkAnim;
-    Animation m_castAnim;
     Animation m_attackAnim01;
+    Animation m_attackAnim02;
+    Animation m_attackAnim03; // Attack 03 = Cast Spell เดิม
     Animation m_hurtAnim;
     Animation m_deadAnim;
 
@@ -74,67 +89,59 @@ private:
     float m_blendRate = 0.1f;
     bool m_isDead = false;
 
-    // Logic สำหรับ Rotation
+    // Logic สำหรับ Rotation และ Position
+    glm::vec3 m_position = glm::vec3(0.0f, -0.4f, 0.0f);
     glm::vec3 m_forward = glm::vec3(0.0f, 0.0f, -1.0f);
     float m_rotationY = 0.0f;
-
-    // Transition times (Calculated based on animation duration)
-    // const float CAST_TRANSITION_TIME;
-    // const float ATTACK01_TRANSITION_TIME;
-    // const float IDLE_TIME;
-    // const float WALK_TIME;
-    // const float HURT_ANIM_TIME = 0.5f;
 
     int m_handBoneID;
     float m_stateTime = -1.0f;
     float m_hurtTimer = 0.0f;
 
-    // 🌟🌟 Crystal Attack Logic (Member Variables) 🌟🌟
+    // Crystal Attack Logic
     std::vector<CrystalLayer> m_activeAttack;
-    bool m_isAttacking = false; // 🔴 แทนที่ extern bool isAttacking;
+    bool m_isAttacking = false;
     float m_attackTimer = 0.0f;
     int m_currentLayer = 0;
-
-    // 🔴 ค่าคงที่สำหรับ Crystal Logic (ปรับที่นี่ได้เลย)
     const float LAYER_SPAWN_RATE = 0.05f;
     const float EFFECT_DURATION = 1.0f;
 
-    // 🔴 ฟังก์ชันจัดการ Crystal
+    // 🔴 ฟังก์ชันช่วยสุ่ม/จัดการ Attack
     void updateCrystalAttack(float deltaTime, float currentFrame);
-    // 🌟🌟 สิ้นสุด Crystal Attack Logic 🌟🌟
+    void TriggerAttack(Animation *nextAnim);
 
-    // --- State Handler Prototypes ---
-    void handleStateIdle(GLFWwindow *window);
+    // --- State Handler Prototypes (ลบ window ออก) ---
+    void handleStateIdle();
     void handleStateIdleWalk();
-    void handleStateWalk(GLFWwindow *window);
+    void handleStateWalk();
     void handleStateWalkIdle();
-    void handleStateIdleCast();
-    void handleStateCastIdle();
-
     void handleStateIdleAttack01();
     void handleStateAttack01Idle();
-
+    void handleStateIdleAttack02();
+    void handleStateAttack02Idle();
+    void handleStateIdleAttack03();
+    void handleStateAttack03Idle();
     void handleStateHurt();
     void handleStateHurtIdle();
     void handleStateDead();
 
-    // --- Interrupt Logic ---
-    bool checkHurtInterrupt(GLFWwindow *window);
-
 public:
-    // 1. Constructor (Implementation อยู่ใน .h)
-    Demon() : m_model(FileSystem::getPath("src/demon/object/Whiteclown N Hallin.dae")),
-              m_idleAnim(FileSystem::getPath("src/demon/object/standing idle.dae"), &m_model),
-              m_walkAnim(FileSystem::getPath("src/demon/object/Standing Walk Forward.dae"), &m_model),
-              m_castAnim(FileSystem::getPath("src/demon/object/Standing 2H Cast Spell 01.dae"), &m_model),
-              m_attackAnim01(FileSystem::getPath("src/demon/object/Standing 2H Magic Attack 01.dae"), &m_model),
-              m_hurtAnim(FileSystem::getPath("src/demon/object/Standing React Small From Front.dae"), &m_model),
-              m_deadAnim(FileSystem::getPath("src/demon/object/Standing React Death Backward.dae"), &m_model),
-              m_animator(&m_idleAnim)
-    //   CAST_TRANSITION_TIME(m_castAnim.GetDuration() * 0.2f),
-    //   ATTACK01_TRANSITION_TIME(m_attackAnim01.GetDuration() * 0.3f),
-    //   WALK_TIME(m_walkAnim.GetDuration() * 0.13f),
-    //   IDLE_TIME(m_idleAnim.GetDuration() * 0.22f)
+    Demon(Shader &mainShader, Model &staffModel, Shader &staffShader, Model &crystalModel, Shader &crystalShader, unsigned int crystalDiffuseID)
+        : m_model(FileSystem::getPath("src/demon/object/Whiteclown N Hallin.dae")),
+          m_idleAnim(FileSystem::getPath("src/demon/object/standing idle.dae"), &m_model),
+          m_walkAnim(FileSystem::getPath("src/demon/object/Standing Walk Forward.dae"), &m_model),
+          m_attackAnim03(FileSystem::getPath("src/demon/object/Standing 2H Cast Spell 01.dae"), &m_model),
+          m_attackAnim01(FileSystem::getPath("src/demon/object/Standing 2H Magic Attack 01.dae"), &m_model),
+          m_attackAnim02(FileSystem::getPath("src/demon/object/Standing 1H Magic Attack 03.dae"), &m_model),
+          m_hurtAnim(FileSystem::getPath("src/demon/object/Standing React Small From Front.dae"), &m_model),
+          m_deadAnim(FileSystem::getPath("src/demon/object/Standing React Death Backward.dae"), &m_model),
+          m_animator(&m_idleAnim),
+          m_shader(mainShader),
+          m_staffModel(staffModel),
+          m_staffShader(staffShader),
+          m_crystalModel(crystalModel),
+          m_crystalShader(crystalShader),
+          m_crystalDiffuseID(crystalDiffuseID)
     {
         try
         {
@@ -147,65 +154,205 @@ public:
         }
     }
 
-    // 2. Public Methods
-    void Update(GLFWwindow *window, float deltaTime, float currentFrame); // 🔴 รับ currentFrame มาด้วย
-    void Draw(Shader &shader) { m_model.Draw(shader); }
+    // 🌟 Public Methods
+    void Update(float deltaTime, float currentFrame);
+    void Draw(const glm::mat4 &projection, const glm::mat4 &view, const glm::vec3 &viewPos);
+
+    // 🌟 Input/Action Methods (ไม่ต้องใช้ปุ่ม)
+    void Move(float deltaTime, bool isForward);
+    void Rotate(float deltaTime, float direction);
+    void Attack();       // 🌟 2. สุ่มแอนิเมชัน 3 แบบ
+    void TakeDamage();   // 🌟 1. ถูกโจมตี (เปลี่ยนไป HURT)
+    void TriggerDeath(); // 🌟 1. ตายทันที (ไม่ต้องใช้ปุ่ม)
+
+    // Getters
     int GetHandBoneID() const { return m_handBoneID; }
     const std::vector<glm::mat4> &GetFinalBoneMatrices() const { return m_animator.m_FinalBoneMatrices; }
-
+    glm::mat4 GetModelMatrix() const;
     glm::vec3 GetForwardDirection() const { return m_forward; }
     float GetRotationY() const { return m_rotationY; }
-
-    void TriggerDeath()
-    {
-        if (!m_isDead)
-        {
-            m_isDead = true;
-            m_blendAmount = 1.0f;
-            m_animator.PlayAnimation(&m_deadAnim, NULL, 0.0f, 0.0f, 0.0f);
-            m_animator.UpdateAnimation(0.0f);
-            m_charState = AnimState::DEAD;
-        }
-    }
     bool IsDead() const { return m_isDead; }
-
-    // 🌟🌟 Demon::Attack() (Implementation อยู่ใน .h)
-    void Attack()
-    {
-        if (m_isDead)
-            return;
-
-        // 🔴 เริ่มต้น Attack Logic
-        m_isAttacking = true;
-        m_attackTimer = 0.0f;
-        m_currentLayer = 0;
-        m_activeAttack.clear();
-        m_stateTime = -1.0f;
-
-        if (m_charState == AnimState::IDLE)
-        {
-            m_blendAmount = 0.0f;
-            m_animator.PlayAnimation(&m_idleAnim, &m_attackAnim01, m_animator.m_CurrentTime, 0.0f, m_blendAmount);
-            m_charState = AnimState::IDLE_ATTACK01;
-        }
-        else if (m_charState == AnimState::WALK)
-        {
-            m_blendAmount = 0.0f;
-            m_animator.PlayAnimation(&m_walkAnim, &m_attackAnim01, m_animator.m_CurrentTime, 0.0f, m_blendAmount);
-            m_charState = AnimState::IDLE_ATTACK01;
-        }
-    }
-
-    // 🌟🌟 Getter สำหรับ Crystal Logic (ใช้ใน main.cpp สำหรับ Render)
     bool IsCastingAttack() const { return m_isAttacking; }
     const std::vector<CrystalLayer> &GetActiveAttackCrystals() const { return m_activeAttack; }
-    // 🌟🌟
 };
 
 // --------------------------------------------------------------------------------
 // 🔴 Full Implementation of remaining methods (ต้องนิยามนอกคลาส แต่ยังอยู่ในไฟล์ .h)
 // --------------------------------------------------------------------------------
 
+inline glm::mat4 Demon::GetModelMatrix() const
+{
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, m_position);
+    model = glm::rotate(model, glm::radians(m_rotationY), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(.5f, .5f, .5f));
+    return model;
+}
+
+// 🌟 Action Methods Implementation
+inline void Demon::Move(float deltaTime, bool isForward)
+{
+    if (m_charState == AnimState::WALK)
+    {
+        float speed = 2.0f * (isForward ? 1.0f : -1.0f);
+        m_position += m_forward * speed * deltaTime;
+    }
+}
+
+inline void Demon::Rotate(float deltaTime, float direction)
+{
+    m_rotationY += 100.0f * deltaTime * direction;
+}
+
+// 🌟 TriggerDeath (Public Method)
+inline void Demon::TriggerDeath()
+{
+    if (!m_isDead)
+    {
+        m_isDead = true;
+        m_blendAmount = 1.0f;
+        m_animator.PlayAnimation(&m_deadAnim, NULL, 0.0f, 0.0f, 0.0f);
+        m_animator.UpdateAnimation(0.0f);
+        m_charState = AnimState::DEAD;
+    }
+}
+
+// 🌟 TakeDamage (Public Method)
+inline void Demon::TakeDamage()
+{
+    if (m_isDead || m_charState == AnimState::HURT || m_charState == AnimState::HURT_IDLE)
+        return;
+
+    if (m_charState == AnimState::IDLE || m_charState == AnimState::WALK)
+    {
+        m_blendAmount = 0.0f;
+        m_animator.PlayAnimation(NULL, &m_hurtAnim, 0.0f, 0.0f, 0.0f);
+        m_charState = AnimState::HURT;
+        m_hurtTimer = 0.0f;
+    }
+}
+
+// 🌟 Attack (สุ่มแอนิเมชัน 3 แบบ)
+inline void Demon::Attack()
+{
+    if (m_isDead || m_isAttacking || (m_charState != AnimState::IDLE && m_charState != AnimState::WALK))
+        return;
+
+    Animation *nextAnim = nullptr;
+    int randomType = rand() % 3; // 0, 1, or 2
+
+    if (randomType == 0)
+        nextAnim = &m_attackAnim01;
+    else if (randomType == 1)
+        nextAnim = &m_attackAnim02;
+    else if (randomType == 2)
+        nextAnim = &m_attackAnim03;
+
+    TriggerAttack(nextAnim);
+}
+
+// 🌟 TriggerAttack (เปลี่ยนไปใช้ nextAnim)
+inline void Demon::TriggerAttack(Animation *nextAnim)
+{
+    m_isAttacking = true;
+    m_attackTimer = 0.0f;
+    m_currentLayer = 0;
+    m_activeAttack.clear();
+    m_stateTime = -1.0f;
+
+    // กำหนด State Machine ที่ถูกต้องตามแอนิเมชัน
+    AnimState nextBlendState;
+    if (nextAnim == &m_attackAnim01)
+    {
+        nextBlendState = AnimState::IDLE_ATTACK01;
+    }
+    else if (nextAnim == &m_attackAnim02)
+    {
+        nextBlendState = AnimState::IDLE_ATTACK02;
+    }
+    else
+    {
+        nextBlendState = AnimState::IDLE_ATTACK03;
+    }
+    Animation *currentAnim = (m_charState == AnimState::IDLE) ? &m_idleAnim : &m_walkAnim;
+
+    m_blendAmount = 0.0f;
+    m_animator.PlayAnimation(currentAnim, nextAnim, m_animator.m_CurrentTime, 0.0f, m_blendAmount);
+    m_charState = nextBlendState;
+}
+
+// 🌟 Demon::Draw (รวม Staff และ Crystal)
+inline void Demon::Draw(const glm::mat4 &projection, const glm::mat4 &view, const glm::vec3 &viewPos)
+{
+    // 1. DRAW DEMON
+    m_shader.use();
+    m_shader.setMat4("projection", projection);
+    m_shader.setMat4("view", view);
+
+    auto transforms = m_animator.m_FinalBoneMatrices;
+    for (int i = 0; i < transforms.size(); ++i)
+        m_shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+
+    glm::mat4 modelMatrix = GetModelMatrix();
+    m_shader.setMat4("model", modelMatrix);
+    m_model.Draw(m_shader);
+
+    // 2. DRAW STAFF (🌟 รวม Staff Logic เข้ามาใน Draw)
+    int handBoneID = GetHandBoneID();
+    if (handBoneID >= 0 && handBoneID < transforms.size())
+    {
+        glm::mat4 handBoneTransform = transforms[handBoneID];
+        glm::mat4 worldHandMatrix = modelMatrix * handBoneTransform;
+
+        glm::mat4 staffOffset = glm::mat4(1.0f);
+        staffOffset = glm::translate(staffOffset, glm::vec3(-95.0f, 178.0f, -190.0f));
+        staffOffset = glm::rotate(staffOffset, glm::radians(90.0f), glm::vec3(1, 0, 0));
+        staffOffset = glm::scale(staffOffset, glm::vec3(50.0f));
+
+        glm::mat4 staffModelMatrix = worldHandMatrix * staffOffset;
+
+        m_staffShader.use();
+        m_staffShader.setMat4("projection", projection);
+        m_staffShader.setMat4("view", view);
+        m_staffShader.setMat4("model", staffModelMatrix);
+        m_staffShader.setVec3("lightPos", glm::vec3(5.0f, 5.0f, 5.0f));
+        m_staffShader.setVec3("viewPos", viewPos);
+
+        m_staffModel.Draw(m_staffShader);
+    }
+
+    // 3. DRAW CRYSTAL (🌟 รวม Crystal Logic เข้ามาใน Draw)
+    if (IsCastingAttack())
+    {
+        m_crystalShader.use();
+        m_crystalShader.setMat4("projection", projection);
+        m_crystalShader.setMat4("view", view);
+        m_crystalShader.setVec3("lightPos", glm::vec3(5.0f, 5.0f, 5.0f));
+        m_crystalShader.setVec3("viewPos", viewPos);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_crystalDiffuseID);
+        m_crystalShader.setInt("texture_diffuse1", 0);
+
+        const auto &activeAttack = GetActiveAttackCrystals();
+        for (const auto &layer : activeAttack)
+        {
+            for (const auto &crystal : layer.crystals)
+            {
+                glm::mat4 crystalModelMatrix = glm::mat4(1.0f);
+                crystalModelMatrix = glm::translate(crystalModelMatrix, crystal.Position);
+                crystalModelMatrix = glm::rotate(crystalModelMatrix, glm::radians(crystal.RotationY), glm::vec3(0.0f, 1.0f, 0.0f));
+
+                float baseScale = 1.5f;
+                float scale = baseScale + (layer.layer * 0.05f);
+
+                crystalModelMatrix = glm::scale(crystalModelMatrix, glm::vec3(scale));
+
+                m_crystalShader.setMat4("model", crystalModelMatrix);
+                m_crystalModel.Draw(m_crystalShader);
+            }
+        }
+    }
+}
 inline void Demon::updateCrystalAttack(float deltaTime, float currentFrame)
 {
     if (m_stateTime >= 0.0f) // โค้ดที่ถูกต้อง
@@ -255,104 +402,61 @@ inline void Demon::updateCrystalAttack(float deltaTime, float currentFrame)
     }
 }
 
-inline bool Demon::checkHurtInterrupt(GLFWwindow *window)
-{
-    // ... (โค้ดเดิม)
-    if (m_isDead)
-        return false;
-    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-    {
-        TriggerDeath();
-        return true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS)
-    {
-        if (m_charState == AnimState::IDLE || m_charState == AnimState::WALK)
-        {
-            m_blendAmount = 0.0f;
-            Animation *currentAnim = m_animator.m_CurrentAnimation;
-
-            m_animator.PlayAnimation(NULL, &m_hurtAnim, 0.0f, 0.0f, 0.0f);
-            m_charState = AnimState::HURT;
-            m_hurtTimer = 0.0f;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    return false;
-}
-
-inline void Demon::Update(GLFWwindow *window, float deltaTime, float currentFrame)
+inline void Demon::Update(float deltaTime, float currentFrame)
 {
     if (m_isDead)
     {
-        handleStateDead(); // อาจจะทำให้ m_CurrentTime = Duration
+        handleStateDead();
         if (m_animator.m_CurrentTime < m_deadAnim.GetDuration() - (m_deadAnim.GetDuration() * 0.1))
         {
             m_animator.UpdateAnimation(deltaTime);
         }
-
         return;
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-    {
-        m_rotationY += 100.0f * deltaTime;
-    }
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-    {
-        m_rotationY -= 100.0f * deltaTime;
     }
 
     m_forward.x = glm::sin(glm::radians(m_rotationY));
     m_forward.z = -glm::cos(glm::radians(m_rotationY));
     m_forward = glm::normalize(m_forward);
 
-    // 1. ตรวจสอบการขัดจังหวะ (Interrupt)
-    checkHurtInterrupt(window);
-
-    // 🌟🌟 เรียก Attack() หากกด Spacebar และไม่กำลังโจมตีอยู่
-    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS && !m_isAttacking) // 🔴 ใช้ m_isAttacking
-    {
-        if (m_charState == AnimState::IDLE || m_charState == AnimState::WALK)
-        {
-            Attack();
-        }
-    }
-
     // 2. จัดการ Crystal Attack Logic
-    updateCrystalAttack(deltaTime, currentFrame); // 🔴 เรียกใช้ฟังก์ชันที่ถูกย้ายเข้ามา
+    updateCrystalAttack(deltaTime, currentFrame);
 
-    // 3. State Machine update (โค้ดเดิม)
+    // 3. State Machine update (ใช้ State Handler ที่ไม่มี Input)
     switch (m_charState)
     {
     case AnimState::IDLE:
-        handleStateIdle(window);
+        handleStateIdle();
         break;
     case AnimState::IDLE_WALK:
         handleStateIdleWalk();
         break;
     case AnimState::WALK:
-        handleStateWalk(window);
+        handleStateWalk();
         break;
     case AnimState::WALK_IDLE:
         handleStateWalkIdle();
         break;
-    case AnimState::IDLE_CAST:
-        handleStateIdleCast();
-        break;
-    case AnimState::CAST_IDLE:
-        handleStateCastIdle();
-        break;
+
     case AnimState::IDLE_ATTACK01:
         handleStateIdleAttack01();
         break;
     case AnimState::ATTACK01_IDLE:
         handleStateAttack01Idle();
         break;
+
+    case AnimState::IDLE_ATTACK02:
+        handleStateIdleAttack02();
+        break;
+    case AnimState::ATTACK02_IDLE:
+        handleStateAttack02Idle();
+        break;
+    case AnimState::IDLE_ATTACK03:
+        handleStateIdleAttack03();
+        break;
+    case AnimState::ATTACK03_IDLE:
+        handleStateAttack03Idle();
+        break;
+
     case AnimState::HURT:
         handleStateHurt();
         break;
@@ -364,25 +468,15 @@ inline void Demon::Update(GLFWwindow *window, float deltaTime, float currentFram
         break;
     }
 
-    // 4. Update animator
     m_animator.UpdateAnimation(deltaTime);
 }
 
-inline void Demon::handleStateIdle(GLFWwindow *window)
+inline void Demon::handleStateIdle()
 {
+}
 
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-    {
-        m_blendAmount = 0.0f;
-        m_animator.PlayAnimation(&m_idleAnim, &m_walkAnim, m_animator.m_CurrentTime, 0.0f, m_blendAmount);
-        m_charState = AnimState::IDLE_WALK;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
-    {
-        m_blendAmount = 0.0f;
-        m_animator.PlayAnimation(&m_idleAnim, &m_castAnim, m_animator.m_CurrentTime, 0.0f, m_blendAmount);
-        m_charState = AnimState::IDLE_CAST;
-    }
+inline void Demon::handleStateWalk()
+{
 }
 
 inline void Demon::handleStateIdleWalk()
@@ -399,15 +493,6 @@ inline void Demon::handleStateIdleWalk()
     }
 }
 
-inline void Demon::handleStateWalk(GLFWwindow *window)
-{
-    // m_animator.PlayAnimation(&m_walkAnim, NULL, m_animator.m_CurrentTime, m_animator.m_CurrentTime2, m_blendAmount);
-    if (glfwGetKey(window, GLFW_KEY_UP) != GLFW_PRESS)
-    {
-        m_charState = AnimState::WALK_IDLE;
-    }
-}
-
 inline void Demon::handleStateWalkIdle()
 {
     m_blendAmount += m_blendRate;
@@ -419,38 +504,6 @@ inline void Demon::handleStateWalkIdle()
         float startTime = m_animator.m_CurrentTime2;
         m_animator.PlayAnimation(&m_idleAnim, NULL, startTime, 0.0f, m_blendAmount);
         m_charState = AnimState::IDLE;
-    }
-}
-
-inline void Demon::handleStateIdleCast()
-{
-    m_blendAmount += m_blendRate;
-    m_blendAmount = glm::min(m_blendAmount, 1.0f);
-    m_animator.PlayAnimation(&m_idleAnim, &m_castAnim, m_animator.m_CurrentTime, m_animator.m_CurrentTime2, m_blendAmount);
-    if (m_blendAmount >= 1.0f)
-    {
-        m_blendAmount = 0.0f;
-        float startTime = m_animator.m_CurrentTime2;
-        m_animator.PlayAnimation(&m_castAnim, NULL, startTime, 0.0f, m_blendAmount);
-        m_charState = AnimState::CAST_IDLE;
-    }
-}
-
-inline void Demon::handleStateCastIdle()
-{
-    if (m_animator.m_CurrentTime >= m_castAnim.GetDuration() * 0.99f)
-    {
-        m_blendAmount += m_blendRate;
-        m_blendAmount = glm::min(m_blendAmount, 1.0f);
-        m_animator.PlayAnimation(&m_castAnim, &m_idleAnim, m_animator.m_CurrentTime, m_animator.m_CurrentTime2, m_blendAmount);
-        m_animator.m_CurrentTime = m_castAnim.GetDuration() * 0.99f;
-        if (m_blendAmount >= 1.0f)
-        {
-            m_blendAmount = 0.0f;
-            float startTime = m_animator.m_CurrentTime2;
-            m_animator.PlayAnimation(&m_idleAnim, NULL, startTime, 0.0f, m_blendAmount);
-            m_charState = AnimState::IDLE;
-        }
     }
 }
 
@@ -481,6 +534,72 @@ inline void Demon::handleStateAttack01Idle()
         m_blendAmount = glm::min(m_blendAmount, 1.0f);
         m_animator.PlayAnimation(&m_attackAnim01, &m_idleAnim, m_animator.m_CurrentTime, m_animator.m_CurrentTime2, m_blendAmount);
         m_animator.m_CurrentTime = m_attackAnim01.GetDuration() * 0.99f;
+        if (m_blendAmount >= 1.0f)
+        {
+            m_blendAmount = 0.0f;
+            float startTime = m_animator.m_CurrentTime2;
+            m_animator.PlayAnimation(&m_idleAnim, NULL, startTime, 0.0f, m_blendAmount);
+            m_charState = AnimState::IDLE;
+            m_isAttacking = false;
+        }
+    }
+}
+
+inline void Demon::handleStateIdleAttack02()
+{
+    m_blendAmount += m_blendRate;
+    m_blendAmount = glm::min(m_blendAmount, 1.0f);
+    m_animator.PlayAnimation(&m_idleAnim, &m_attackAnim02, m_animator.m_CurrentTime, m_animator.m_CurrentTime2, m_blendAmount);
+    if (m_blendAmount >= 1.0f)
+    {
+        m_blendAmount = 0.0f;
+        float startTime = m_animator.m_CurrentTime2;
+        m_animator.PlayAnimation(&m_attackAnim02, NULL, startTime, 0.0f, m_blendAmount);
+        m_charState = AnimState::ATTACK02_IDLE;
+    }
+}
+
+inline void Demon::handleStateAttack02Idle()
+{
+    if (m_animator.m_CurrentTime >= m_attackAnim02.GetDuration() * 0.99f)
+    {
+        m_blendAmount += m_blendRate;
+        m_blendAmount = glm::min(m_blendAmount, 1.0f);
+        m_animator.PlayAnimation(&m_attackAnim02, &m_idleAnim, m_animator.m_CurrentTime, m_animator.m_CurrentTime2, m_blendAmount);
+        m_animator.m_CurrentTime = m_attackAnim02.GetDuration() * 0.99f;
+        if (m_blendAmount >= 1.0f)
+        {
+            m_blendAmount = 0.0f;
+            float startTime = m_animator.m_CurrentTime2;
+            m_animator.PlayAnimation(&m_idleAnim, NULL, startTime, 0.0f, m_blendAmount);
+            m_charState = AnimState::IDLE;
+            m_isAttacking = false;
+        }
+    }
+}
+
+inline void Demon::handleStateIdleAttack03()
+{
+    m_blendAmount += m_blendRate;
+    m_blendAmount = glm::min(m_blendAmount, 1.0f);
+    m_animator.PlayAnimation(&m_idleAnim, &m_attackAnim03, m_animator.m_CurrentTime, m_animator.m_CurrentTime2, m_blendAmount);
+    if (m_blendAmount >= 1.0f)
+    {
+        m_blendAmount = 0.0f;
+        float startTime = m_animator.m_CurrentTime2;
+        m_animator.PlayAnimation(&m_attackAnim03, NULL, startTime, 0.0f, m_blendAmount);
+        m_charState = AnimState::ATTACK03_IDLE;
+    }
+}
+
+inline void Demon::handleStateAttack03Idle()
+{
+    if (m_animator.m_CurrentTime >= m_attackAnim03.GetDuration() * 0.99f)
+    {
+        m_blendAmount += m_blendRate;
+        m_blendAmount = glm::min(m_blendAmount, 1.0f);
+        m_animator.PlayAnimation(&m_attackAnim03, &m_idleAnim, m_animator.m_CurrentTime, m_animator.m_CurrentTime2, m_blendAmount);
+        m_animator.m_CurrentTime = m_attackAnim03.GetDuration() * 0.99f;
         if (m_blendAmount >= 1.0f)
         {
             m_blendAmount = 0.0f;
@@ -529,5 +648,4 @@ inline void Demon::handleStateDead()
         m_animator.m_CurrentTime = m_deadAnim.GetDuration();
     }
 }
-
 #endif // DEMON_H
