@@ -18,6 +18,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <cstdlib> // สำหรับ rand()
+#include "projectile/projectile.h"
 
 // --------------------------------------------------------------------------------
 // 🔴 Structs (Crystal)
@@ -106,6 +107,20 @@ private:
     const float LAYER_SPAWN_RATE = 0.05f;
     const float EFFECT_DURATION = 1.0f;
 
+    bool m_isAttacking_Anim02;
+    float m_attackAnim02_Timer;
+
+    std::vector<Projectile> m_activeFireballs;
+
+    Model m_fireballModel;
+    Shader m_fireballShader;
+
+    const int FIREBALL_BURST_COUNT = 10;
+    const float FIREBALL_SPREAD_ANGLE = 8.0f;
+
+    glm::mat4 m_rightHandBoneMatrix; // World Space Matrix ของมือขวา
+    glm::vec3 m_forwardDirection;
+
     // 🔴 ฟังก์ชันช่วยสุ่ม/จัดการ Attack
     void updateCrystalAttack(float deltaTime, float currentFrame);
     void TriggerAttack(Animation *nextAnim);
@@ -124,15 +139,19 @@ private:
     void handleStateHurt();
     void handleStateHurtIdle();
     void handleStateDead();
+    void ShootFireball();
+    void UpdateBoneMatrices(const std::vector<glm::mat4> &finalBoneMatrices);
 
 public:
-    Demon(Shader &mainShader, Model &staffModel, Shader &staffShader, Model &crystalModel, Shader &crystalShader, unsigned int crystalDiffuseID)
+    Demon(Shader &mainShader, Model &staffModel, Shader &staffShader,
+          Model &crystalModel, Shader &crystalShader, unsigned int crystalTexID,
+          Model &fbModel, Shader &fbShader)
         : m_model(FileSystem::getPath("src/demon/object/Whiteclown N Hallin.dae")),
           m_idleAnim(FileSystem::getPath("src/demon/object/standing idle.dae"), &m_model),
           m_walkAnim(FileSystem::getPath("src/demon/object/Standing Walk Forward.dae"), &m_model),
-          m_attackAnim03(FileSystem::getPath("src/demon/object/Standing 2H Cast Spell 01.dae"), &m_model),
           m_attackAnim01(FileSystem::getPath("src/demon/object/Standing 2H Magic Attack 01.dae"), &m_model),
           m_attackAnim02(FileSystem::getPath("src/demon/object/Standing 1H Magic Attack 03.dae"), &m_model),
+          m_attackAnim03(FileSystem::getPath("src/demon/object/Standing 2H Cast Spell 01.dae"), &m_model),
           m_hurtAnim(FileSystem::getPath("src/demon/object/Standing React Small From Front.dae"), &m_model),
           m_deadAnim(FileSystem::getPath("src/demon/object/Standing React Death Backward.dae"), &m_model),
           m_animator(&m_idleAnim),
@@ -141,7 +160,9 @@ public:
           m_staffShader(staffShader),
           m_crystalModel(crystalModel),
           m_crystalShader(crystalShader),
-          m_crystalDiffuseID(crystalDiffuseID)
+          m_crystalDiffuseID(crystalTexID),
+          m_fireballModel(fbModel),
+          m_fireballShader(fbShader)
     {
         try
         {
@@ -152,6 +173,10 @@ public:
             std::cerr << "Error: Bone 'mixamorig_RightHand' not found in model." << std::endl;
             m_handBoneID = -1;
         }
+        m_isAttacking_Anim02 = false;
+        m_attackAnim02_Timer = 0.0f;
+        m_rightHandBoneMatrix = glm::mat4(1.0f);
+        m_forwardDirection = glm::vec3(0.0f, 0.0f, -1.0f);
     }
 
     // 🌟 Public Methods
@@ -162,6 +187,7 @@ public:
     void Move(float deltaTime, bool isForward);
     void Rotate(float deltaTime, float direction);
     void Attack();       // 🌟 2. สุ่มแอนิเมชัน 3 แบบ
+    void AttackAnim02(); // 🌟 เพิ่ม Public Method
     void TakeDamage();   // 🌟 1. ถูกโจมตี (เปลี่ยนไป HURT)
     void TriggerDeath(); // 🌟 1. ตายทันที (ไม่ต้องใช้ปุ่ม)
 
@@ -251,6 +277,14 @@ inline void Demon::Attack()
     TriggerAttack(nextAnim);
 }
 
+// 🌟 AttackAnim02 (Public Method)
+inline void Demon::AttackAnim02()
+{
+    if (m_isDead || m_isAttacking || (m_charState != AnimState::IDLE && m_charState != AnimState::WALK))
+        return;
+    TriggerAttack(&m_attackAnim02);
+}
+
 // 🌟 TriggerAttack (เปลี่ยนไปใช้ nextAnim)
 inline void Demon::TriggerAttack(Animation *nextAnim)
 {
@@ -281,6 +315,41 @@ inline void Demon::TriggerAttack(Animation *nextAnim)
     m_charState = nextBlendState;
 }
 
+inline void Demon::ShootFireball()
+{
+    glm::vec3 startPos = m_rightHandBoneMatrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+    for (int i = 0; i < FIREBALL_BURST_COUNT; ++i)
+    {
+        // 1. สร้าง Fireball ใหม่ (สมมติว่า Projectile มี Constructor แบบนี้)
+        Projectile newFireball(m_fireballModel, m_fireballShader, 0.5f, false);
+
+        // 2. คำนวณทิศทางที่มีการกระจาย (Spread)
+        // คำนวณค่า Offset องศา (-1, 0, 1) * SpreadAngle สำหรับ 3 ลูก
+        float offsetIndex = (float)(i - (FIREBALL_BURST_COUNT - 1) / 2.0f);
+        float angleOffset = offsetIndex * FIREBALL_SPREAD_ANGLE;
+
+        // หมุนเวกเตอร์ m_forward รอบแกน Y (yaw)
+        glm::vec3 rotatedForward = glm::rotateY(m_forward, glm::radians(angleOffset));
+
+        newFireball.Launch(startPos, rotatedForward);
+        m_activeFireballs.push_back(newFireball);
+    }
+}
+
+inline void Demon::UpdateBoneMatrices(const std::vector<glm::mat4> &finalBoneMatrices)
+{
+    // ตรวจสอบว่า Bone ID ของมือขวาถูกต้องและอยู่ในขอบเขต
+    if (m_handBoneID >= 0 && m_handBoneID < finalBoneMatrices.size())
+    {
+        glm::mat4 modelMatrix = GetModelMatrix(); // Model Matrix ของ Demon
+        glm::mat4 boneMatrix = finalBoneMatrices[m_handBoneID];
+
+        // World Matrix ของมือขวา = Demon's Model Matrix * Hand's Bone Matrix
+        m_rightHandBoneMatrix = modelMatrix * boneMatrix;
+    }
+}
+
 // 🌟 Demon::Draw (รวม Staff และ Crystal)
 inline void Demon::Draw(const glm::mat4 &projection, const glm::mat4 &view, const glm::vec3 &viewPos)
 {
@@ -296,6 +365,8 @@ inline void Demon::Draw(const glm::mat4 &projection, const glm::mat4 &view, cons
     glm::mat4 modelMatrix = GetModelMatrix();
     m_shader.setMat4("model", modelMatrix);
     m_model.Draw(m_shader);
+
+    UpdateBoneMatrices(transforms);
 
     // 2. DRAW STAFF (🌟 รวม Staff Logic เข้ามาใน Draw)
     int handBoneID = GetHandBoneID();
@@ -351,6 +422,11 @@ inline void Demon::Draw(const glm::mat4 &projection, const glm::mat4 &view, cons
                 m_crystalModel.Draw(m_crystalShader);
             }
         }
+    }
+
+    for (Projectile &fireball : m_activeFireballs)
+    {
+        fireball.Draw(projection, view, viewPos);
     }
 }
 inline void Demon::updateCrystalAttack(float deltaTime, float currentFrame)
@@ -414,12 +490,39 @@ inline void Demon::Update(float deltaTime, float currentFrame)
         return;
     }
 
-    m_forward.x = glm::sin(glm::radians(m_rotationY));
-    m_forward.z = -glm::cos(glm::radians(m_rotationY));
+    m_forward.x = -glm::sin(glm::radians(m_rotationY)); // กลับเครื่องหมายของ sin
+    m_forward.z = glm::cos(glm::radians(m_rotationY));  // กลับเครื่องหมายของ cos (จาก -cos เป็น +cos)
     m_forward = glm::normalize(m_forward);
+
+    for (size_t i = 0; i < m_activeFireballs.size();)
+    {
+        m_activeFireballs[i].Update(deltaTime);
+        // ต้องสมมติว่า Projectile มีฟังก์ชัน IsDestroyed()
+        if (m_activeFireballs[i].IsDestroyed())
+        {
+            m_activeFireballs.erase(m_activeFireballs.begin() + i);
+        }
+        else
+        {
+            ++i;
+        }
+    }
 
     // 2. จัดการ Crystal Attack Logic
     updateCrystalAttack(deltaTime, currentFrame);
+
+    if (m_isAttacking_Anim02 && m_attackAnim02_Timer > 0.0f)
+    {
+        m_attackAnim02_Timer -= deltaTime;
+
+        // 🌟 Trigger ShootFireball เมื่อ Attack Timer หมด
+        if (m_attackAnim02_Timer <= 0.0f)
+        {
+            ShootFireball();
+            // ตั้งค่าเป็น -1.0f เพื่อให้ผ่านเงื่อนไขใน Update แต่ไม่ผ่านเงื่อนไขใน State Handler
+            m_attackAnim02_Timer = -1.0f;
+        }
+    }
 
     // 3. State Machine update (ใช้ State Handler ที่ไม่มี Input)
     switch (m_charState)
@@ -561,19 +664,32 @@ inline void Demon::handleStateIdleAttack02()
 
 inline void Demon::handleStateAttack02Idle()
 {
+    float triggerTime = m_attackAnim02.GetDuration() * 0.35f;
+    float duration = m_attackAnim02.GetDuration();
+
+    // 🌟 แก้ไข: ตรวจสอบเงื่อนไขการยิง Fireball (ตั้งค่า m_isAttacking_Anim02 = true)
+    if (m_animator.m_CurrentTime >= triggerTime && m_attackAnim02_Timer == 0.0f)
+    {
+        m_attackAnim02_Timer = 0.01f; // ตั้งค่า Timer เล็กน้อยเพื่อ Trigger ใน Update()
+        m_isAttacking_Anim02 = true;  // Flag เพื่อให้ Update() รู้ว่าต้องยิง
+    }
+
     if (m_animator.m_CurrentTime >= m_attackAnim02.GetDuration() * 0.99f)
     {
         m_blendAmount += m_blendRate;
         m_blendAmount = glm::min(m_blendAmount, 1.0f);
         m_animator.PlayAnimation(&m_attackAnim02, &m_idleAnim, m_animator.m_CurrentTime, m_animator.m_CurrentTime2, m_blendAmount);
-        m_animator.m_CurrentTime = m_attackAnim02.GetDuration() * 0.99f;
+        m_animator.m_CurrentTime = duration * 0.99f;
         if (m_blendAmount >= 1.0f)
         {
             m_blendAmount = 0.0f;
             float startTime = m_animator.m_CurrentTime2;
             m_animator.PlayAnimation(&m_idleAnim, NULL, startTime, 0.0f, m_blendAmount);
+
             m_charState = AnimState::IDLE;
-            m_isAttacking = false;
+            m_isAttacking = false;        // ✅ [สำคัญ] รีเซ็ตตัวแปรหลัก
+            m_isAttacking_Anim02 = false; // ✅ รีเซ็ต Flag การยิง
+            m_attackAnim02_Timer = 0.0f;  // ✅ รีเซ็ต Timer เพื่อให้ Trigger ได้อีกครั้ง
         }
     }
 }
@@ -640,9 +756,6 @@ inline void Demon::handleStateHurtIdle()
 
 inline void Demon::handleStateDead()
 {
-    // m_animator.PlayAnimation(m_animator.m_CurrentAnimation, &m_deadAnim, m_animator.m_CurrentTime, 0.0f, m_blendAmount);
-    // m_blendAmount += m_blendRate;
-    // m_blendAmount = glm::min(m_blendAmount, 1.0f);
     if (m_animator.m_CurrentTime >= m_deadAnim.GetDuration() * 0.99)
     {
         m_animator.m_CurrentTime = m_deadAnim.GetDuration();

@@ -75,34 +75,28 @@ int main()
     stbi_set_flip_vertically_on_load(true);
     glEnable(GL_DEPTH_TEST);
 
-    Shader staffShader("model_loading_1.vs", "model_loading_1.fs");
+    // --- โหลด Model และ Shader สำหรับ Staff/Crystal ---
+    Shader staffShader("model_loading_staff.vs", "model_loading_staff.fs");
     Model staffModel(FileSystem::getPath("src/staff/Staff.obj"));
-    Shader ourShader("anim_model_1.vs", "anim_model_1.fs");
+    Shader ourShader("anim_model_demon.vs", "anim_model_demon.fs");
 
     unsigned int crystalDiffuseID = TextureFromFile(
         FileSystem::getPath("src/crystal/textures/crystal_m_Base_color.png").c_str());
 
-    Shader crystalShader("model_loading_1.vs", "model_loading_1.fs");
+    Shader crystalShader("model_loading_crystal.vs", "model_loading_crystal.fs");
     Model crystalModel(FileSystem::getPath("src/crystal/stylized_crystal_SM.obj"));
 
-    // 🌟 1. สร้าง Demon Object
-    Demon demon(ourShader, staffModel, staffShader, crystalModel, crystalShader, crystalDiffuseID);
+    // --------------------------------------------------------------------
+    // 🚀 ส่วนที่ 1: โหลดโมเดล Projectile (Fireball/Meteor)
+    // --------------------------------------------------------------------
+    Shader fireballShader("model_loading_fireball.vs", "model_loading_fireball.fs");
+    Model fireballModel(FileSystem::getPath("src/fireball/scene.gltf"));
 
     // --------------------------------------------------------------------
-    // 🚀 เพิ่ม: โหลดโมเดล Meteor
+    // 🌟 ส่วนที่ 2: สร้าง Demon Object (ส่ง Projectile Model เข้าไปด้วย)
     // --------------------------------------------------------------------
-    Shader meteorShader("model_loading_1.vs", "model_loading_1.fs");
-    Model meteorModel(FileSystem::getPath("src/fireball/scene.gltf"));
-
-    // ตั้งค่า Transform เริ่มต้นสำหรับ Meteor (เพื่อให้มันลอยอยู่ข้างบนและมองเห็นได้ชัด)
-    // 🌟🌟 ปรับตำแหน่ง (Y) ให้สูงขึ้น และ Z ให้ไกลขึ้น เพื่อรองรับขนาดที่ใหญ่ขึ้น
-    glm::vec3 meteorPosition = glm::vec3(0.0f, 10.0f, -30.0f);
-
-    // 🌟🌟 แก้ไข: ปรับ Scale เป็น 50 เท่า
-    float meteorScale = 1.0f;
-
-    float meteorRotation = 0.0f;
-    // --------------------------------------------------------------------
+    Demon demon(ourShader, staffModel, staffShader, crystalModel, crystalShader, crystalDiffuseID,
+                 fireballModel, fireballShader); // 👈 เพิ่ม Fireball Model/Shader
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -114,9 +108,6 @@ int main()
         processInput(window, demon);
         demon.Update(deltaTime, currentFrame);
 
-        // 🚀 เพิ่ม: Animation หมุน Meteor เพื่อให้ดูน่าสนใจ
-        meteorRotation += 50.0f * deltaTime;
-
         // render
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -126,22 +117,7 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
 
         // --------------------------------------------------------------------
-        // 🚀 เพิ่ม: Draw Meteor
-        // --------------------------------------------------------------------
-        meteorShader.use();
-        meteorShader.setMat4("projection", projection);
-        meteorShader.setMat4("view", view);
-
-        glm::mat4 meteorModelMatrix = glm::mat4(1.0f);
-        meteorModelMatrix = glm::translate(meteorModelMatrix, meteorPosition);
-        meteorModelMatrix = glm::rotate(meteorModelMatrix, glm::radians(meteorRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-        meteorModelMatrix = glm::scale(meteorModelMatrix, glm::vec3(meteorScale));
-
-        meteorShader.setMat4("model", meteorModelMatrix);
-        meteorShader.setVec3("lightPos", glm::vec3(5.0f, 5.0f, 5.0f)); // สมมติ LightPos
-        meteorShader.setVec3("viewPos", camera.Position);
-
-        meteorModel.Draw(meteorShader);
+        // ❌ ลบ: ลบ Draw Meteor เก่าออก
         // --------------------------------------------------------------------
 
         // Draw DEMON (Animated Model)
@@ -155,7 +131,7 @@ int main()
         for (int i = 0; i < transforms.size(); ++i)
             ourShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
 
-        // Draw Demon, Staff และ Crystal (ผ่าน Demon::Draw)
+        // Draw Demon, Staff, Crystal และ Fireball (ทั้งหมดถูกจัดการผ่าน Demon::Draw)
         demon.Draw(projection, view, camera.Position);
 
         glfwSwapBuffers(window);
@@ -167,12 +143,11 @@ int main()
 }
 
 // --------------------------------------------------------------------------------
-// 🔴 ฟังก์ชัน OpenGL/GLFW Callbacks และ TextureFromFile (Implementations)
+// 🔴 ฟังก์ชัน processInput (ส่วนที่แก้ไข)
 // --------------------------------------------------------------------------------
 
 void processInput(GLFWwindow *window, Demon &demon)
 {
-    // ... (ฟังก์ชัน processInput เดิม) ...
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
@@ -186,7 +161,7 @@ void processInput(GLFWwindow *window, Demon &demon)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
 
-    // Demon Movement & Actions (ใช้ Public Methods ของ Demon)
+    // Demon Movement & Actions
 
     // การเคลื่อนที่
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
@@ -208,10 +183,16 @@ void processInput(GLFWwindow *window, Demon &demon)
         demon.Rotate(deltaTime, -1.0f);
     }
 
-    // การโจมตี (Attack)
+    // การโจมตี (Attack) - สุ่ม 3 ท่า
     if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
     {
         demon.Attack();
+    }
+    
+    // 🌟🌟 ส่วนที่ 3: เพิ่มปุ่ม AttackAnim02 โดยตรง (ใช้ปุ่ม J เป็นตัวอย่าง)
+    if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
+    {
+        demon.AttackAnim02(); 
     }
 
     // การบาดเจ็บ/ตาย (สำหรับทดสอบ)
@@ -224,6 +205,10 @@ void processInput(GLFWwindow *window, Demon &demon)
         demon.TriggerDeath();
     }
 }
+
+// --------------------------------------------------------------------------------
+// 🔴 ฟังก์ชัน OpenGL/GLFW Callbacks และ TextureFromFile (ไม่มีการแก้ไข)
+// --------------------------------------------------------------------------------
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
