@@ -517,7 +517,7 @@ inline void Demon::Update(float deltaTime, float currentFrame)
         return;
     }
 
-    m_forward.x = -glm::sin(glm::radians(m_rotationY)); // กลับเครื่องหมายของ sin
+    m_forward.x = glm::sin(glm::radians(m_rotationY)); // กลับเครื่องหมายของ sin
     m_forward.z = glm::cos(glm::radians(m_rotationY));  // กลับเครื่องหมายของ cos (จาก -cos เป็น +cos)
     m_forward = glm::normalize(m_forward);
 
