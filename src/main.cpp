@@ -177,6 +177,10 @@ void processInput(GLFWwindow *window, Demon &demon)
     {
         demon.Move(deltaTime, false);
     }
+    else
+    {
+        demon.StopMove();
+    }
 
     // การหมุน
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)

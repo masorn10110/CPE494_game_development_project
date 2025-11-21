@@ -90,6 +90,7 @@ private:
     float m_blendAmount = 0.0f;
     float m_blendRate = 0.1f;
     bool m_isDead = false;
+    bool m_isMoving = false;
 
     // Logic สำหรับ Rotation และ Position
     glm::vec3 m_position = glm::vec3(0.0f, -0.4f, 0.0f);
@@ -194,6 +195,7 @@ public:
 
     // 🌟 Input/Action Methods (ไม่ต้องใช้ปุ่ม)
     void Move(float deltaTime, bool isForward);
+    void StopMove();
     void Rotate(float deltaTime, float direction);
     void Attack();       // 🌟 2. สุ่มแอนิเมชัน 3 แบบ
     void AttackAnim02(); // 🌟 เพิ่ม Public Method
@@ -227,11 +229,21 @@ inline glm::mat4 Demon::GetModelMatrix() const
 // 🌟 Action Methods Implementation
 inline void Demon::Move(float deltaTime, bool isForward)
 {
-    if (m_charState == AnimState::WALK)
+    m_isMoving = true;
+    if (m_charState == AnimState::IDLE)
+    {
+        m_charState = AnimState::IDLE_WALK;
+    }
+    if (m_charState == AnimState::WALK || m_charState == AnimState::IDLE_WALK)
     {
         float speed = 2.0f * (isForward ? 1.0f : -1.0f);
         m_position += m_forward * speed * deltaTime;
     }
+}
+
+inline void Demon::StopMove()
+{
+    m_isMoving = false;
 }
 
 inline void Demon::Rotate(float deltaTime, float direction)
@@ -518,7 +530,7 @@ inline void Demon::Update(float deltaTime, float currentFrame)
     }
 
     m_forward.x = glm::sin(glm::radians(m_rotationY)); // กลับเครื่องหมายของ sin
-    m_forward.z = glm::cos(glm::radians(m_rotationY));  // กลับเครื่องหมายของ cos (จาก -cos เป็น +cos)
+    m_forward.z = glm::cos(glm::radians(m_rotationY)); // กลับเครื่องหมายของ cos (จาก -cos เป็น +cos)
     m_forward = glm::normalize(m_forward);
 
     for (size_t i = 0; i < m_activeFireballs.size();)
@@ -609,6 +621,12 @@ inline void Demon::handleStateIdle()
 
 inline void Demon::handleStateWalk()
 {
+    if (!m_isMoving)
+    {
+        m_blendAmount = 0.0f;
+        m_animator.PlayAnimation(&m_walkAnim, &m_idleAnim, m_animator.m_CurrentTime, 0.0f, m_blendAmount);
+        m_charState = AnimState::WALK_IDLE;
+    }
 }
 
 inline void Demon::handleStateIdleWalk()
