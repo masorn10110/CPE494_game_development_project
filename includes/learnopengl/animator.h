@@ -123,11 +123,11 @@ public:
 
 //private:
 	std::vector<glm::mat4> m_FinalBoneMatrices;
+	std::map<std::string, glm::mat4> m_BoneWorldTransforms;	//added by Boat
 	Animation* m_CurrentAnimation;
 	Animation* m_CurrentAnimation2;
 	float m_CurrentTime;
 	float m_CurrentTime2;
 	float m_DeltaTime;
 	float m_blendAmount;
-
 };

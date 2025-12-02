@@ -77,6 +77,9 @@ add_library(GLAD "src/glad.c")
 add_library(STB_IMAGE "src/stb_image.cpp")
 set(LIBS ${LIBS} GLAD STB_IMAGE)
 
+configure_file(configuration/root_directory.h.in configuration/root_directory.h)
+include_directories(${CMAKE_BINARY_DIR}/configuration)
+
 # -----------------------------
 # Create executable
 # -----------------------------
@@ -101,8 +104,12 @@ file(GLOB_RECURSE SHADERS
 )
 
 foreach(SHADER ${SHADERS})
-  add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SHADER} $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${SHADER}"
+    "$<TARGET_FILE_DIR:${PROJECT_NAME}>/"
+    COMMENT "Copying shader: ${SHADER} to target directory"
+  )
 endforeach()
 
 # -----------------------------

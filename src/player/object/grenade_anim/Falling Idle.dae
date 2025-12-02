@@ -1,0 +1,3172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor>
+      <author>Mixamo</author>
+      <authoring_tool>COLLADA Mixamo exporter</authoring_tool>
+      <comments/>
+    </contributor>
+    <created>2025-11-20T18:40:56Z</created>
+    <modified>2025-11-20T18:40:56Z</modified>
+    <revision/>
+    <title/>
+    <unit meter="0.010000"/>
+    <up_axis>Y_UP</up_axis>
+  </asset>
+  <library_animations>
+    <animation id="mixamorig_Hips-anim" name="mixamorig_Hips">
+      <source id="mixamorig_Hips-Matrix-animation-input">
+        <float_array id="mixamorig_Hips-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Hips-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Hips-Matrix-animation-output-transform">
+        <float_array id="mixamorig_Hips-Matrix-animation-output-transform-array" count="32">
+
+0.518138 -0.373706 -0.769335 4.574165 0.120157 0.922379 -0.367123 175.057327 0.846815 0.097779 0.522823 -2.760322 0.000000 0.000000 0.000000 1.000000
+0.519728 -0.370870 -0.769636 5.280032 0.139813 0.925640 -0.351630 173.148697 0.842814 0.075147 0.532933 -2.808837 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Hips-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Hips-Interpolations">
+        <Name_array id="mixamorig_Hips-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_Hips-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_Hips-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_Hips-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_Hips-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_Hips-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_Hips-Matrix-animation-transform" target="mixamorig_Hips/matrix"/>
+    </animation>
+    <animation id="mixamorig_Spine-anim" name="mixamorig_Spine">
+      <source id="mixamorig_Spine-Matrix-animation-input">
+        <float_array id="mixamorig_Spine-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Spine-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Spine-Matrix-animation-output-transform">
+        <float_array id="mixamorig_Spine-Matrix-animation-output-transform-array" count="32">
+
+0.987609 0.156703 -0.008489 -0.006600 -0.151204 0.935680 -0.318811 10.822600 -0.042016 0.316144 0.947780 -0.430700 0.000000 0.000000 0.000000 1.000000
+0.988507 0.151075 -0.005568 -0.006600 -0.143991 0.929659 -0.339118 10.822600 -0.046056 0.336022 0.940727 -0.430700 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Spine-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Spine-Interpolations">
+        <Name_array id="mixamorig_Spine-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_Spine-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_Spine-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_Spine-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_Spine-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_Spine-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_Spine-Matrix-animation-transform" target="mixamorig_Spine/matrix"/>
+    </animation>
+    <animation id="mixamorig_Spine1-anim" name="mixamorig_Spine1">
+      <source id="mixamorig_Spine1-Matrix-animation-input">
+        <float_array id="mixamorig_Spine1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Spine1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Spine1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_Spine1-Matrix-animation-output-transform-array" count="32">
+
+0.989883 0.139510 0.025851 0.000000 -0.133772 0.978387 -0.157686 12.655100 -0.047291 0.152632 0.987151 0.000000 0.000000 0.000000 0.000000 1.000000
+0.990613 0.133716 0.028394 0.000000 -0.126540 0.975577 -0.179547 12.655100 -0.051709 0.174269 0.983340 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Spine1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Spine1-Interpolations">
+        <Name_array id="mixamorig_Spine1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_Spine1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_Spine1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_Spine1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_Spine1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_Spine1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_Spine1-Matrix-animation-transform" target="mixamorig_Spine1/matrix"/>
+    </animation>
+    <animation id="mixamorig_Spine2-anim" name="mixamorig_Spine2">
+      <source id="mixamorig_Spine2-Matrix-animation-input">
+        <float_array id="mixamorig_Spine2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Spine2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Spine2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_Spine2-Matrix-animation-output-transform-array" count="32">
+
+0.990932 0.131130 0.029307 0.000000 -0.126121 0.982964 -0.133696 14.459700 -0.046339 0.128787 0.990589 0.000000 0.000000 0.000000 0.000000 1.000000
+0.991569 0.125374 0.032732 0.000000 -0.118849 0.980623 -0.155732 14.459700 -0.051622 0.150529 0.987257 -0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Spine2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Spine2-Interpolations">
+        <Name_array id="mixamorig_Spine2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_Spine2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_Spine2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_Spine2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_Spine2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_Spine2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_Spine2-Matrix-animation-transform" target="mixamorig_Spine2/matrix"/>
+    </animation>
+    <animation id="mixamorig_Neck-anim" name="mixamorig_Neck">
+      <source id="mixamorig_Neck-Matrix-animation-input">
+        <float_array id="mixamorig_Neck-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Neck-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Neck-Matrix-animation-output-transform">
+        <float_array id="mixamorig_Neck-Matrix-animation-output-transform-array" count="32">
+
+0.923277 -0.144614 0.355874 0.000000 -0.029718 0.896763 0.441512 16.135700 -0.382983 -0.418214 0.823663 -0.000000 0.000000 0.000000 0.000000 1.000000
+0.921074 -0.149986 0.359342 0.000000 -0.025820 0.897283 0.440701 16.135700 -0.388530 -0.415196 0.822591 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Neck-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Neck-Interpolations">
+        <Name_array id="mixamorig_Neck-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_Neck-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_Neck-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_Neck-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_Neck-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_Neck-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_Neck-Matrix-animation-transform" target="mixamorig_Neck/matrix"/>
+    </animation>
+    <animation id="mixamorig_Head-anim" name="mixamorig_Head">
+      <source id="mixamorig_Head-Matrix-animation-input">
+        <float_array id="mixamorig_Head-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Head-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Head-Matrix-animation-output-transform">
+        <float_array id="mixamorig_Head-Matrix-animation-output-transform-array" count="32">
+
+0.896156 0.165078 0.411890 0.000000 -0.145706 0.986229 -0.078249 6.791300 -0.419135 0.010108 0.907868 0.000000 0.000000 0.000000 0.000000 1.000000
+0.890926 0.185540 0.414518 0.000000 -0.157523 0.982324 -0.101127 6.791300 -0.425954 0.024801 0.904405 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_Head-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_Head-Interpolations">
+        <Name_array id="mixamorig_Head-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_Head-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_Head-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_Head-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_Head-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_Head-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_Head-Matrix-animation-transform" target="mixamorig_Head/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftShoulder-anim" name="mixamorig_LeftShoulder">
+      <source id="mixamorig_LeftShoulder-Matrix-animation-input">
+        <float_array id="mixamorig_LeftShoulder-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftShoulder-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftShoulder-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftShoulder-Matrix-animation-output-transform-array" count="32">
+
+0.316561 0.695611 -0.644914 11.022900 -0.018112 -0.675322 -0.737300 13.234400 -0.948399 0.245081 -0.201182 -1.554100 0.000000 0.000000 0.000000 1.000000
+0.318913 0.693646 -0.645872 11.022900 -0.004038 -0.680454 -0.732780 13.234400 -0.947775 0.236301 -0.214205 -1.554100 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftShoulder-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftShoulder-Interpolations">
+        <Name_array id="mixamorig_LeftShoulder-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftShoulder-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftShoulder-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftShoulder-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftShoulder-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftShoulder-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftShoulder-Matrix-animation-transform" target="mixamorig_LeftShoulder/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftArm-anim" name="mixamorig_LeftArm">
+      <source id="mixamorig_LeftArm-Matrix-animation-input">
+        <float_array id="mixamorig_LeftArm-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftArm-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftArm-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftArm-Matrix-animation-output-transform-array" count="32">
+
+0.728442 0.077571 -0.680702 0.000000 0.088430 0.974612 0.205696 16.551600 0.679377 -0.210032 0.703089 0.000000 0.000000 0.000000 0.000000 1.000000
+0.739506 -0.000345 -0.673149 0.000000 0.155641 0.972991 0.170485 16.551600 0.654909 -0.230844 0.719586 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftArm-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftArm-Interpolations">
+        <Name_array id="mixamorig_LeftArm-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftArm-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftArm-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftArm-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftArm-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftArm-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftArm-Matrix-animation-transform" target="mixamorig_LeftArm/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftForeArm-anim" name="mixamorig_LeftForeArm">
+      <source id="mixamorig_LeftForeArm-Matrix-animation-input">
+        <float_array id="mixamorig_LeftForeArm-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftForeArm-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftForeArm-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftForeArm-Matrix-animation-output-transform-array" count="32">
+
+-0.314473 -0.949211 0.010236 0.000000 0.949256 -0.314401 0.008086 27.198299 -0.004457 0.012259 0.999915 0.000000 0.000000 0.000000 0.000000 1.000000
+-0.257948 -0.966105 0.010167 -0.000000 0.966131 -0.257848 0.010216 27.198299 -0.007248 0.012458 0.999896 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftForeArm-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftForeArm-Interpolations">
+        <Name_array id="mixamorig_LeftForeArm-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftForeArm-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftForeArm-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftForeArm-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftForeArm-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftForeArm-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftForeArm-Matrix-animation-transform" target="mixamorig_LeftForeArm/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHand-anim" name="mixamorig_LeftHand">
+      <source id="mixamorig_LeftHand-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHand-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHand-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHand-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHand-Matrix-animation-output-transform-array" count="32">
+
+0.912821 -0.387913 -0.127596 0.000000 0.371664 0.659747 0.653146 21.535400 -0.169182 -0.643629 0.746405 0.000000 0.000000 0.000000 0.000000 1.000000
+0.899714 -0.418076 -0.125405 0.000000 0.394674 0.656541 0.642796 21.535400 -0.186404 -0.627827 0.755703 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHand-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHand-Interpolations">
+        <Name_array id="mixamorig_LeftHand-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHand-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHand-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHand-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHand-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHand-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHand-Matrix-animation-transform" target="mixamorig_LeftHand/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandThumb1-anim" name="mixamorig_LeftHandThumb1">
+      <source id="mixamorig_LeftHandThumb1-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandThumb1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandThumb1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandThumb1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandThumb1-Matrix-animation-output-transform-array" count="32">
+
+0.879807 -0.221542 0.420546 -1.897200 0.355559 0.893914 -0.272940 4.226700 -0.315464 0.389663 0.865243 4.940900 0.000000 0.000000 0.000000 1.000000
+0.879850 -0.221466 0.420496 -1.897200 0.355521 0.893877 -0.273109 4.226700 -0.315387 0.389790 0.865214 4.940900 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandThumb1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandThumb1-Interpolations">
+        <Name_array id="mixamorig_LeftHandThumb1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandThumb1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandThumb1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandThumb1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandThumb1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandThumb1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandThumb1-Matrix-animation-transform" target="mixamorig_LeftHandThumb1/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandThumb2-anim" name="mixamorig_LeftHandThumb2">
+      <source id="mixamorig_LeftHandThumb2-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandThumb2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandThumb2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandThumb2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandThumb2-Matrix-animation-output-transform-array" count="32">
+
+0.979006 0.170741 -0.111332 -0.788100 -0.183596 0.975921 -0.117770 4.746200 0.088543 0.135738 0.986780 -0.000000 0.000000 0.000000 0.000000 1.000000
+0.979006 0.170741 -0.111332 -0.788100 -0.183596 0.975921 -0.117770 4.746200 0.088543 0.135738 0.986780 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandThumb2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandThumb2-Interpolations">
+        <Name_array id="mixamorig_LeftHandThumb2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandThumb2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandThumb2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandThumb2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandThumb2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandThumb2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandThumb2-Matrix-animation-transform" target="mixamorig_LeftHandThumb2/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandThumb3-anim" name="mixamorig_LeftHandThumb3">
+      <source id="mixamorig_LeftHandThumb3-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandThumb3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandThumb3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandThumb3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandThumb3-Matrix-animation-output-transform-array" count="32">
+
+0.963103 0.268385 0.020050 -0.314700 -0.268753 0.963028 0.018671 7.341200 -0.014297 -0.023371 0.999625 -0.000000 0.000000 0.000000 0.000000 1.000000
+0.964590 0.262990 0.020050 -0.314700 -0.263359 0.964516 0.018715 7.341200 -0.014417 -0.023333 0.999624 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandThumb3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandThumb3-Interpolations">
+        <Name_array id="mixamorig_LeftHandThumb3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandThumb3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandThumb3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandThumb3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandThumb3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandThumb3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandThumb3-Matrix-animation-transform" target="mixamorig_LeftHandThumb3/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandIndex1-anim" name="mixamorig_LeftHandIndex1">
+      <source id="mixamorig_LeftHandIndex1-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandIndex1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandIndex1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandIndex1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandIndex1-Matrix-animation-output-transform-array" count="32">
+
+0.958890 0.162172 0.232874 -2.959300 -0.143759 0.985130 -0.094088 12.531300 -0.244669 0.056742 0.967945 1.173500 0.000000 0.000000 0.000000 1.000000
+0.958644 0.168917 0.229062 -2.959300 -0.144869 0.982373 -0.118139 12.531300 -0.244980 0.080069 0.966216 1.173500 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandIndex1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandIndex1-Interpolations">
+        <Name_array id="mixamorig_LeftHandIndex1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandIndex1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandIndex1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandIndex1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandIndex1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandIndex1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandIndex1-Matrix-animation-transform" target="mixamorig_LeftHandIndex1/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandIndex2-anim" name="mixamorig_LeftHandIndex2">
+      <source id="mixamorig_LeftHandIndex2-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandIndex2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandIndex2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandIndex2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandIndex2-Matrix-animation-output-transform-array" count="32">
+
+0.998401 0.045733 -0.033214 -0.006300 -0.050761 0.467069 -0.882763 8.298100 -0.024858 0.883038 0.468644 0.000000 0.000000 0.000000 0.000000 1.000000
+0.998274 0.046693 -0.035620 -0.006300 -0.052001 0.420909 -0.905611 8.298100 -0.027293 0.905900 0.422611 -0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandIndex2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandIndex2-Interpolations">
+        <Name_array id="mixamorig_LeftHandIndex2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandIndex2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandIndex2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandIndex2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandIndex2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandIndex2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandIndex2-Matrix-animation-transform" target="mixamorig_LeftHandIndex2/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandIndex3-anim" name="mixamorig_LeftHandIndex3">
+      <source id="mixamorig_LeftHandIndex3-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandIndex3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandIndex3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandIndex3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandIndex3-Matrix-animation-output-transform-array" count="32">
+
+0.999648 0.024964 -0.008973 0.002000 -0.026463 0.914852 -0.402921 4.720200 -0.001849 0.403017 0.915191 -0.000000 0.000000 0.000000 0.000000 1.000000
+0.999578 0.027158 -0.010280 0.002000 -0.028884 0.893370 -0.448392 4.720200 -0.002994 0.448500 0.893778 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandIndex3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandIndex3-Interpolations">
+        <Name_array id="mixamorig_LeftHandIndex3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandIndex3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandIndex3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandIndex3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandIndex3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandIndex3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandIndex3-Matrix-animation-transform" target="mixamorig_LeftHandIndex3/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandMiddle1-anim" name="mixamorig_LeftHandMiddle1">
+      <source id="mixamorig_LeftHandMiddle1-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandMiddle1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandMiddle1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandMiddle1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandMiddle1-Matrix-animation-output-transform-array" count="32">
+
+0.969952 0.235943 0.059362 2.392400 -0.184355 0.871976 -0.453509 14.502300 -0.158764 0.428938 0.889273 -0.033500 0.000000 0.000000 0.000000 1.000000
+0.969717 0.237849 0.055467 2.392400 -0.185328 0.864531 -0.467162 14.502300 -0.159067 0.442736 0.882430 -0.033500 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandMiddle1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandMiddle1-Interpolations">
+        <Name_array id="mixamorig_LeftHandMiddle1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandMiddle1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandMiddle1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandMiddle1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandMiddle1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandMiddle1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandMiddle1-Matrix-animation-transform" target="mixamorig_LeftHandMiddle1/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandMiddle2-anim" name="mixamorig_LeftHandMiddle2">
+      <source id="mixamorig_LeftHandMiddle2-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandMiddle2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandMiddle2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandMiddle2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandMiddle2-Matrix-animation-output-transform-array" count="32">
+
+0.997195 0.062528 -0.041135 0.002700 -0.064512 0.439405 -0.895970 8.151000 -0.037948 0.896110 0.442206 0.000000 0.000000 0.000000 0.000000 1.000000
+0.997014 0.063423 -0.044054 0.002700 -0.065704 0.397000 -0.915464 8.151000 -0.040572 0.915625 0.399982 -0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandMiddle2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandMiddle2-Interpolations">
+        <Name_array id="mixamorig_LeftHandMiddle2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandMiddle2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandMiddle2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandMiddle2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandMiddle2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandMiddle2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandMiddle2-Matrix-animation-transform" target="mixamorig_LeftHandMiddle2/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandMiddle3-anim" name="mixamorig_LeftHandMiddle3">
+      <source id="mixamorig_LeftHandMiddle3-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandMiddle3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandMiddle3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandMiddle3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandMiddle3-Matrix-animation-output-transform-array" count="32">
+
+0.999081 0.042005 -0.008575 -0.001100 -0.038128 0.779128 -0.625704 4.559900 -0.019601 0.625456 0.780013 0.000000 0.000000 0.000000 0.000000 1.000000
+0.998937 0.044797 -0.010910 -0.001100 -0.040658 0.744294 -0.666613 4.559900 -0.021742 0.666348 0.745324 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandMiddle3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandMiddle3-Interpolations">
+        <Name_array id="mixamorig_LeftHandMiddle3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandMiddle3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandMiddle3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandMiddle3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandMiddle3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandMiddle3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandMiddle3-Matrix-animation-transform" target="mixamorig_LeftHandMiddle3/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandRing1-anim" name="mixamorig_LeftHandRing1">
+      <source id="mixamorig_LeftHandRing1-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandRing1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandRing1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandRing1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandRing1-Matrix-animation-output-transform-array" count="32">
+
+0.956975 0.272691 -0.099185 7.071600 -0.256776 0.636634 -0.727162 14.022100 -0.135146 0.721344 0.679263 -0.727900 0.000000 0.000000 0.000000 1.000000
+0.956988 0.272457 -0.099703 7.071600 -0.256614 0.634557 -0.729031 14.022100 -0.135362 0.723260 0.677180 -0.727900 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandRing1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandRing1-Interpolations">
+        <Name_array id="mixamorig_LeftHandRing1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandRing1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandRing1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandRing1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandRing1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandRing1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandRing1-Matrix-animation-transform" target="mixamorig_LeftHandRing1/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandRing2-anim" name="mixamorig_LeftHandRing2">
+      <source id="mixamorig_LeftHandRing2-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandRing2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandRing2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandRing2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandRing2-Matrix-animation-output-transform-array" count="32">
+
+0.997925 0.052822 -0.036830 0.005000 -0.054685 0.393161 -0.917842 6.963300 -0.034002 0.917951 0.395233 -0.000000 0.000000 0.000000 0.000000 1.000000
+0.997820 0.053457 -0.038704 0.005000 -0.055422 0.360305 -0.931187 6.963300 -0.035833 0.931302 0.362482 -0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandRing2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandRing2-Interpolations">
+        <Name_array id="mixamorig_LeftHandRing2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandRing2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandRing2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandRing2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandRing2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandRing2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandRing2-Matrix-animation-transform" target="mixamorig_LeftHandRing2/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandRing3-anim" name="mixamorig_LeftHandRing3">
+      <source id="mixamorig_LeftHandRing3-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandRing3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandRing3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandRing3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandRing3-Matrix-animation-output-transform-array" count="32">
+
+0.998772 0.047222 -0.015019 -0.001000 -0.045953 0.769232 -0.637315 3.798600 -0.018542 0.637222 0.770457 0.000000 0.000000 0.000000 0.000000 1.000000
+0.998632 0.049290 -0.017477 -0.001000 -0.048121 0.735198 -0.676142 3.798600 -0.020478 0.676058 0.736564 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandRing3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandRing3-Interpolations">
+        <Name_array id="mixamorig_LeftHandRing3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandRing3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandRing3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandRing3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandRing3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandRing3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandRing3-Matrix-animation-transform" target="mixamorig_LeftHandRing3/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandPinky1-anim" name="mixamorig_LeftHandPinky1">
+      <source id="mixamorig_LeftHandPinky1-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandPinky1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandPinky1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandPinky1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandPinky1-Matrix-animation-output-transform-array" count="32">
+
+0.941057 0.168520 -0.293281 10.979800 -0.331983 0.626283 -0.705377 13.885000 0.064807 0.761164 0.645313 0.589700 0.000000 0.000000 0.000000 1.000000
+0.941934 0.172128 -0.288327 10.979800 -0.329751 0.636359 -0.697360 13.885000 0.063444 0.751944 0.656167 0.589700 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandPinky1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandPinky1-Interpolations">
+        <Name_array id="mixamorig_LeftHandPinky1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandPinky1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandPinky1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandPinky1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandPinky1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandPinky1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandPinky1-Matrix-animation-transform" target="mixamorig_LeftHandPinky1/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandPinky2-anim" name="mixamorig_LeftHandPinky2">
+      <source id="mixamorig_LeftHandPinky2-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandPinky2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandPinky2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandPinky2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandPinky2-Matrix-animation-output-transform-array" count="32">
+
+0.997160 0.056052 -0.050291 0.000300 -0.054747 0.081027 -0.995207 3.975700 -0.051708 0.995135 0.083865 0.000000 0.000000 0.000000 0.000000 1.000000
+0.997107 0.056097 -0.051294 0.000300 -0.054819 0.063209 -0.996494 3.975700 -0.052658 0.996422 0.066101 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandPinky2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandPinky2-Interpolations">
+        <Name_array id="mixamorig_LeftHandPinky2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandPinky2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandPinky2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandPinky2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandPinky2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandPinky2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandPinky2-Matrix-animation-transform" target="mixamorig_LeftHandPinky2/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftHandPinky3-anim" name="mixamorig_LeftHandPinky3">
+      <source id="mixamorig_LeftHandPinky3-Matrix-animation-input">
+        <float_array id="mixamorig_LeftHandPinky3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandPinky3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandPinky3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftHandPinky3-Matrix-animation-output-transform-array" count="32">
+
+0.999010 0.041766 -0.015324 -0.000400 -0.039772 0.684096 -0.728307 2.799700 -0.019935 0.728195 0.685080 0.000000 0.000000 0.000000 0.000000 1.000000
+0.998909 0.043420 -0.017185 -0.000400 -0.041346 0.651332 -0.757665 2.799700 -0.021705 0.757549 0.652417 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandPinky3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftHandPinky3-Interpolations">
+        <Name_array id="mixamorig_LeftHandPinky3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftHandPinky3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftHandPinky3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftHandPinky3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftHandPinky3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftHandPinky3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftHandPinky3-Matrix-animation-transform" target="mixamorig_LeftHandPinky3/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightShoulder-anim" name="mixamorig_RightShoulder">
+      <source id="mixamorig_RightShoulder-Matrix-animation-input">
+        <float_array id="mixamorig_RightShoulder-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightShoulder-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightShoulder-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightShoulder-Matrix-animation-output-transform-array" count="32">
+
+-0.135552 -0.884242 0.446925 -10.882400 -0.040912 -0.445708 -0.894243 13.272500 0.989925 -0.139501 0.024241 -1.553300 0.000000 0.000000 0.000000 1.000000
+-0.140857 -0.883463 0.446825 -10.882400 -0.055292 -0.443601 -0.894517 13.272500 0.988485 -0.150705 0.013635 -1.553300 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightShoulder-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightShoulder-Interpolations">
+        <Name_array id="mixamorig_RightShoulder-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightShoulder-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightShoulder-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightShoulder-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightShoulder-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightShoulder-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightShoulder-Matrix-animation-transform" target="mixamorig_RightShoulder/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightArm-anim" name="mixamorig_RightArm">
+      <source id="mixamorig_RightArm-Matrix-animation-input">
+        <float_array id="mixamorig_RightArm-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightArm-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightArm-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightArm-Matrix-animation-output-transform-array" count="32">
+
+0.713158 -0.192507 0.674052 0.000000 0.637503 0.578004 -0.509413 16.507099 -0.291539 0.793003 0.534931 0.000000 0.000000 0.000000 0.000000 1.000000
+0.706589 -0.174319 0.685817 -0.000000 0.628879 0.599017 -0.495671 16.507099 -0.324411 0.781532 0.532884 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightArm-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightArm-Interpolations">
+        <Name_array id="mixamorig_RightArm-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightArm-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightArm-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightArm-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightArm-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightArm-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightArm-Matrix-animation-transform" target="mixamorig_RightArm/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightForeArm-anim" name="mixamorig_RightForeArm">
+      <source id="mixamorig_RightForeArm-Matrix-animation-input">
+        <float_array id="mixamorig_RightForeArm-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightForeArm-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightForeArm-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightForeArm-Matrix-animation-output-transform-array" count="32">
+
+-0.351656 0.934677 -0.052122 0.000000 -0.923960 -0.355494 -0.141146 19.953800 -0.150455 -0.001476 0.988616 -0.000000 0.000000 0.000000 0.000000 1.000000
+-0.390546 0.918539 -0.061316 -0.000000 -0.906849 -0.395327 -0.146089 19.953800 -0.158428 -0.001450 0.987369 -0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightForeArm-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightForeArm-Interpolations">
+        <Name_array id="mixamorig_RightForeArm-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightForeArm-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightForeArm-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightForeArm-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightForeArm-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightForeArm-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightForeArm-Matrix-animation-transform" target="mixamorig_RightForeArm/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHand-anim" name="mixamorig_RightHand">
+      <source id="mixamorig_RightHand-Matrix-animation-input">
+        <float_array id="mixamorig_RightHand-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHand-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHand-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHand-Matrix-animation-output-transform-array" count="32">
+
+0.975266 0.172909 0.137694 0.000000 -0.192848 0.970034 0.147796 28.810400 -0.108012 -0.170695 0.979386 -0.000000 0.000000 0.000000 0.000000 1.000000
+0.979079 0.163836 0.120676 0.000000 -0.184085 0.965873 0.182217 28.810400 -0.086704 -0.200619 0.975825 -0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHand-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHand-Interpolations">
+        <Name_array id="mixamorig_RightHand-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHand-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHand-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHand-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHand-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHand-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHand-Matrix-animation-transform" target="mixamorig_RightHand/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandThumb1-anim" name="mixamorig_RightHandThumb1">
+      <source id="mixamorig_RightHandThumb1-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandThumb1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandThumb1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandThumb1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandThumb1-Matrix-animation-output-transform-array" count="32">
+
+0.714138 0.637377 -0.289410 1.539600 -0.694064 0.698478 -0.174367 3.801100 0.091009 0.325391 0.941190 1.972600 0.000000 0.000000 0.000000 1.000000
+0.716874 0.634197 -0.289631 1.539600 -0.691229 0.700767 -0.176431 3.801100 0.091072 0.326680 0.940737 1.972600 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandThumb1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandThumb1-Interpolations">
+        <Name_array id="mixamorig_RightHandThumb1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandThumb1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandThumb1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandThumb1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandThumb1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandThumb1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandThumb1-Matrix-animation-transform" target="mixamorig_RightHandThumb1/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandThumb2-anim" name="mixamorig_RightHandThumb2">
+      <source id="mixamorig_RightHandThumb2-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandThumb2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandThumb2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandThumb2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandThumb2-Matrix-animation-output-transform-array" count="32">
+
+0.869849 -0.466880 0.159330 0.267800 0.479734 0.875834 -0.052632 4.847300 -0.114974 0.122218 0.985821 0.000000 0.000000 0.000000 0.000000 1.000000
+0.887015 -0.432725 0.161100 0.267800 0.445997 0.893262 -0.056299 4.847300 -0.119543 0.121788 0.985331 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandThumb2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandThumb2-Interpolations">
+        <Name_array id="mixamorig_RightHandThumb2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandThumb2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandThumb2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandThumb2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandThumb2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandThumb2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandThumb2-Matrix-animation-transform" target="mixamorig_RightHandThumb2/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandThumb3-anim" name="mixamorig_RightHandThumb3">
+      <source id="mixamorig_RightHandThumb3-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandThumb3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandThumb3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandThumb3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandThumb3-Matrix-animation-output-transform-array" count="32">
+
+0.809135 -0.586149 -0.041590 -0.081100 0.587276 0.804198 0.091499 4.705100 -0.020186 -0.098460 0.994936 0.000000 0.000000 0.000000 0.000000 1.000000
+0.849125 -0.527042 -0.034835 -0.081100 0.527981 0.845071 0.084208 4.705100 -0.014944 -0.089895 0.995839 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandThumb3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandThumb3-Interpolations">
+        <Name_array id="mixamorig_RightHandThumb3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandThumb3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandThumb3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandThumb3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandThumb3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandThumb3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandThumb3-Matrix-animation-transform" target="mixamorig_RightHandThumb3/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandIndex1-anim" name="mixamorig_RightHandIndex1">
+      <source id="mixamorig_RightHandIndex1-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandIndex1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandIndex1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandIndex1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandIndex1-Matrix-animation-output-transform-array" count="32">
+
+0.945373 -0.079091 -0.316250 5.382800 -0.129383 0.799409 -0.586691 13.307100 0.299215 0.595559 0.745506 -0.085200 0.000000 0.000000 0.000000 1.000000
+0.948695 -0.055772 -0.311236 5.382800 -0.130713 0.827098 -0.546646 13.307100 0.287910 0.559283 0.777374 -0.085200 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandIndex1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandIndex1-Interpolations">
+        <Name_array id="mixamorig_RightHandIndex1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandIndex1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandIndex1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandIndex1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandIndex1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandIndex1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandIndex1-Matrix-animation-transform" target="mixamorig_RightHandIndex1/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandIndex2-anim" name="mixamorig_RightHandIndex2">
+      <source id="mixamorig_RightHandIndex2-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandIndex2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandIndex2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandIndex2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandIndex2-Matrix-animation-output-transform-array" count="32">
+
+0.999846 0.012553 0.012234 -0.001700 0.016289 -0.407548 -0.913039 3.921400 -0.006476 0.913098 -0.407690 0.000000 0.000000 0.000000 0.000000 1.000000
+0.999860 0.011718 0.011986 -0.001700 0.015214 -0.334323 -0.942336 3.921400 -0.007035 0.942386 -0.334454 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandIndex2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandIndex2-Interpolations">
+        <Name_array id="mixamorig_RightHandIndex2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandIndex2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandIndex2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandIndex2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandIndex2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandIndex2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandIndex2-Matrix-animation-transform" target="mixamorig_RightHandIndex2/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandIndex3-anim" name="mixamorig_RightHandIndex3">
+      <source id="mixamorig_RightHandIndex3-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandIndex3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandIndex3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandIndex3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandIndex3-Matrix-animation-output-transform-array" count="32">
+
+0.999911 0.005988 0.011890 -0.000300 0.011393 0.077221 -0.996949 3.178700 -0.006888 0.996996 0.077146 0.000000 0.000000 0.000000 0.000000 1.000000
+0.999919 0.005536 0.011462 -0.000300 0.010665 0.127215 -0.991818 3.178700 -0.006948 0.991860 0.127146 -0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandIndex3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandIndex3-Interpolations">
+        <Name_array id="mixamorig_RightHandIndex3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandIndex3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandIndex3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandIndex3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandIndex3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandIndex3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandIndex3-Matrix-animation-transform" target="mixamorig_RightHandIndex3/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandMiddle1-anim" name="mixamorig_RightHandMiddle1">
+      <source id="mixamorig_RightHandMiddle1-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandMiddle1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandMiddle1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandMiddle1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandMiddle1-Matrix-animation-output-transform-array" count="32">
+
+0.989983 -0.018268 -0.139997 1.695500 -0.098632 0.620002 -0.778376 14.609200 0.101018 0.784388 0.611990 0.049800 0.000000 0.000000 0.000000 1.000000
+0.989403 -0.009967 -0.144852 1.695500 -0.101142 0.668456 -0.736842 14.609200 0.104171 0.743685 0.660365 0.049800 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandMiddle1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandMiddle1-Interpolations">
+        <Name_array id="mixamorig_RightHandMiddle1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandMiddle1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandMiddle1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandMiddle1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandMiddle1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandMiddle1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandMiddle1-Matrix-animation-transform" target="mixamorig_RightHandMiddle1/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandMiddle2-anim" name="mixamorig_RightHandMiddle2">
+      <source id="mixamorig_RightHandMiddle2-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandMiddle2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandMiddle2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandMiddle2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandMiddle2-Matrix-animation-output-transform-array" count="32">
+
+0.999727 -0.019729 0.012506 -0.000200 0.006344 -0.285950 -0.958223 4.318300 0.022481 0.958041 -0.285747 -0.000000 0.000000 0.000000 0.000000 1.000000
+0.999725 -0.020011 0.012247 -0.000200 0.007852 -0.206531 -0.978409 4.318300 0.022108 0.978235 -0.206317 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandMiddle2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandMiddle2-Interpolations">
+        <Name_array id="mixamorig_RightHandMiddle2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandMiddle2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandMiddle2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandMiddle2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandMiddle2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandMiddle2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandMiddle2-Matrix-animation-transform" target="mixamorig_RightHandMiddle2/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandMiddle3-anim" name="mixamorig_RightHandMiddle3">
+      <source id="mixamorig_RightHandMiddle3-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandMiddle3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandMiddle3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandMiddle3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandMiddle3-Matrix-animation-output-transform-array" count="32">
+
+0.999837 -0.018026 -0.001409 0.001500 0.000063 0.081397 -0.996682 3.241000 0.018080 0.996519 0.081384 0.000000 0.000000 0.000000 0.000000 1.000000
+0.999845 -0.017556 -0.001575 0.001500 0.000728 0.130407 -0.991460 3.241000 0.017611 0.991305 0.130399 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandMiddle3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandMiddle3-Interpolations">
+        <Name_array id="mixamorig_RightHandMiddle3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandMiddle3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandMiddle3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandMiddle3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandMiddle3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandMiddle3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandMiddle3-Matrix-animation-transform" target="mixamorig_RightHandMiddle3/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandRing1-anim" name="mixamorig_RightHandRing1">
+      <source id="mixamorig_RightHandRing1-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandRing1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandRing1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandRing1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandRing1-Matrix-animation-output-transform-array" count="32">
+
+0.999646 -0.007350 -0.025586 -1.709700 -0.017171 0.556420 -0.830723 14.370000 0.020343 0.830868 0.556097 -0.144700 0.000000 0.000000 0.000000 1.000000
+0.999174 -0.010784 -0.039170 -1.709700 -0.024534 0.608329 -0.793306 14.370000 0.032383 0.793612 0.607562 -0.144700 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandRing1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandRing1-Interpolations">
+        <Name_array id="mixamorig_RightHandRing1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandRing1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandRing1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandRing1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandRing1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandRing1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandRing1-Matrix-animation-transform" target="mixamorig_RightHandRing1/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandRing2-anim" name="mixamorig_RightHandRing2">
+      <source id="mixamorig_RightHandRing2-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandRing2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandRing2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandRing2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandRing2-Matrix-animation-output-transform-array" count="32">
+
+0.999928 -0.011989 -0.000505 0.001300 -0.003000 -0.208975 -0.977916 3.380800 0.011619 0.977847 -0.208996 -0.000000 0.000000 0.000000 0.000000 1.000000
+0.999932 -0.011695 -0.000479 0.001300 -0.001974 -0.128156 -0.991752 3.380800 0.011537 0.991685 -0.128170 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandRing2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandRing2-Interpolations">
+        <Name_array id="mixamorig_RightHandRing2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandRing2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandRing2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandRing2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandRing2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandRing2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandRing2-Matrix-animation-transform" target="mixamorig_RightHandRing2/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandRing3-anim" name="mixamorig_RightHandRing3">
+      <source id="mixamorig_RightHandRing3-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandRing3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandRing3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandRing3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandRing3-Matrix-animation-output-transform-array" count="32">
+
+0.999913 -0.010137 0.008493 -0.000200 0.006774 -0.158938 -0.987265 2.845800 0.011358 0.987237 -0.158856 0.000000 0.000000 0.000000 0.000000 1.000000
+0.999909 -0.010489 0.008530 -0.000200 0.007547 -0.090448 -0.995873 2.845800 0.011217 0.995846 -0.090361 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandRing3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandRing3-Interpolations">
+        <Name_array id="mixamorig_RightHandRing3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandRing3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandRing3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandRing3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandRing3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandRing3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandRing3-Matrix-animation-transform" target="mixamorig_RightHandRing3/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandPinky1-anim" name="mixamorig_RightHandPinky1">
+      <source id="mixamorig_RightHandPinky1-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandPinky1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandPinky1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandPinky1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandPinky1-Matrix-animation-output-transform-array" count="32">
+
+0.978041 0.165393 0.126812 -4.848000 0.034765 0.470471 -0.881730 14.008100 -0.205494 0.866777 0.454390 -0.068600 0.000000 0.000000 0.000000 1.000000
+0.984160 0.143233 0.104468 -4.848000 0.013063 0.529080 -0.848471 14.008100 -0.176801 0.836396 0.518828 -0.068600 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandPinky1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandPinky1-Interpolations">
+        <Name_array id="mixamorig_RightHandPinky1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandPinky1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandPinky1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandPinky1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandPinky1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandPinky1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandPinky1-Matrix-animation-transform" target="mixamorig_RightHandPinky1/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandPinky2-anim" name="mixamorig_RightHandPinky2">
+      <source id="mixamorig_RightHandPinky2-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandPinky2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandPinky2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandPinky2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandPinky2-Matrix-animation-output-transform-array" count="32">
+
+0.999427 0.007347 -0.033026 0.005700 -0.023301 -0.558293 -0.829317 2.332400 -0.024531 0.829612 -0.557802 0.000000 0.000000 0.000000 0.000000 1.000000
+0.999473 0.008925 -0.031222 0.005700 -0.023470 -0.465912 -0.884520 2.332400 -0.022441 0.884786 -0.465457 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandPinky2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandPinky2-Interpolations">
+        <Name_array id="mixamorig_RightHandPinky2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandPinky2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandPinky2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandPinky2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandPinky2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandPinky2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandPinky2-Matrix-animation-transform" target="mixamorig_RightHandPinky2/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightHandPinky3-anim" name="mixamorig_RightHandPinky3">
+      <source id="mixamorig_RightHandPinky3-Matrix-animation-input">
+        <float_array id="mixamorig_RightHandPinky3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandPinky3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandPinky3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightHandPinky3-Matrix-animation-output-transform-array" count="32">
+
+0.999794 0.013457 -0.015205 -0.003000 -0.018750 0.324446 -0.945718 2.529300 -0.007794 0.945809 0.324631 0.000000 0.000000 0.000000 0.000000 1.000000
+0.999813 0.013201 -0.014150 -0.003000 -0.018056 0.373349 -0.927515 2.529300 -0.006961 0.927597 0.373518 -0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandPinky3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightHandPinky3-Interpolations">
+        <Name_array id="mixamorig_RightHandPinky3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightHandPinky3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightHandPinky3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightHandPinky3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightHandPinky3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightHandPinky3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightHandPinky3-Matrix-animation-transform" target="mixamorig_RightHandPinky3/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftUpLeg-anim" name="mixamorig_LeftUpLeg">
+      <source id="mixamorig_LeftUpLeg-Matrix-animation-input">
+        <float_array id="mixamorig_LeftUpLeg-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftUpLeg-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftUpLeg-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftUpLeg-Matrix-animation-output-transform-array" count="32">
+
+-0.945308 0.202255 0.255901 13.280500 0.311534 0.327412 0.892047 -6.012500 0.096636 0.922981 -0.372515 -0.531400 0.000000 0.000000 0.000000 1.000000
+-0.970677 0.178908 0.160556 13.280500 0.212679 0.327837 0.920484 -6.012500 0.112045 0.927639 -0.356274 -0.531400 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftUpLeg-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftUpLeg-Interpolations">
+        <Name_array id="mixamorig_LeftUpLeg-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftUpLeg-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftUpLeg-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftUpLeg-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftUpLeg-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftUpLeg-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftUpLeg-Matrix-animation-transform" target="mixamorig_LeftUpLeg/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftLeg-anim" name="mixamorig_LeftLeg">
+      <source id="mixamorig_LeftLeg-Matrix-animation-input">
+        <float_array id="mixamorig_LeftLeg-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftLeg-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftLeg-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftLeg-Matrix-animation-output-transform-array" count="32">
+
+0.973385 -0.224728 -0.044923 0.000000 -0.111385 -0.635225 0.764253 52.183899 -0.200286 -0.738909 -0.643350 0.000000 0.000000 0.000000 0.000000 1.000000
+0.987236 -0.133437 -0.086944 0.000000 -0.012133 -0.607343 0.794347 52.183899 -0.158800 -0.783153 -0.601210 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftLeg-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftLeg-Interpolations">
+        <Name_array id="mixamorig_LeftLeg-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftLeg-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftLeg-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftLeg-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftLeg-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftLeg-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftLeg-Matrix-animation-transform" target="mixamorig_LeftLeg/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftFoot-anim" name="mixamorig_LeftFoot">
+      <source id="mixamorig_LeftFoot-Matrix-animation-input">
+        <float_array id="mixamorig_LeftFoot-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftFoot-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftFoot-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftFoot-Matrix-animation-output-transform-array" count="32">
+
+0.967331 -0.171027 -0.187140 0.000000 -0.066452 0.541307 -0.838195 50.974098 0.244654 0.823248 0.512257 0.000000 0.000000 0.000000 0.000000 1.000000
+0.981927 -0.152006 -0.112755 0.000000 -0.008143 0.561286 -0.827582 50.974098 0.189085 0.813543 0.549904 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftFoot-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftFoot-Interpolations">
+        <Name_array id="mixamorig_LeftFoot-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftFoot-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftFoot-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftFoot-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftFoot-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftFoot-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftFoot-Matrix-animation-transform" target="mixamorig_LeftFoot/matrix"/>
+    </animation>
+    <animation id="mixamorig_LeftToeBase-anim" name="mixamorig_LeftToeBase">
+      <source id="mixamorig_LeftToeBase-Matrix-animation-input">
+        <float_array id="mixamorig_LeftToeBase-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftToeBase-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftToeBase-Matrix-animation-output-transform">
+        <float_array id="mixamorig_LeftToeBase-Matrix-animation-output-transform-array" count="32">
+
+0.987687 0.072100 0.138838 0.000000 0.003968 0.875637 -0.482953 21.993700 -0.156393 0.477557 0.864570 0.000000 0.000000 0.000000 0.000000 1.000000
+0.987689 0.072069 0.138840 -0.000000 0.003995 0.875639 -0.482949 21.993700 -0.156380 0.477558 0.864571 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftToeBase-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_LeftToeBase-Interpolations">
+        <Name_array id="mixamorig_LeftToeBase-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_LeftToeBase-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_LeftToeBase-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_LeftToeBase-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_LeftToeBase-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_LeftToeBase-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_LeftToeBase-Matrix-animation-transform" target="mixamorig_LeftToeBase/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightUpLeg-anim" name="mixamorig_RightUpLeg">
+      <source id="mixamorig_RightUpLeg-Matrix-animation-input">
+        <float_array id="mixamorig_RightUpLeg-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightUpLeg-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightUpLeg-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightUpLeg-Matrix-animation-output-transform-array" count="32">
+
+-0.983987 -0.147996 0.099329 -13.293700 0.089453 0.071973 0.993387 -6.012500 -0.154167 0.986366 -0.057581 -0.531400 0.000000 0.000000 0.000000 1.000000
+-0.966498 -0.209913 0.147710 -13.293700 0.132507 0.084811 0.987547 -6.012500 -0.219826 0.974035 -0.054155 -0.531400 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightUpLeg-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightUpLeg-Interpolations">
+        <Name_array id="mixamorig_RightUpLeg-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightUpLeg-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightUpLeg-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightUpLeg-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightUpLeg-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightUpLeg-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightUpLeg-Matrix-animation-transform" target="mixamorig_RightUpLeg/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightLeg-anim" name="mixamorig_RightLeg">
+      <source id="mixamorig_RightLeg-Matrix-animation-input">
+        <float_array id="mixamorig_RightLeg-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightLeg-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightLeg-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightLeg-Matrix-animation-output-transform-array" count="32">
+
+0.999515 0.019470 -0.024312 -0.000000 0.031147 -0.621307 0.782948 52.153900 0.000139 -0.783325 -0.621612 -0.000000 0.000000 0.000000 0.000000 1.000000
+0.998768 0.014564 0.047445 0.000000 -0.029122 -0.602116 0.797877 52.153900 0.040187 -0.798276 -0.600950 -0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightLeg-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightLeg-Interpolations">
+        <Name_array id="mixamorig_RightLeg-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightLeg-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightLeg-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightLeg-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightLeg-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightLeg-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightLeg-Matrix-animation-transform" target="mixamorig_RightLeg/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightFoot-anim" name="mixamorig_RightFoot">
+      <source id="mixamorig_RightFoot-Matrix-animation-input">
+        <float_array id="mixamorig_RightFoot-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightFoot-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightFoot-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightFoot-Matrix-animation-output-transform-array" count="32">
+
+0.974978 0.064017 0.212884 0.000000 0.156404 0.482985 -0.861547 51.002602 -0.157974 0.873285 0.460887 0.000000 0.000000 0.000000 0.000000 1.000000
+0.980438 0.084603 0.177716 0.000000 0.115875 0.481753 -0.868612 51.002602 -0.159102 0.872214 0.462525 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightFoot-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightFoot-Interpolations">
+        <Name_array id="mixamorig_RightFoot-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightFoot-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightFoot-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightFoot-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightFoot-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightFoot-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightFoot-Matrix-animation-transform" target="mixamorig_RightFoot/matrix"/>
+    </animation>
+    <animation id="mixamorig_RightToeBase-anim" name="mixamorig_RightToeBase">
+      <source id="mixamorig_RightToeBase-Matrix-animation-input">
+        <float_array id="mixamorig_RightToeBase-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightToeBase-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightToeBase-Matrix-animation-output-transform">
+        <float_array id="mixamorig_RightToeBase-Matrix-animation-output-transform-array" count="32">
+
+0.988865 -0.066667 -0.133044 0.000000 -0.004121 0.881423 -0.472309 22.030199 0.148756 0.467598 0.871334 0.000000 0.000000 0.000000 0.000000 1.000000
+0.988866 -0.066664 -0.133042 -0.000000 -0.004124 0.881423 -0.472309 22.030199 0.148753 0.467599 0.871334 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightToeBase-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_RightToeBase-Interpolations">
+        <Name_array id="mixamorig_RightToeBase-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_RightToeBase-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_RightToeBase-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_RightToeBase-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_RightToeBase-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_RightToeBase-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_RightToeBase-Matrix-animation-transform" target="mixamorig_RightToeBase/matrix"/>
+    </animation>
+    <animation id="mixamorig_F_skirt1-anim" name="mixamorig_F_skirt1">
+      <source id="mixamorig_F_skirt1-Matrix-animation-input">
+        <float_array id="mixamorig_F_skirt1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_F_skirt1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_F_skirt1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_F_skirt1-Matrix-animation-output-transform-array" count="32">
+
+0.000000 1.000000 0.000000 -0.580400 -1.000000 0.000000 0.000000 -7.794500 -0.000000 0.000000 1.000000 17.818100 0.000000 0.000000 0.000000 1.000000
+0.000000 1.000000 -0.000000 -0.580400 -1.000000 0.000000 -0.000000 -7.794500 0.000000 0.000000 1.000000 17.818100 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_F_skirt1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_F_skirt1-Interpolations">
+        <Name_array id="mixamorig_F_skirt1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_F_skirt1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_F_skirt1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_F_skirt1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_F_skirt1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_F_skirt1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_F_skirt1-Matrix-animation-transform" target="mixamorig_F_skirt1/matrix"/>
+    </animation>
+    <animation id="mixamorig_F_skirt2-anim" name="mixamorig_F_skirt2">
+      <source id="mixamorig_F_skirt2-Matrix-animation-input">
+        <float_array id="mixamorig_F_skirt2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_F_skirt2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_F_skirt2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_F_skirt2-Matrix-animation-output-transform-array" count="32">
+
+1.000000 -0.000000 0.000000 27.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 -0.000000 0.000000 27.000000 0.000000 1.000000 0.000000 -0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_F_skirt2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_F_skirt2-Interpolations">
+        <Name_array id="mixamorig_F_skirt2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_F_skirt2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_F_skirt2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_F_skirt2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_F_skirt2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_F_skirt2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_F_skirt2-Matrix-animation-transform" target="mixamorig_F_skirt2/matrix"/>
+    </animation>
+    <animation id="mixamorig_F_skirt3-anim" name="mixamorig_F_skirt3">
+      <source id="mixamorig_F_skirt3-Matrix-animation-input">
+        <float_array id="mixamorig_F_skirt3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_F_skirt3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_F_skirt3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_F_skirt3-Matrix-animation-output-transform-array" count="32">
+
+1.000000 0.000000 -0.000000 27.000000 0.000000 1.000000 -0.000000 -0.000000 0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 -0.000000 0.000000 27.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_F_skirt3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_F_skirt3-Interpolations">
+        <Name_array id="mixamorig_F_skirt3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_F_skirt3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_F_skirt3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_F_skirt3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_F_skirt3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_F_skirt3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_F_skirt3-Matrix-animation-transform" target="mixamorig_F_skirt3/matrix"/>
+    </animation>
+    <animation id="mixamorig_L_A_skirt1-anim" name="mixamorig_L_A_skirt1">
+      <source id="mixamorig_L_A_skirt1-Matrix-animation-input">
+        <float_array id="mixamorig_L_A_skirt1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_A_skirt1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_A_skirt1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_L_A_skirt1-Matrix-animation-output-transform-array" count="32">
+
+0.122996 0.897244 0.424058 9.424300 -0.992244 0.103429 0.068955 -5.518500 0.018009 -0.429250 0.903006 15.946100 0.000000 0.000000 0.000000 1.000000
+0.122996 0.897244 0.424058 9.424300 -0.992244 0.103429 0.068955 -5.518500 0.018009 -0.429250 0.903006 15.946100 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_A_skirt1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_A_skirt1-Interpolations">
+        <Name_array id="mixamorig_L_A_skirt1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_A_skirt1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_L_A_skirt1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_L_A_skirt1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_L_A_skirt1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_L_A_skirt1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_L_A_skirt1-Matrix-animation-transform" target="mixamorig_L_A_skirt1/matrix"/>
+    </animation>
+    <animation id="mixamorig_L_A_skirt2-anim" name="mixamorig_L_A_skirt2">
+      <source id="mixamorig_L_A_skirt2-Matrix-animation-input">
+        <float_array id="mixamorig_L_A_skirt2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_A_skirt2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_A_skirt2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_L_A_skirt2-Matrix-animation-output-transform-array" count="32">
+
+1.000000 -0.000000 0.000000 27.000000 0.000000 1.000000 -0.000000 0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 0.000000 0.000000 27.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_A_skirt2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_A_skirt2-Interpolations">
+        <Name_array id="mixamorig_L_A_skirt2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_A_skirt2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_L_A_skirt2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_L_A_skirt2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_L_A_skirt2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_L_A_skirt2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_L_A_skirt2-Matrix-animation-transform" target="mixamorig_L_A_skirt2/matrix"/>
+    </animation>
+    <animation id="mixamorig_L_A_skirt3-anim" name="mixamorig_L_A_skirt3">
+      <source id="mixamorig_L_A_skirt3-Matrix-animation-input">
+        <float_array id="mixamorig_L_A_skirt3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_A_skirt3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_A_skirt3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_L_A_skirt3-Matrix-animation-output-transform-array" count="32">
+
+1.000000 -0.000000 0.000000 27.000000 0.000000 1.000000 0.000000 -0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 -0.000000 0.000000 27.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_A_skirt3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_A_skirt3-Interpolations">
+        <Name_array id="mixamorig_L_A_skirt3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_A_skirt3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_L_A_skirt3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_L_A_skirt3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_L_A_skirt3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_L_A_skirt3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_L_A_skirt3-Matrix-animation-transform" target="mixamorig_L_A_skirt3/matrix"/>
+    </animation>
+    <animation id="mixamorig_L_B_skirt1-anim" name="mixamorig_L_B_skirt1">
+      <source id="mixamorig_L_B_skirt1-Matrix-animation-input">
+        <float_array id="mixamorig_L_B_skirt1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_B_skirt1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_B_skirt1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_L_B_skirt1-Matrix-animation-output-transform-array" count="32">
+
+0.111759 0.000000 0.993735 18.448999 -0.993735 0.000000 0.111759 -4.216000 -0.000000 -1.000000 0.000000 -0.295100 0.000000 0.000000 0.000000 1.000000
+0.111759 0.000000 0.993735 18.448999 -0.993735 0.000000 0.111759 -4.216000 -0.000000 -1.000000 0.000000 -0.295100 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_B_skirt1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_B_skirt1-Interpolations">
+        <Name_array id="mixamorig_L_B_skirt1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_B_skirt1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_L_B_skirt1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_L_B_skirt1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_L_B_skirt1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_L_B_skirt1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_L_B_skirt1-Matrix-animation-transform" target="mixamorig_L_B_skirt1/matrix"/>
+    </animation>
+    <animation id="mixamorig_L_B_skirt2-anim" name="mixamorig_L_B_skirt2">
+      <source id="mixamorig_L_B_skirt2-Matrix-animation-input">
+        <float_array id="mixamorig_L_B_skirt2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_B_skirt2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_B_skirt2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_L_B_skirt2-Matrix-animation-output-transform-array" count="32">
+
+1.000000 0.000000 0.000000 27.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 -0.000000 -0.000000 27.000000 -0.000000 1.000000 -0.000000 0.000000 0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_B_skirt2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_B_skirt2-Interpolations">
+        <Name_array id="mixamorig_L_B_skirt2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_B_skirt2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_L_B_skirt2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_L_B_skirt2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_L_B_skirt2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_L_B_skirt2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_L_B_skirt2-Matrix-animation-transform" target="mixamorig_L_B_skirt2/matrix"/>
+    </animation>
+    <animation id="mixamorig_L_B_skirt3-anim" name="mixamorig_L_B_skirt3">
+      <source id="mixamorig_L_B_skirt3-Matrix-animation-input">
+        <float_array id="mixamorig_L_B_skirt3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_B_skirt3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_B_skirt3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_L_B_skirt3-Matrix-animation-output-transform-array" count="32">
+
+1.000000 0.000000 0.000000 27.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 0.000000 0.000000 27.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_B_skirt3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_B_skirt3-Interpolations">
+        <Name_array id="mixamorig_L_B_skirt3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_B_skirt3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_L_B_skirt3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_L_B_skirt3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_L_B_skirt3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_L_B_skirt3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_L_B_skirt3-Matrix-animation-transform" target="mixamorig_L_B_skirt3/matrix"/>
+    </animation>
+    <animation id="mixamorig_L_C_skirt1-anim" name="mixamorig_L_C_skirt1">
+      <source id="mixamorig_L_C_skirt1-Matrix-animation-input">
+        <float_array id="mixamorig_L_C_skirt1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_C_skirt1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_C_skirt1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_L_C_skirt1-Matrix-animation-output-transform-array" count="32">
+
+0.023939 -0.971540 0.235663 7.049900 -0.998221 -0.010354 0.058718 -6.149500 -0.054607 -0.236649 -0.970059 -15.762800 0.000000 0.000000 0.000000 1.000000
+0.023939 -0.971540 0.235663 7.049900 -0.998221 -0.010354 0.058718 -6.149500 -0.054607 -0.236649 -0.970059 -15.762800 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_C_skirt1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_C_skirt1-Interpolations">
+        <Name_array id="mixamorig_L_C_skirt1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_C_skirt1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_L_C_skirt1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_L_C_skirt1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_L_C_skirt1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_L_C_skirt1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_L_C_skirt1-Matrix-animation-transform" target="mixamorig_L_C_skirt1/matrix"/>
+    </animation>
+    <animation id="mixamorig_L_C_skirt2-anim" name="mixamorig_L_C_skirt2">
+      <source id="mixamorig_L_C_skirt2-Matrix-animation-input">
+        <float_array id="mixamorig_L_C_skirt2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_C_skirt2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_C_skirt2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_L_C_skirt2-Matrix-animation-output-transform-array" count="32">
+
+1.000000 0.000000 -0.000000 28.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 -0.000000 -0.000000 28.000000 0.000000 1.000000 -0.000000 0.000000 -0.000000 -0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_C_skirt2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_C_skirt2-Interpolations">
+        <Name_array id="mixamorig_L_C_skirt2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_C_skirt2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_L_C_skirt2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_L_C_skirt2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_L_C_skirt2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_L_C_skirt2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_L_C_skirt2-Matrix-animation-transform" target="mixamorig_L_C_skirt2/matrix"/>
+    </animation>
+    <animation id="mixamorig_L_C_skirt3-anim" name="mixamorig_L_C_skirt3">
+      <source id="mixamorig_L_C_skirt3-Matrix-animation-input">
+        <float_array id="mixamorig_L_C_skirt3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_C_skirt3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_C_skirt3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_L_C_skirt3-Matrix-animation-output-transform-array" count="32">
+
+1.000000 -0.000000 0.000000 28.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 0.000000 -0.000000 28.000000 0.000000 1.000000 -0.000000 0.000000 -0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_C_skirt3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_L_C_skirt3-Interpolations">
+        <Name_array id="mixamorig_L_C_skirt3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_L_C_skirt3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_L_C_skirt3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_L_C_skirt3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_L_C_skirt3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_L_C_skirt3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_L_C_skirt3-Matrix-animation-transform" target="mixamorig_L_C_skirt3/matrix"/>
+    </animation>
+    <animation id="mixamorig_R_A_skirt1-anim" name="mixamorig_R_A_skirt1">
+      <source id="mixamorig_R_A_skirt1-Matrix-animation-input">
+        <float_array id="mixamorig_R_A_skirt1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_A_skirt1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_A_skirt1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_R_A_skirt1-Matrix-animation-output-transform-array" count="32">
+
+-0.122996 0.897244 -0.424058 -9.424300 -0.992244 -0.103429 0.068955 -5.518900 0.018009 0.429250 0.903006 15.946100 0.000000 0.000000 0.000000 1.000000
+-0.122996 0.897244 -0.424058 -9.424300 -0.992244 -0.103429 0.068955 -5.518900 0.018009 0.429250 0.903006 15.946100 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_A_skirt1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_A_skirt1-Interpolations">
+        <Name_array id="mixamorig_R_A_skirt1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_A_skirt1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_R_A_skirt1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_R_A_skirt1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_R_A_skirt1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_R_A_skirt1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_R_A_skirt1-Matrix-animation-transform" target="mixamorig_R_A_skirt1/matrix"/>
+    </animation>
+    <animation id="mixamorig_R_A_skirt2-anim" name="mixamorig_R_A_skirt2">
+      <source id="mixamorig_R_A_skirt2-Matrix-animation-input">
+        <float_array id="mixamorig_R_A_skirt2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_A_skirt2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_A_skirt2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_R_A_skirt2-Matrix-animation-output-transform-array" count="32">
+
+1.000000 -0.000000 -0.000000 26.999599 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000100 0.000000 0.000000 0.000000 1.000000
+1.000000 0.000000 0.000000 26.999599 0.000000 1.000000 0.000000 -0.000000 0.000000 0.000000 1.000000 0.000100 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_A_skirt2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_A_skirt2-Interpolations">
+        <Name_array id="mixamorig_R_A_skirt2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_A_skirt2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_R_A_skirt2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_R_A_skirt2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_R_A_skirt2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_R_A_skirt2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_R_A_skirt2-Matrix-animation-transform" target="mixamorig_R_A_skirt2/matrix"/>
+    </animation>
+    <animation id="mixamorig_R_A_skirt3-anim" name="mixamorig_R_A_skirt3">
+      <source id="mixamorig_R_A_skirt3-Matrix-animation-input">
+        <float_array id="mixamorig_R_A_skirt3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_A_skirt3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_A_skirt3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_R_A_skirt3-Matrix-animation-output-transform-array" count="32">
+
+1.000000 -0.000000 -0.000000 27.000000 -0.000000 1.000000 0.000000 -0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 -0.000000 -0.000000 27.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_A_skirt3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_A_skirt3-Interpolations">
+        <Name_array id="mixamorig_R_A_skirt3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_A_skirt3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_R_A_skirt3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_R_A_skirt3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_R_A_skirt3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_R_A_skirt3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_R_A_skirt3-Matrix-animation-transform" target="mixamorig_R_A_skirt3/matrix"/>
+    </animation>
+    <animation id="mixamorig_R_B_skirt1-anim" name="mixamorig_R_B_skirt1">
+      <source id="mixamorig_R_B_skirt1-Matrix-animation-input">
+        <float_array id="mixamorig_R_B_skirt1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_B_skirt1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_B_skirt1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_R_B_skirt1-Matrix-animation-output-transform-array" count="32">
+
+-0.111759 -0.000000 -0.993735 -18.448900 -0.993735 -0.000000 0.111759 -4.216300 -0.000000 1.000000 0.000000 -0.295100 0.000000 0.000000 0.000000 1.000000
+-0.111759 0.000000 -0.993735 -18.448900 -0.993735 -0.000000 0.111759 -4.216300 0.000000 1.000000 -0.000000 -0.295100 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_B_skirt1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_B_skirt1-Interpolations">
+        <Name_array id="mixamorig_R_B_skirt1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_B_skirt1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_R_B_skirt1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_R_B_skirt1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_R_B_skirt1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_R_B_skirt1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_R_B_skirt1-Matrix-animation-transform" target="mixamorig_R_B_skirt1/matrix"/>
+    </animation>
+    <animation id="mixamorig_R_B_skirt2-anim" name="mixamorig_R_B_skirt2">
+      <source id="mixamorig_R_B_skirt2-Matrix-animation-input">
+        <float_array id="mixamorig_R_B_skirt2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_B_skirt2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_B_skirt2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_R_B_skirt2-Matrix-animation-output-transform-array" count="32">
+
+1.000000 0.000000 0.000000 26.999701 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000100 0.000000 0.000000 0.000000 1.000000
+1.000000 -0.000000 -0.000000 26.999701 0.000000 1.000000 0.000000 0.000000 0.000000 -0.000000 1.000000 0.000100 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_B_skirt2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_B_skirt2-Interpolations">
+        <Name_array id="mixamorig_R_B_skirt2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_B_skirt2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_R_B_skirt2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_R_B_skirt2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_R_B_skirt2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_R_B_skirt2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_R_B_skirt2-Matrix-animation-transform" target="mixamorig_R_B_skirt2/matrix"/>
+    </animation>
+    <animation id="mixamorig_R_B_skirt3-anim" name="mixamorig_R_B_skirt3">
+      <source id="mixamorig_R_B_skirt3-Matrix-animation-input">
+        <float_array id="mixamorig_R_B_skirt3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_B_skirt3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_B_skirt3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_R_B_skirt3-Matrix-animation-output-transform-array" count="32">
+
+1.000000 -0.000000 0.000000 26.999901 0.000000 1.000000 0.000000 0.000000 0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 0.000000 -0.000000 26.999901 0.000000 1.000000 0.000000 0.000000 -0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_B_skirt3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_B_skirt3-Interpolations">
+        <Name_array id="mixamorig_R_B_skirt3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_B_skirt3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_R_B_skirt3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_R_B_skirt3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_R_B_skirt3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_R_B_skirt3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_R_B_skirt3-Matrix-animation-transform" target="mixamorig_R_B_skirt3/matrix"/>
+    </animation>
+    <animation id="mixamorig_R_bag1-anim" name="mixamorig_R_bag1">
+      <source id="mixamorig_R_bag1-Matrix-animation-input">
+        <float_array id="mixamorig_R_bag1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_bag1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_bag1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_R_bag1-Matrix-animation-output-transform-array" count="32">
+
+0.973707 -0.116729 -0.195624 6.766800 -0.197277 -0.002660 -0.980344 2.209500 0.113914 0.993160 -0.025618 5.400800 0.000000 0.000000 0.000000 1.000000
+0.973707 -0.116729 -0.195624 6.766800 -0.197277 -0.002660 -0.980344 2.209500 0.113914 0.993160 -0.025618 5.400800 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_bag1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_bag1-Interpolations">
+        <Name_array id="mixamorig_R_bag1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_bag1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_R_bag1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_R_bag1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_R_bag1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_R_bag1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_R_bag1-Matrix-animation-transform" target="mixamorig_R_bag1/matrix"/>
+    </animation>
+    <animation id="mixamorig_R_C_skirt1-anim" name="mixamorig_R_C_skirt1">
+      <source id="mixamorig_R_C_skirt1-Matrix-animation-input">
+        <float_array id="mixamorig_R_C_skirt1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_C_skirt1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_C_skirt1-Matrix-animation-output-transform">
+        <float_array id="mixamorig_R_C_skirt1-Matrix-animation-output-transform-array" count="32">
+
+-0.023939 -0.971540 -0.235663 -7.049900 -0.998221 0.010354 0.058718 -6.149900 -0.054607 0.236649 -0.970059 -15.762700 0.000000 0.000000 0.000000 1.000000
+-0.023939 -0.971540 -0.235663 -7.049900 -0.998221 0.010354 0.058718 -6.149900 -0.054607 0.236649 -0.970059 -15.762700 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_C_skirt1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_C_skirt1-Interpolations">
+        <Name_array id="mixamorig_R_C_skirt1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_C_skirt1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_R_C_skirt1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_R_C_skirt1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_R_C_skirt1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_R_C_skirt1-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_R_C_skirt1-Matrix-animation-transform" target="mixamorig_R_C_skirt1/matrix"/>
+    </animation>
+    <animation id="mixamorig_R_C_skirt2-anim" name="mixamorig_R_C_skirt2">
+      <source id="mixamorig_R_C_skirt2-Matrix-animation-input">
+        <float_array id="mixamorig_R_C_skirt2-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_C_skirt2-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_C_skirt2-Matrix-animation-output-transform">
+        <float_array id="mixamorig_R_C_skirt2-Matrix-animation-output-transform-array" count="32">
+
+1.000000 0.000000 0.000000 27.999701 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 -0.000000 0.000000 27.999701 -0.000000 1.000000 0.000000 0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_C_skirt2-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_C_skirt2-Interpolations">
+        <Name_array id="mixamorig_R_C_skirt2-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_C_skirt2-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_R_C_skirt2-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_R_C_skirt2-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_R_C_skirt2-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_R_C_skirt2-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_R_C_skirt2-Matrix-animation-transform" target="mixamorig_R_C_skirt2/matrix"/>
+    </animation>
+    <animation id="mixamorig_R_C_skirt3-anim" name="mixamorig_R_C_skirt3">
+      <source id="mixamorig_R_C_skirt3-Matrix-animation-input">
+        <float_array id="mixamorig_R_C_skirt3-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_C_skirt3-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_C_skirt3-Matrix-animation-output-transform">
+        <float_array id="mixamorig_R_C_skirt3-Matrix-animation-output-transform-array" count="32">
+
+1.000000 -0.000000 0.000000 27.999901 0.000000 1.000000 -0.000000 -0.000000 -0.000000 -0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000
+1.000000 0.000000 -0.000000 27.999901 0.000000 1.000000 0.000000 0.000000 -0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_C_skirt3-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="mixamorig_R_C_skirt3-Interpolations">
+        <Name_array id="mixamorig_R_C_skirt3-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#mixamorig_R_C_skirt3-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="mixamorig_R_C_skirt3-Matrix-animation-transform">
+        <input semantic="INPUT" source="#mixamorig_R_C_skirt3-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#mixamorig_R_C_skirt3-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#mixamorig_R_C_skirt3-Interpolations"/>
+      </sampler>
+      <channel source="#mixamorig_R_C_skirt3-Matrix-animation-transform" target="mixamorig_R_C_skirt3/matrix"/>
+    </animation>
+    <animation id="L_horn1-anim" name="L_horn1">
+      <source id="L_horn1-Matrix-animation-input">
+        <float_array id="L_horn1-Matrix-animation-input-array" count="2">
+
+0.000000 0.033333</float_array>
+        <technique_common>
+          <accessor source="#L_horn1-Matrix-animation-input-array" count="2">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="L_horn1-Matrix-animation-output-transform">
+        <float_array id="L_horn1-Matrix-animation-output-transform-array" count="32">
+
+0.406838 0.870118 0.278168 18.209600 -0.904436 0.426462 -0.011194 1.020800 -0.128368 -0.247031 0.960467 -3.906100 0.000000 0.000000 0.000000 1.000000
+0.406838 0.870118 0.278168 18.209600 -0.904436 0.426462 -0.011194 1.020800 -0.128368 -0.247031 0.960467 -3.906100 0.000000 0.000000 0.000000 1.000000</float_array>
+        <technique_common>
+          <accessor source="#L_horn1-Matrix-animation-output-transform-array" count="2" stride="16">
+            <param type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="L_horn1-Interpolations">
+        <Name_array id="L_horn1-Interpolations-array" count="2">
+ LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#L_horn1-Interpolations-array" count="2">
+            <param type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="L_horn1-Matrix-animation-transform">
+        <input semantic="INPUT" source="#L_horn1-Matrix-animation-input"/>
+        <input semantic="OUTPUT" source="#L_horn1-Matrix-animation-output-transform"/>
+        <input semantic="INTERPOLATION" source="#L_horn1-Interpolations"/>
+      </sampler>
+      <channel source="#L_horn1-Matrix-animation-transform" target="L_horn1/matrix"/>
+    </animation>
+  </library_animations>
+  <library_visual_scenes>
+    <visual_scene id="RootNode" name="RootNode">
+      <node id="mixamorig_Hips" name="mixamorig_Hips" sid="mixamorig_Hips" type="JOINT">
+        <matrix sid="matrix">0.518138 -0.373706 -0.769335 4.574165 0.120157 0.922379 -0.367123 175.057327 0.846815 0.097779 0.522823 -2.760322 0.000000 0.000000 0.000000 1.000000</matrix>
+        <node id="mixamorig_Spine" name="mixamorig_Spine" sid="mixamorig_Spine" type="JOINT">
+          <matrix sid="matrix">0.987609 0.156703 -0.008489 -0.006600 -0.151204 0.935680 -0.318811 10.822600 -0.042016 0.316144 0.947780 -0.430700 0.000000 0.000000 0.000000 1.000000</matrix>
+          <node id="mixamorig_Spine1" name="mixamorig_Spine1" sid="mixamorig_Spine1" type="JOINT">
+            <matrix sid="matrix">0.989883 0.139510 0.025851 0.000000 -0.133772 0.978387 -0.157686 12.655100 -0.047291 0.152632 0.987151 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+            <node id="mixamorig_Spine2" name="mixamorig_Spine2" sid="mixamorig_Spine2" type="JOINT">
+              <matrix sid="matrix">0.990932 0.131130 0.029307 0.000000 -0.126121 0.982964 -0.133696 14.459700 -0.046339 0.128787 0.990589 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              <node id="mixamorig_Neck" name="mixamorig_Neck" sid="mixamorig_Neck" type="JOINT">
+                <matrix sid="matrix">0.923277 -0.144614 0.355874 0.000000 -0.029718 0.896763 0.441512 16.135700 -0.382983 -0.418214 0.823663 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                <node id="mixamorig_Head" name="mixamorig_Head" sid="mixamorig_Head" type="JOINT">
+                  <matrix sid="matrix">0.896156 0.165078 0.411890 0.000000 -0.145706 0.986229 -0.078249 6.791300 -0.419135 0.010108 0.907868 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                  <node id="mixamorig_HeadTop_End" name="mixamorig_HeadTop_End" sid="mixamorig_HeadTop_End" type="JOINT">
+                    <matrix sid="matrix">1.000000 -0.000000 -0.000000 0.000000 0.000000 1.000000 -0.000000 23.104200 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                  </node>
+                  <node id="mixamorig_LeftEye" name="mixamorig_LeftEye" sid="mixamorig_LeftEye" type="JOINT">
+                    <matrix sid="matrix">0.999998 0.002177 0.000049 3.472400 -0.002171 0.994739 0.102423 10.009700 0.000174 -0.102423 0.994741 8.325400 0.000000 0.000000 0.000000 1.000000</matrix>
+                  </node>
+                  <node id="mixamorig_RightEye" name="mixamorig_RightEye" sid="mixamorig_RightEye" type="JOINT">
+                    <matrix sid="matrix">0.999998 0.002177 0.000049 -3.952600 -0.002171 0.994739 0.102423 9.961800 0.000174 -0.102423 0.994741 8.315900 0.000000 0.000000 0.000000 1.000000</matrix>
+                  </node>
+                </node>
+              </node>
+              <node id="mixamorig_LeftShoulder" name="mixamorig_LeftShoulder" sid="mixamorig_LeftShoulder" type="JOINT">
+                <matrix sid="matrix">0.316561 0.695611 -0.644914 11.022900 -0.018112 -0.675322 -0.737300 13.234400 -0.948399 0.245081 -0.201182 -1.554100 0.000000 0.000000 0.000000 1.000000</matrix>
+                <node id="mixamorig_LeftArm" name="mixamorig_LeftArm" sid="mixamorig_LeftArm" type="JOINT">
+                  <matrix sid="matrix">0.728442 0.077571 -0.680702 0.000000 0.088430 0.974612 0.205696 16.551600 0.679377 -0.210032 0.703089 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                  <node id="mixamorig_LeftForeArm" name="mixamorig_LeftForeArm" sid="mixamorig_LeftForeArm" type="JOINT">
+                    <matrix sid="matrix">-0.314473 -0.949211 0.010236 0.000000 0.949256 -0.314401 0.008086 27.198299 -0.004457 0.012259 0.999915 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                    <node id="mixamorig_LeftHand" name="mixamorig_LeftHand" sid="mixamorig_LeftHand" type="JOINT">
+                      <matrix sid="matrix">0.912821 -0.387913 -0.127596 0.000000 0.371664 0.659747 0.653146 21.535400 -0.169182 -0.643629 0.746405 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                      <node id="mixamorig_LeftHandThumb1" name="mixamorig_LeftHandThumb1" sid="mixamorig_LeftHandThumb1" type="JOINT">
+                        <matrix sid="matrix">0.879807 -0.221542 0.420546 -1.897200 0.355559 0.893914 -0.272940 4.226700 -0.315464 0.389663 0.865243 4.940900 0.000000 0.000000 0.000000 1.000000</matrix>
+                        <node id="mixamorig_LeftHandThumb2" name="mixamorig_LeftHandThumb2" sid="mixamorig_LeftHandThumb2" type="JOINT">
+                          <matrix sid="matrix">0.979006 0.170741 -0.111332 -0.788100 -0.183596 0.975921 -0.117770 4.746200 0.088543 0.135738 0.986780 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                          <node id="mixamorig_LeftHandThumb3" name="mixamorig_LeftHandThumb3" sid="mixamorig_LeftHandThumb3" type="JOINT">
+                            <matrix sid="matrix">0.963103 0.268385 0.020050 -0.314700 -0.268753 0.963028 0.018671 7.341200 -0.014297 -0.023371 0.999625 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            <node id="mixamorig_LeftHandThumb4" name="mixamorig_LeftHandThumb4" sid="mixamorig_LeftHandThumb4" type="JOINT">
+                              <matrix sid="matrix">1.000000 0.000000 -0.000000 1.102800 -0.000000 1.000000 0.000000 7.800700 -0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node id="mixamorig_LeftHandIndex1" name="mixamorig_LeftHandIndex1" sid="mixamorig_LeftHandIndex1" type="JOINT">
+                        <matrix sid="matrix">0.958890 0.162172 0.232874 -2.959300 -0.143759 0.985130 -0.094088 12.531300 -0.244669 0.056742 0.967945 1.173500 0.000000 0.000000 0.000000 1.000000</matrix>
+                        <node id="mixamorig_LeftHandIndex2" name="mixamorig_LeftHandIndex2" sid="mixamorig_LeftHandIndex2" type="JOINT">
+                          <matrix sid="matrix">0.998401 0.045733 -0.033214 -0.006300 -0.050761 0.467069 -0.882763 8.298100 -0.024858 0.883038 0.468644 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                          <node id="mixamorig_LeftHandIndex3" name="mixamorig_LeftHandIndex3" sid="mixamorig_LeftHandIndex3" type="JOINT">
+                            <matrix sid="matrix">0.999648 0.024964 -0.008973 0.002000 -0.026463 0.914852 -0.402921 4.720200 -0.001849 0.403017 0.915191 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            <node id="mixamorig_LeftHandIndex4" name="mixamorig_LeftHandIndex4" sid="mixamorig_LeftHandIndex4" type="JOINT">
+                              <matrix sid="matrix">1.000000 0.000000 -0.000000 0.000600 0.000000 1.000000 0.000000 7.237800 -0.000000 -0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node id="mixamorig_LeftHandMiddle1" name="mixamorig_LeftHandMiddle1" sid="mixamorig_LeftHandMiddle1" type="JOINT">
+                        <matrix sid="matrix">0.969952 0.235943 0.059362 2.392400 -0.184355 0.871976 -0.453509 14.502300 -0.158764 0.428938 0.889273 -0.033500 0.000000 0.000000 0.000000 1.000000</matrix>
+                        <node id="mixamorig_LeftHandMiddle2" name="mixamorig_LeftHandMiddle2" sid="mixamorig_LeftHandMiddle2" type="JOINT">
+                          <matrix sid="matrix">0.997195 0.062528 -0.041135 0.002700 -0.064512 0.439405 -0.895970 8.151000 -0.037948 0.896110 0.442206 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                          <node id="mixamorig_LeftHandMiddle3" name="mixamorig_LeftHandMiddle3" sid="mixamorig_LeftHandMiddle3" type="JOINT">
+                            <matrix sid="matrix">0.999081 0.042005 -0.008575 -0.001100 -0.038128 0.779128 -0.625704 4.559900 -0.019601 0.625456 0.780013 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            <node id="mixamorig_LeftHandMiddle4" name="mixamorig_LeftHandMiddle4" sid="mixamorig_LeftHandMiddle4" type="JOINT">
+                              <matrix sid="matrix">1.000000 -0.000000 0.000000 0.000100 -0.000000 1.000000 0.000000 7.733900 -0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node id="mixamorig_LeftHandRing1" name="mixamorig_LeftHandRing1" sid="mixamorig_LeftHandRing1" type="JOINT">
+                        <matrix sid="matrix">0.956975 0.272691 -0.099185 7.071600 -0.256776 0.636634 -0.727162 14.022100 -0.135146 0.721344 0.679263 -0.727900 0.000000 0.000000 0.000000 1.000000</matrix>
+                        <node id="mixamorig_LeftHandRing2" name="mixamorig_LeftHandRing2" sid="mixamorig_LeftHandRing2" type="JOINT">
+                          <matrix sid="matrix">0.997925 0.052822 -0.036830 0.005000 -0.054685 0.393161 -0.917842 6.963300 -0.034002 0.917951 0.395233 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                          <node id="mixamorig_LeftHandRing3" name="mixamorig_LeftHandRing3" sid="mixamorig_LeftHandRing3" type="JOINT">
+                            <matrix sid="matrix">0.998772 0.047222 -0.015019 -0.001000 -0.045953 0.769232 -0.637315 3.798600 -0.018542 0.637222 0.770457 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            <node id="mixamorig_LeftHandRing4" name="mixamorig_LeftHandRing4" sid="mixamorig_LeftHandRing4" type="JOINT">
+                              <matrix sid="matrix">1.000000 -0.000000 0.000000 -0.002900 0.000000 1.000000 0.000000 6.663500 0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node id="mixamorig_LeftHandPinky1" name="mixamorig_LeftHandPinky1" sid="mixamorig_LeftHandPinky1" type="JOINT">
+                        <matrix sid="matrix">0.941057 0.168520 -0.293281 10.979800 -0.331983 0.626283 -0.705377 13.885000 0.064807 0.761164 0.645313 0.589700 0.000000 0.000000 0.000000 1.000000</matrix>
+                        <node id="mixamorig_LeftHandPinky2" name="mixamorig_LeftHandPinky2" sid="mixamorig_LeftHandPinky2" type="JOINT">
+                          <matrix sid="matrix">0.997160 0.056052 -0.050291 0.000300 -0.054747 0.081027 -0.995207 3.975700 -0.051708 0.995135 0.083865 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                          <node id="mixamorig_LeftHandPinky3" name="mixamorig_LeftHandPinky3" sid="mixamorig_LeftHandPinky3" type="JOINT">
+                            <matrix sid="matrix">0.999010 0.041766 -0.015324 -0.000400 -0.039772 0.684096 -0.728307 2.799700 -0.019935 0.728195 0.685080 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            <node id="mixamorig_LeftHandPinky4" name="mixamorig_LeftHandPinky4" sid="mixamorig_LeftHandPinky4" type="JOINT">
+                              <matrix sid="matrix">1.000000 -0.000000 -0.000000 -0.000400 -0.000000 1.000000 0.000000 5.669600 -0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+              <node id="mixamorig_RightShoulder" name="mixamorig_RightShoulder" sid="mixamorig_RightShoulder" type="JOINT">
+                <matrix sid="matrix">-0.135552 -0.884242 0.446925 -10.882400 -0.040912 -0.445708 -0.894243 13.272500 0.989925 -0.139501 0.024241 -1.553300 0.000000 0.000000 0.000000 1.000000</matrix>
+                <node id="mixamorig_RightArm" name="mixamorig_RightArm" sid="mixamorig_RightArm" type="JOINT">
+                  <matrix sid="matrix">0.713158 -0.192507 0.674052 0.000000 0.637503 0.578004 -0.509413 16.507099 -0.291539 0.793003 0.534931 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                  <node id="mixamorig_RightForeArm" name="mixamorig_RightForeArm" sid="mixamorig_RightForeArm" type="JOINT">
+                    <matrix sid="matrix">-0.351656 0.934677 -0.052122 0.000000 -0.923960 -0.355494 -0.141146 19.953800 -0.150455 -0.001476 0.988616 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                    <node id="mixamorig_RightHand" name="mixamorig_RightHand" sid="mixamorig_RightHand" type="JOINT">
+                      <matrix sid="matrix">0.975266 0.172909 0.137694 0.000000 -0.192848 0.970034 0.147796 28.810400 -0.108012 -0.170695 0.979386 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                      <node id="mixamorig_RightHandThumb1" name="mixamorig_RightHandThumb1" sid="mixamorig_RightHandThumb1" type="JOINT">
+                        <matrix sid="matrix">0.714138 0.637377 -0.289410 1.539600 -0.694064 0.698478 -0.174367 3.801100 0.091009 0.325391 0.941190 1.972600 0.000000 0.000000 0.000000 1.000000</matrix>
+                        <node id="mixamorig_RightHandThumb2" name="mixamorig_RightHandThumb2" sid="mixamorig_RightHandThumb2" type="JOINT">
+                          <matrix sid="matrix">0.869849 -0.466880 0.159330 0.267800 0.479734 0.875834 -0.052632 4.847300 -0.114974 0.122218 0.985821 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                          <node id="mixamorig_RightHandThumb3" name="mixamorig_RightHandThumb3" sid="mixamorig_RightHandThumb3" type="JOINT">
+                            <matrix sid="matrix">0.809135 -0.586149 -0.041590 -0.081100 0.587276 0.804198 0.091499 4.705100 -0.020186 -0.098460 0.994936 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            <node id="mixamorig_RightHandThumb4" name="mixamorig_RightHandThumb4" sid="mixamorig_RightHandThumb4" type="JOINT">
+                              <matrix sid="matrix">1.000000 0.000000 -0.000000 -0.186700 0.000000 1.000000 0.000000 5.139200 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node id="mixamorig_RightHandIndex1" name="mixamorig_RightHandIndex1" sid="mixamorig_RightHandIndex1" type="JOINT">
+                        <matrix sid="matrix">0.945373 -0.079091 -0.316250 5.382800 -0.129383 0.799409 -0.586691 13.307100 0.299215 0.595559 0.745506 -0.085200 0.000000 0.000000 0.000000 1.000000</matrix>
+                        <node id="mixamorig_RightHandIndex2" name="mixamorig_RightHandIndex2" sid="mixamorig_RightHandIndex2" type="JOINT">
+                          <matrix sid="matrix">0.999846 0.012553 0.012234 -0.001700 0.016289 -0.407548 -0.913039 3.921400 -0.006476 0.913098 -0.407690 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                          <node id="mixamorig_RightHandIndex3" name="mixamorig_RightHandIndex3" sid="mixamorig_RightHandIndex3" type="JOINT">
+                            <matrix sid="matrix">0.999911 0.005988 0.011890 -0.000300 0.011393 0.077221 -0.996949 3.178700 -0.006888 0.996996 0.077146 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            <node id="mixamorig_RightHandIndex4" name="mixamorig_RightHandIndex4" sid="mixamorig_RightHandIndex4" type="JOINT">
+                              <matrix sid="matrix">1.000000 0.000000 0.000000 0.001900 -0.000000 1.000000 -0.000000 5.164400 -0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node id="mixamorig_RightHandMiddle1" name="mixamorig_RightHandMiddle1" sid="mixamorig_RightHandMiddle1" type="JOINT">
+                        <matrix sid="matrix">0.989983 -0.018268 -0.139997 1.695500 -0.098632 0.620002 -0.778376 14.609200 0.101018 0.784388 0.611990 0.049800 0.000000 0.000000 0.000000 1.000000</matrix>
+                        <node id="mixamorig_RightHandMiddle2" name="mixamorig_RightHandMiddle2" sid="mixamorig_RightHandMiddle2" type="JOINT">
+                          <matrix sid="matrix">0.999727 -0.019729 0.012506 -0.000200 0.006344 -0.285950 -0.958223 4.318300 0.022481 0.958041 -0.285747 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                          <node id="mixamorig_RightHandMiddle3" name="mixamorig_RightHandMiddle3" sid="mixamorig_RightHandMiddle3" type="JOINT">
+                            <matrix sid="matrix">0.999837 -0.018026 -0.001409 0.001500 0.000063 0.081397 -0.996682 3.241000 0.018080 0.996519 0.081384 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            <node id="mixamorig_RightHandMiddle4" name="mixamorig_RightHandMiddle4" sid="mixamorig_RightHandMiddle4" type="JOINT">
+                              <matrix sid="matrix">1.000000 -0.000000 -0.000000 -0.001900 0.000000 1.000000 -0.000000 4.879200 0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node id="mixamorig_RightHandRing1" name="mixamorig_RightHandRing1" sid="mixamorig_RightHandRing1" type="JOINT">
+                        <matrix sid="matrix">0.999646 -0.007350 -0.025586 -1.709700 -0.017171 0.556420 -0.830723 14.370000 0.020343 0.830868 0.556097 -0.144700 0.000000 0.000000 0.000000 1.000000</matrix>
+                        <node id="mixamorig_RightHandRing2" name="mixamorig_RightHandRing2" sid="mixamorig_RightHandRing2" type="JOINT">
+                          <matrix sid="matrix">0.999928 -0.011989 -0.000505 0.001300 -0.003000 -0.208975 -0.977916 3.380800 0.011619 0.977847 -0.208996 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                          <node id="mixamorig_RightHandRing3" name="mixamorig_RightHandRing3" sid="mixamorig_RightHandRing3" type="JOINT">
+                            <matrix sid="matrix">0.999913 -0.010137 0.008493 -0.000200 0.006774 -0.158938 -0.987265 2.845800 0.011358 0.987237 -0.158856 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            <node id="mixamorig_RightHandRing4" name="mixamorig_RightHandRing4" sid="mixamorig_RightHandRing4" type="JOINT">
+                              <matrix sid="matrix">1.000000 0.000000 0.000000 -0.001200 0.000000 1.000000 0.000000 4.826200 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node id="mixamorig_RightHandPinky1" name="mixamorig_RightHandPinky1" sid="mixamorig_RightHandPinky1" type="JOINT">
+                        <matrix sid="matrix">0.978041 0.165393 0.126812 -4.848000 0.034765 0.470471 -0.881730 14.008100 -0.205494 0.866777 0.454390 -0.068600 0.000000 0.000000 0.000000 1.000000</matrix>
+                        <node id="mixamorig_RightHandPinky2" name="mixamorig_RightHandPinky2" sid="mixamorig_RightHandPinky2" type="JOINT">
+                          <matrix sid="matrix">0.999427 0.007347 -0.033026 0.005700 -0.023301 -0.558293 -0.829317 2.332400 -0.024531 0.829612 -0.557802 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                          <node id="mixamorig_RightHandPinky3" name="mixamorig_RightHandPinky3" sid="mixamorig_RightHandPinky3" type="JOINT">
+                            <matrix sid="matrix">0.999794 0.013457 -0.015205 -0.003000 -0.018750 0.324446 -0.945718 2.529300 -0.007794 0.945809 0.324631 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            <node id="mixamorig_RightHandPinky4" name="mixamorig_RightHandPinky4" sid="mixamorig_RightHandPinky4" type="JOINT">
+                              <matrix sid="matrix">1.000000 -0.000000 -0.000000 -0.002700 0.000000 1.000000 -0.000000 3.288700 0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node id="mixamorig_LeftUpLeg" name="mixamorig_LeftUpLeg" sid="mixamorig_LeftUpLeg" type="JOINT">
+          <matrix sid="matrix">-0.945308 0.202255 0.255901 13.280500 0.311534 0.327412 0.892047 -6.012500 0.096636 0.922981 -0.372515 -0.531400 0.000000 0.000000 0.000000 1.000000</matrix>
+          <node id="mixamorig_LeftLeg" name="mixamorig_LeftLeg" sid="mixamorig_LeftLeg" type="JOINT">
+            <matrix sid="matrix">0.973385 -0.224728 -0.044923 0.000000 -0.111385 -0.635225 0.764253 52.183899 -0.200286 -0.738909 -0.643350 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+            <node id="mixamorig_LeftFoot" name="mixamorig_LeftFoot" sid="mixamorig_LeftFoot" type="JOINT">
+              <matrix sid="matrix">0.967331 -0.171027 -0.187140 0.000000 -0.066452 0.541307 -0.838195 50.974098 0.244654 0.823248 0.512257 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              <node id="mixamorig_LeftToeBase" name="mixamorig_LeftToeBase" sid="mixamorig_LeftToeBase" type="JOINT">
+                <matrix sid="matrix">0.987687 0.072100 0.138838 0.000000 0.003968 0.875637 -0.482953 21.993700 -0.156393 0.477557 0.864570 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                <node id="mixamorig_LeftToe_End" name="mixamorig_LeftToe_End" sid="mixamorig_LeftToe_End" type="JOINT">
+                  <matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 -0.000000 9.003600 0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node id="mixamorig_RightUpLeg" name="mixamorig_RightUpLeg" sid="mixamorig_RightUpLeg" type="JOINT">
+          <matrix sid="matrix">-0.983987 -0.147996 0.099329 -13.293700 0.089453 0.071973 0.993387 -6.012500 -0.154167 0.986366 -0.057581 -0.531400 0.000000 0.000000 0.000000 1.000000</matrix>
+          <node id="mixamorig_RightLeg" name="mixamorig_RightLeg" sid="mixamorig_RightLeg" type="JOINT">
+            <matrix sid="matrix">0.999515 0.019470 -0.024312 -0.000000 0.031147 -0.621307 0.782948 52.153900 0.000139 -0.783325 -0.621612 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+            <node id="mixamorig_RightFoot" name="mixamorig_RightFoot" sid="mixamorig_RightFoot" type="JOINT">
+              <matrix sid="matrix">0.974978 0.064017 0.212884 0.000000 0.156404 0.482985 -0.861547 51.002602 -0.157974 0.873285 0.460887 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              <node id="mixamorig_RightToeBase" name="mixamorig_RightToeBase" sid="mixamorig_RightToeBase" type="JOINT">
+                <matrix sid="matrix">0.988865 -0.066667 -0.133044 0.000000 -0.004121 0.881423 -0.472309 22.030199 0.148756 0.467598 0.871334 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                <node id="mixamorig_RightToe_End" name="mixamorig_RightToe_End" sid="mixamorig_RightToe_End" type="JOINT">
+                  <matrix sid="matrix">1.000000 0.000000 -0.000000 0.000000 0.000000 1.000000 0.000000 9.032300 0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node id="mixamorig_F_skirt1" name="mixamorig_F_skirt1" sid="mixamorig_F_skirt1" type="JOINT">
+          <matrix sid="matrix">0.000000 1.000000 0.000000 -0.580400 -1.000000 0.000000 0.000000 -7.794500 -0.000000 0.000000 1.000000 17.818100 0.000000 0.000000 0.000000 1.000000</matrix>
+          <node id="mixamorig_F_skirt2" name="mixamorig_F_skirt2" sid="mixamorig_F_skirt2" type="JOINT">
+            <matrix sid="matrix">1.000000 -0.000000 0.000000 27.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+            <node id="mixamorig_F_skirt3" name="mixamorig_F_skirt3" sid="mixamorig_F_skirt3" type="JOINT">
+              <matrix sid="matrix">1.000000 0.000000 -0.000000 27.000000 0.000000 1.000000 -0.000000 -0.000000 0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              <node id="mixamorig_F_skirt_end" name="mixamorig_F_skirt_end" sid="mixamorig_F_skirt_end" type="JOINT">
+                <matrix sid="matrix">1.000000 0.000000 -0.000000 24.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node id="mixamorig_L_A_skirt1" name="mixamorig_L_A_skirt1" sid="mixamorig_L_A_skirt1" type="JOINT">
+          <matrix sid="matrix">0.122996 0.897244 0.424058 9.424300 -0.992244 0.103429 0.068955 -5.518500 0.018009 -0.429250 0.903006 15.946100 0.000000 0.000000 0.000000 1.000000</matrix>
+          <node id="mixamorig_L_A_skirt2" name="mixamorig_L_A_skirt2" sid="mixamorig_L_A_skirt2" type="JOINT">
+            <matrix sid="matrix">1.000000 -0.000000 0.000000 27.000000 0.000000 1.000000 -0.000000 0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+            <node id="mixamorig_L_A_skirt3" name="mixamorig_L_A_skirt3" sid="mixamorig_L_A_skirt3" type="JOINT">
+              <matrix sid="matrix">1.000000 -0.000000 0.000000 27.000000 0.000000 1.000000 0.000000 -0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              <node id="mixamorig_L_A_skirt_end" name="mixamorig_L_A_skirt_end" sid="mixamorig_L_A_skirt_end" type="JOINT">
+                <matrix sid="matrix">1.000000 -0.000000 0.000000 27.000000 0.000000 1.000000 -0.000000 0.000000 -0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node id="mixamorig_L_B_skirt1" name="mixamorig_L_B_skirt1" sid="mixamorig_L_B_skirt1" type="JOINT">
+          <matrix sid="matrix">0.111759 0.000000 0.993735 18.448999 -0.993735 0.000000 0.111759 -4.216000 -0.000000 -1.000000 0.000000 -0.295100 0.000000 0.000000 0.000000 1.000000</matrix>
+          <node id="mixamorig_L_B_skirt2" name="mixamorig_L_B_skirt2" sid="mixamorig_L_B_skirt2" type="JOINT">
+            <matrix sid="matrix">1.000000 0.000000 0.000000 27.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+            <node id="mixamorig_L_B_skirt3" name="mixamorig_L_B_skirt3" sid="mixamorig_L_B_skirt3" type="JOINT">
+              <matrix sid="matrix">1.000000 0.000000 0.000000 27.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              <node id="mixamorig_L_B_skirt_end" name="mixamorig_L_B_skirt_end" sid="mixamorig_L_B_skirt_end" type="JOINT">
+                <matrix sid="matrix">1.000000 -0.000000 0.000000 27.000000 0.000000 1.000000 0.000000 -0.000000 -0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node id="mixamorig_L_C_skirt1" name="mixamorig_L_C_skirt1" sid="mixamorig_L_C_skirt1" type="JOINT">
+          <matrix sid="matrix">0.023939 -0.971540 0.235663 7.049900 -0.998221 -0.010354 0.058718 -6.149500 -0.054607 -0.236649 -0.970059 -15.762800 0.000000 0.000000 0.000000 1.000000</matrix>
+          <node id="mixamorig_L_C_skirt2" name="mixamorig_L_C_skirt2" sid="mixamorig_L_C_skirt2" type="JOINT">
+            <matrix sid="matrix">1.000000 0.000000 -0.000000 28.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+            <node id="mixamorig_L_C_skirt3" name="mixamorig_L_C_skirt3" sid="mixamorig_L_C_skirt3" type="JOINT">
+              <matrix sid="matrix">1.000000 -0.000000 0.000000 28.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              <node id="mixamorig_L_C_skirt_end" name="mixamorig_L_C_skirt_end" sid="mixamorig_L_C_skirt_end" type="JOINT">
+                <matrix sid="matrix">1.000000 -0.000000 0.000000 28.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node id="mixamorig_R_A_skirt1" name="mixamorig_R_A_skirt1" sid="mixamorig_R_A_skirt1" type="JOINT">
+          <matrix sid="matrix">-0.122996 0.897244 -0.424058 -9.424300 -0.992244 -0.103429 0.068955 -5.518900 0.018009 0.429250 0.903006 15.946100 0.000000 0.000000 0.000000 1.000000</matrix>
+          <node id="mixamorig_R_A_skirt2" name="mixamorig_R_A_skirt2" sid="mixamorig_R_A_skirt2" type="JOINT">
+            <matrix sid="matrix">1.000000 -0.000000 -0.000000 26.999599 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000100 0.000000 0.000000 0.000000 1.000000</matrix>
+            <node id="mixamorig_R_A_skirt3" name="mixamorig_R_A_skirt3" sid="mixamorig_R_A_skirt3" type="JOINT">
+              <matrix sid="matrix">1.000000 -0.000000 -0.000000 27.000000 -0.000000 1.000000 0.000000 -0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              <node id="mixamorig_R_A_skirt_end" name="mixamorig_R_A_skirt_end" sid="mixamorig_R_A_skirt_end" type="JOINT">
+                <matrix sid="matrix">1.000000 0.000000 0.000000 27.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node id="mixamorig_R_B_skirt1" name="mixamorig_R_B_skirt1" sid="mixamorig_R_B_skirt1" type="JOINT">
+          <matrix sid="matrix">-0.111759 -0.000000 -0.993735 -18.448900 -0.993735 -0.000000 0.111759 -4.216300 -0.000000 1.000000 0.000000 -0.295100 0.000000 0.000000 0.000000 1.000000</matrix>
+          <node id="mixamorig_R_B_skirt2" name="mixamorig_R_B_skirt2" sid="mixamorig_R_B_skirt2" type="JOINT">
+            <matrix sid="matrix">1.000000 0.000000 0.000000 26.999701 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000100 0.000000 0.000000 0.000000 1.000000</matrix>
+            <node id="mixamorig_R_B_skirt3" name="mixamorig_R_B_skirt3" sid="mixamorig_R_B_skirt3" type="JOINT">
+              <matrix sid="matrix">1.000000 -0.000000 0.000000 26.999901 0.000000 1.000000 0.000000 0.000000 0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              <node id="mixamorig_R_B_skirt_end" name="mixamorig_R_B_skirt_end" sid="mixamorig_R_B_skirt_end" type="JOINT">
+                <matrix sid="matrix">1.000000 -0.000000 0.000000 27.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              </node>
+            </node>
+          </node>
+          <node id="mixamorig_R_bag1" name="mixamorig_R_bag1" sid="mixamorig_R_bag1" type="JOINT">
+            <matrix sid="matrix">0.973707 -0.116729 -0.195624 6.766800 -0.197277 -0.002660 -0.980344 2.209500 0.113914 0.993160 -0.025618 5.400800 0.000000 0.000000 0.000000 1.000000</matrix>
+            <node id="mixamorig_R_bag_end" name="mixamorig_R_bag_end" sid="mixamorig_R_bag_end" type="JOINT">
+              <matrix sid="matrix">1.000000 -0.000000 0.000000 20.721201 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+            </node>
+          </node>
+        </node>
+        <node id="mixamorig_R_C_skirt1" name="mixamorig_R_C_skirt1" sid="mixamorig_R_C_skirt1" type="JOINT">
+          <matrix sid="matrix">-0.023939 -0.971540 -0.235663 -7.049900 -0.998221 0.010354 0.058718 -6.149900 -0.054607 0.236649 -0.970059 -15.762700 0.000000 0.000000 0.000000 1.000000</matrix>
+          <node id="mixamorig_R_C_skirt2" name="mixamorig_R_C_skirt2" sid="mixamorig_R_C_skirt2" type="JOINT">
+            <matrix sid="matrix">1.000000 0.000000 0.000000 27.999701 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+            <node id="mixamorig_R_C_skirt3" name="mixamorig_R_C_skirt3" sid="mixamorig_R_C_skirt3" type="JOINT">
+              <matrix sid="matrix">1.000000 -0.000000 0.000000 27.999901 0.000000 1.000000 -0.000000 -0.000000 -0.000000 -0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              <node id="mixamorig_R_C_skirt_end" name="mixamorig_R_C_skirt_end" sid="mixamorig_R_C_skirt_end" type="JOINT">
+                <matrix sid="matrix">1.000000 -0.000000 0.000000 28.000000 0.000000 1.000000 0.000000 0.000000 -0.000000 -0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node id="L_horn1" name="L_horn1" sid="L_horn1" type="JOINT">
+          <matrix sid="matrix">0.406838 0.870118 0.278168 18.209600 -0.904436 0.426462 -0.011194 1.020800 -0.128368 -0.247031 0.960467 -3.906100 0.000000 0.000000 0.000000 1.000000</matrix>
+          <node id="L_horn_end" name="L_horn_end" sid="L_horn_end" type="JOINT">
+            <matrix sid="matrix">1.000000 0.000000 0.000000 13.278900 0.000000 1.000000 0.000000 -0.000000 0.000000 -0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+          </node>
+        </node>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#RootNode"/>
+  </scene>
+</COLLADA>

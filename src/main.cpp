@@ -13,18 +13,23 @@
 
 #include <iostream>
 #include <vector>
+#include "demon/demon.h"
+#include "stb_image.h"
+#include "player/player.h"
+#include "projectile/projectile.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow* window);
+void processInput(GLFWwindow* window, Player& player);
+unsigned int TextureFromFile(const char *path);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera - ปรับตำแหน่งให้เหมาะสม
-Camera camera(glm::vec3(-0.142529f, 27.2639f, 12.534f), glm::vec3(0.0f, 1.0f, 0.0f), -2249.9f, -60.3001f);
+Camera camera(glm::vec3(-0.228665f, 19.0239f, 6.79832f), glm::vec3(0.0f, 1.5f, 0.0f), -2250.39f, -75.7f);
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -133,11 +138,11 @@ BoundingBox characterBBox;
 std::vector<BoundingBox> castleWalls;
 
 // Animation states
-enum AnimState {
+/*enum AnimState {
     IDLE,
     WALK,
-};
-AnimState currentState = IDLE;
+};*/
+//AnimState currentState = IDLE;
 
 int main()
 {
@@ -207,6 +212,54 @@ int main()
 		return -1;
 	}
 	
+    // --- โหลด Model และ Shader สำหรับ Staff/Crystal ---
+    Shader staffShader("model_loading_staff.vs", "model_loading_staff.fs");
+    Model staffModel(FileSystem::getPath("src/staff/Staff.obj"));
+    Shader ourShader("anim_model_demon.vs", "anim_model_demon.fs");
+
+    unsigned int crystalDiffuseID = TextureFromFile(
+        FileSystem::getPath("src/crystal/textures/crystal_m_Base_color.png").c_str());
+
+    Shader crystalShader("model_loading_crystal.vs", "model_loading_crystal.fs");
+    Model crystalModel(FileSystem::getPath("src/crystal/stylized_crystal_SM.obj"));
+
+    // --------------------------------------------------------------------
+    // 🚀 ส่วนที่ 1: โหลดโมเดล Projectile (Fireball/Meteor)
+    // --------------------------------------------------------------------
+    Shader fireballShader("model_loading_fireball.vs", "model_loading_fireball.fs");
+    Model fireballModel(FileSystem::getPath("src/fireball/scene.gltf"));
+
+    Model wallModel(FileSystem::getPath("src/wall/stonewallL.exported.obj"));
+    Shader wallShader("model_loading_stonewall.vs", "model_loading_stonewall.fs");
+    unsigned int wallEmissiveID = TextureFromFile(
+        FileSystem::getPath("src/wall/textures/stonewall_Emissive.png").c_str());
+
+    // --------------------------------------------------------------------
+    // 🌟 ส่วนที่ 2: สร้าง Demon Object (ส่ง Projectile Model เข้าไปด้วย)
+    // --------------------------------------------------------------------
+    Demon demon(ourShader, staffModel, staffShader, crystalModel, crystalShader, crystalDiffuseID,
+                fireballModel, fireballShader, // 👈 เพิ่ม Fireball Model/Shader
+                wallModel, wallShader, wallEmissiveID);
+
+    Shader modelShader("model_loading_1.vs", "model_loading_1.fs");
+    Shader animShader("anim_model_1.vs", "anim_model_1.fs");
+    Player player1(
+        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
+        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
+        FileSystem::getPath("src/player/object/Rifle Run.dae"),
+        FileSystem::getPath("src/player/object/Jump Up.dae"),
+        FileSystem::getPath("src/player/object/Jump Loop.dae"),
+        FileSystem::getPath("src/player/object/Jump Down.dae"),
+        FileSystem::getPath("src/player/object/Firing Rifle.dae"),
+        FileSystem::getPath("src/playergun/heavy_rifle.obj"),
+		FileSystem::getPath("src/player/object/grenade_anim/Standing Idle.dae"),
+		FileSystem::getPath("src/player/object/grenade_anim/Standing Run Forward.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Jump.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Falling Idle.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Jump Landing.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing 1H Magic Attack 01.dae"),
+        glm::vec3(5.0f, 0.0f, -5.0f)
+    );
 	// สร้าง Bounding Boxes สำหรับกำแพงปราสาท
 	castleWalls = createCastleWallBoundingBoxes();
 	
@@ -219,10 +272,10 @@ int main()
 		          << castleWalls[i].max.x << ", " << castleWalls[i].max.y << ", " << castleWalls[i].max.z << ")" << std::endl;
 	}
 	
-	Animation walkAnimation(FileSystem::getPath("resource/maximo/Standard Walk/Standard Walk.dae"), &charModel);
-    Animation idleAnimation(FileSystem::getPath("resource/maximo/Idle/Idle.dae"), &charModel);
+	//Animation walkAnimation(FileSystem::getPath("resource/maximo/Standard Walk/Standard Walk.dae"), &charModel);
+    //Animation idleAnimation(FileSystem::getPath("resource/maximo/Idle/Idle.dae"), &charModel);
     
-    Animator animator(&idleAnimation);
+    //Animator animator(&idleAnimation);
 
 	std::cout << "\n=== Controls ===" << std::endl;
 	std::cout << "Arrow Keys: Move character" << std::endl;
@@ -248,9 +301,19 @@ int main()
 
 		// input
 		// -----
-		processInput(window);
+		processInput(window, player1);
+        demon.Update(deltaTime, currentFrame);
+        player1.Update(deltaTime,
+            glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS,
+            glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS,
+            glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS,
+            glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS,
+            glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS,
+            glfwGetKey(window, GLFW_KEY_PERIOD) == GLFW_PRESS,
+			glfwGetKey(window, GLFW_KEY_COMMA) == GLFW_PRESS
+            );
 
-		animator.UpdateAnimation(deltaTime);
+		//animator.UpdateAnimation(deltaTime);
 
         glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -298,17 +361,32 @@ int main()
         charShader.setVec3("viewPos", camera.Position);
         charShader.setVec3("lightColor", lightColor);
 
-        auto transforms = animator.GetFinalBoneMatrices();
+        /*auto transforms = animator.GetFinalBoneMatrices();
         for (int i = 0; i < transforms.size(); ++i)
-            charShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+            charShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);*/
 
         // คำนวณ model matrix ของตัวละคร
-        glm::mat4 characterModel_mat = glm::mat4(1.0f);
+        /*glm::mat4 characterModel_mat = glm::mat4(1.0f);
         characterModel_mat = glm::translate(characterModel_mat, characterPosition);
         characterModel_mat = glm::rotate(characterModel_mat, glm::radians(characterRotation), glm::vec3(0.0f, 1.0f, 0.0f));
         characterModel_mat = glm::scale(characterModel_mat, glm::vec3(0.8f, 0.8f, 0.8f));
         charShader.setMat4("model", characterModel_mat);
-        charModel.Draw(charShader);
+        charModel.Draw(charShader);*/
+
+        ourShader.use();
+        ourShader.setMat4("projection", projection);
+        ourShader.setMat4("view", view);
+        ourShader.setMat4("model", demon.GetModelMatrix()); // ใช้ Getter ของ Demon
+
+        // Demon Bone Transform Setup
+        auto transforms = demon.GetFinalBoneMatrices();
+        for (int i = 0; i < transforms.size(); ++i)
+            ourShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+
+        // Draw Demon, Staff, Crystal และ Fireball (ทั้งหมดถูกจัดการผ่าน Demon::Draw)
+        demon.Draw(projection, view, camera.Position);
+
+        player1.Draw(animShader, modelShader, view, projection);
         
         // สร้าง Bounding Box สำหรับตัวละคร (ขนาดประมาณ)
         float charRadius = 1.0f; // ปรับให้เหมาะสมกับขนาดตัวละคร
@@ -344,7 +422,7 @@ int main()
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window)
+void processInput(GLFWwindow* window, Player& player)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
@@ -414,7 +492,7 @@ void processInput(GLFWwindow* window)
 
     // Update animation state
     //static AnimState previousState = IDLE;
-    if (isMoving)
+    /*if (isMoving)
     {
         if (currentState != WALK)
             currentState = WALK; // Switch to walk animation
@@ -423,17 +501,30 @@ void processInput(GLFWwindow* window)
     {
         if (currentState != IDLE)
             currentState = IDLE; // Switch to idle animation
-    }
+    }*/
 
 	static bool pKeyPressed = false;
     if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && !pKeyPressed)
     {
         pKeyPressed = true;
+        glm::vec3 playerPos = player.position;
+        float playerYaw = player.yaw;
+
         std::cout << "\n=== Info ===" << std::endl;
         std::cout << "Camera: (" << camera.Position.x << ", " << camera.Position.y << ", " << camera.Position.z << ")" << std::endl;
-        std::cout << "Character: (" << characterPosition.x << ", " << characterPosition.y << ", " << characterPosition.z << ")" << std::endl;
+        std::cout << "Player1 Position: (" << playerPos.x << ", " << playerPos.y << ", " << playerPos.z << ")" << std::endl;
         std::cout << "Character BBox: Min(" << characterBBox.min.x << ", " << characterBBox.min.y << ", " << characterBBox.min.z 
                   << ") Max(" << characterBBox.max.x << ", " << characterBBox.max.y << ", " << characterBBox.max.z << ")" << std::endl;
+        std::cout << "==================\n" << std::endl;
+        std::cout << "\n--- Camera Constructor Code ---" << std::endl;
+        std::cout << "Camera camera(glm::vec3(" 
+              << camera.Position.x << "f, " 
+              << camera.Position.y << "f, " 
+              << camera.Position.z << "f), glm::vec3(0.0f, 1.5f, 0.0f), " 
+              << camera.Yaw << "f, " 
+              << camera.Pitch << "f);" << std::endl;
+        std::cout << "-------------------------------" << std::endl;
+    
         std::cout << "==================\n" << std::endl;
     }
     if (glfwGetKey(window, GLFW_KEY_P) == GLFW_RELEASE)
@@ -475,4 +566,37 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(yoffset);
+}
+
+unsigned int TextureFromFile(const char *path)
+{
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+    int width, height, nrComponents;
+    unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
+    if (data)
+    {
+        GLenum format;
+        if (nrComponents == 1)
+            format = GL_RED;
+        else if (nrComponents == 3)
+            format = GL_RGB;
+        else if (nrComponents == 4)
+            format = GL_RGBA;
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        stbi_image_free(data);
+    }
+    else
+    {
+        std::cout << "Texture failed to load at path: " << path << std::endl;
+        stbi_image_free(data);
+    }
+    return textureID;
 }

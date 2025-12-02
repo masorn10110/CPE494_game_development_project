@@ -1,52 +1,7 @@
-=== Camera Info ===
-Position: glm::vec3(0.0486971f, 23.2626f, 10.4672f)
-Yaw: -2609.5f
-Pitch: -75.8f
-Front: glm::vec3(0.00213834f, -0.969445f, -0.245298f)
-
-// Copy this to initialize camera:
-Camera camera(glm::vec3(0.0486971f, 23.2626f, 10.4672f), glm::vec3(0.0f, 1.0f, 0.0f), -2609.5f, -75.8f);
-==================
-
-
-=== Camera Info ===
-Position: glm::vec3(-0.14427f, 24.1654f, 10.9516f)
-Yaw: -3689.8f
-Pitch: -72.4f
-Front: glm::vec3(0.00106362f, -0.953191f, -0.302367f)
-
-// Copy this to initialize camera:
-Camera camera(glm::vec3(-0.14427f, 24.1654f, 10.9516f), glm::vec3(0.0f, 1.0f, 0.0f), -3689.8f, -72.4f);
-==================
-
-
-=== Camera Info ===
-Position: glm::vec3(-0.275543f, 31.7341f, 18.1386f)
-Yaw: -2249.9f
-Pitch: -51.8001f
-Front: glm::vec3(0.00103988f, -0.785858f, -0.618406f)
-
-// Copy this to initialize camera:
-Camera camera(glm::vec3(-0.275543f, 31.7341f, 18.1386f), glm::vec3(0.0f, 1.0f, 0.0f), -2249.9f, -51.8001f);
-==================
-
-
-=== Camera Info ===
-Position: glm::vec3(-0.729838f, 32.1684f, 19.3134f)
-Yaw: -2249.71f
-Pitch: -51.9f
-Front: glm::vec3(0.00316069f, -0.786935f, -0.617028f)
-
-// Copy this to initialize camera:
-Camera camera(glm::vec3(-0.729838f, 32.1684f, 19.3134f), glm::vec3(0.0f, 1.0f, 0.0f), -2249.71f, -51.9f);
-==================
-
-=== Camera Info ===
-Position: glm::vec3(-0.142529f, 27.2639f, 12.534f)
-Yaw: -2249.9f
-Pitch: -60.3001f
-Front: glm::vec3(0.000869045f, -0.868632f, -0.495457f)
-
-// Copy this to initialize camera:
-Camera camera(glm::vec3(-0.142529f, 27.2639f, 12.534f), glm::vec3(0.0f, 1.0f, 0.0f), -2249.9f, -60.3001f);
+//อันเก่า
+//Camera camera(glm::vec3(-0.142529f, 27.2639f, 12.534f), glm::vec3(0.0f, 1.5f, 0.0f), -2249.9f, -60.3001f);
+//use this
+--- Camera Constructor Code ---
+Camera camera(glm::vec3(-0.228665f, 19.0239f, 6.79832f), glm::vec3(0.0f, 1.5f, 0.0f), -2250.39f, -75.7f);
+-------------------------------
 ==================

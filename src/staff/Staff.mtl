@@ -1,0 +1,56 @@
+# Blender 4.1.1 MTL File: 'Staff.blend'
+# www.blender.org
+
+newmtl Glass_-_Optimized
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Gold
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ./Textures/gold-scuffed_basecolor.png
+map_Ns ./Textures/gold-scuffed_roughness.png
+map_refl ./Textures/gold-scuffed_metallic.png
+map_Bump -bm 1.000000 ./Textures/gold-scuffed_normal.png
+
+newmtl Material
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ./Textures/yoga-mat-wavy-pattern1-albedo.png
+map_Ns ./Textures/yoga-mat-wavy-pattern1-Roughness.png
+map_refl ./Textures/yoga-mat-wavy-pattern1-Metallic.png
+map_Bump -bm 1.000000 ./Textures/yoga-mat-wavy-pattern1-Normal-ogl.png
+
+newmtl Material.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800408 0.000000 0.003822
+Ks 0.500000 0.500000 0.500000
+Ke 1.400000 0.003631 0.002455
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl Red_Glass
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
