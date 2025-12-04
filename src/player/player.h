@@ -13,8 +13,10 @@
 #include <learnopengl/shader_m.h>
 #include <learnopengl/animator.h>
 #include <learnopengl/model_animation.h>
+#include "hitscan.h"
 
-class Player {
+class Player
+{
 public:
     glm::vec3 position;
     glm::vec3 size;
@@ -31,12 +33,12 @@ public:
 
     Animation idleAnim;
     Animation runAnim;
-    
+
     Animation jumpstartAnim;
     Animation jumploopAnim;
-	Animation jumpdownAnim;
+    Animation jumpdownAnim;
 
-	Animation shootAnim;
+    Animation shootAnim;
 
     Animation grenadeIdleAnim;
     Animation grenadeRunAnim;
@@ -47,10 +49,14 @@ public:
 
     Animation grenadeThrowAnim;
 
+    Animation deathAnim;
+    Animation deathAnimLastframe;
+
     Animator animator;
 
     // --- Blend system ---
-    enum AnimState {
+    enum AnimState
+    {
         IDLE,
         IDLE_RUN,
         RUN,
@@ -58,7 +64,8 @@ public:
         JUMP_START,
         JUMP_MID,
         JUMP_LAND,
-        SHOOT
+        SHOOT,
+        DEAD
     };
     AnimState state = IDLE;
 
@@ -67,13 +74,13 @@ public:
 
     float jumpStartTimer = 0.0f;
 
-    float shootCooldown = 0.25f;   // seconds between shots
-    float shootTimer = 0.0f;       // countdown
-    bool isShooting = false;       // for blending (optional)
+    float shootCooldown = 0.25f; // seconds between shots
+    float shootTimer = 0.0f;     // countdown
+    bool isShooting = false;     // for blending (optional)
     // --- Shooting / fire rate ---
-    float fireRate = 0.25f;  // seconds per shot
-    float fireTimer = 0.0f;  // counts down
-    bool shootPressed = false;  // input tracking
+    float fireRate = 0.25f;    // seconds per shot
+    float fireTimer = 0.0f;    // counts down
+    bool shootPressed = false; // input tracking
     bool wasShootPressed = false;
 
     // --- Optional: for blending ---
@@ -83,120 +90,204 @@ public:
     bool holdingGrenade = false;
     bool wasGrenadeTogglePressed = false;
 
-    Player(const std::string& modelPath,
-        const std::string& idlePath,
-        const std::string& runPath,
-		const std::string& jumpstartPath,
-        const std::string& jumploopPath,
-		const std::string& jumpdownPath,
-		const std::string& shootPath,
-        const std::string& gunPath,
-        const std::string& gIdle,
-        const std::string& gRun,
-        const std::string& gJumpStart,
-        const std::string& gJumpLoop,
-        const std::string& gJumpDown,
-        const std::string& gThrow,
-        glm::vec3 startPos)
+    int health = 100;
+    bool deathAnimFinished = false;
+    float deathPoseTimer = 0.0f;
+    float deathPoseDuration = 10.0f; // seconds to hold last-frame pose
+    bool isDead = false;
+    glm::vec3 respawnPosition;
+    float respawnYaw;
+
+    Player(const std::string &modelPath,
+           const std::string &idlePath,
+           const std::string &runPath,
+           const std::string &jumpstartPath,
+           const std::string &jumploopPath,
+           const std::string &jumpdownPath,
+           const std::string &shootPath,
+           const std::string &gunPath,
+           const std::string &gIdle,
+           const std::string &gRun,
+           const std::string &gJumpStart,
+           const std::string &gJumpLoop,
+           const std::string &gJumpDown,
+           const std::string &gThrow,
+           const std::string &deathPath,
+           const std::string &deathLastFramePath,
+           glm::vec3 startPos)
         : model(modelPath),
-        idleAnim(idlePath, &model),
-        runAnim(runPath, &model),
-		jumpstartAnim(jumpstartPath, &model),
-        jumploopAnim(jumploopPath, &model),
-		jumpdownAnim(jumpdownPath, &model),
-		shootAnim(shootPath, &model),
-        animator(&idleAnim),
-        grenadeIdleAnim(gIdle, &model),
-        grenadeRunAnim(gRun, &model),
-        grenadeJumpStartAnim(gJumpStart, &model),
-        grenadeJumpLoopAnim(gJumpLoop, &model), //somehow the is better
-        grenadeJumpDownAnim(gJumpDown, &model),
-        grenadeThrowAnim(gThrow, &model),
-        gunModel(gunPath)
+          idleAnim(idlePath, &model),
+          runAnim(runPath, &model),
+          jumpstartAnim(jumpstartPath, &model),
+          jumploopAnim(jumploopPath, &model),
+          jumpdownAnim(jumpdownPath, &model),
+          shootAnim(shootPath, &model),
+          animator(&idleAnim),
+          grenadeIdleAnim(gIdle, &model),
+          grenadeRunAnim(gRun, &model),
+          grenadeJumpStartAnim(gJumpStart, &model),
+          grenadeJumpLoopAnim(gJumpLoop, &model), // somehow the is better
+          grenadeJumpDownAnim(gJumpDown, &model),
+          grenadeThrowAnim(gThrow, &model),
+          deathAnim(deathPath, &model),
+          deathAnimLastframe(deathLastFramePath, &model),
+          gunModel(gunPath)
     {
         position = startPos;
+        respawnPosition = startPos;
         size = glm::vec3(0.5f, 1.0f, 0.5f);
         yaw = 180.0f;
-		velocity = glm::vec3(0.0f);
+        respawnYaw = 180.0f;
+        velocity = glm::vec3(0.0f);
 
         isMoving = false;
         isJumping = false;
         jumpVelocity = 0.0f;
-        inputDir = glm::vec3 (0.0f);
+        inputDir = glm::vec3(0.0f);
     }
 
-    struct AnimSet {
-        Animation* idle;
-        Animation* run;
-        Animation* jumpStart;
-        Animation* jumpLoop;
-        Animation* jumpDown;
-        Animation* shoot; // = throw grenade
+    struct AnimSet
+    {
+        Animation *idle;
+        Animation *run;
+        Animation *jumpStart;
+        Animation *jumpLoop;
+        Animation *jumpDown;
+        Animation *shoot; // = throw grenade
     };
 
-    AnimSet GetCurrentAnimSet() {
-        if (holdingGrenade) {
+    AnimSet GetCurrentAnimSet()
+    {
+        if (holdingGrenade)
+        {
             return {
                 &grenadeIdleAnim,
                 &grenadeRunAnim,
                 &grenadeJumpStartAnim,
                 &grenadeJumpLoopAnim,
                 &grenadeJumpDownAnim,
-                &grenadeThrowAnim
-            };
+                &grenadeThrowAnim};
         }
-        else {
+        else
+        {
             return {
                 &idleAnim,
                 &runAnim,
                 &jumpstartAnim,
                 &jumploopAnim,
                 &jumpdownAnim,
-                &shootAnim
-            };
+                &shootAnim};
         }
     }
 
-
-    void Update(float dt, bool up, bool down, bool left, bool right, bool jump, bool shoot, bool tggrenade)
+    // ============================================================
+    // PRIVATE HELPER METHODS
+    // ============================================================
+private:
+    void UpdateDeathState(float dt)
     {
-        AnimSet set = GetCurrentAnimSet();  // <-- GET CURRENT ANIMATION SET
+        if (health <= 0)
+        {
+            if (state != DEAD)
+            {
+                EnterDeadState();
+            }
 
-        //------------------------------------------------------------
-        // Movement input
-        //------------------------------------------------------------
+            if (!deathAnimFinished)
+            {
+                UpdateDeathAnimation(dt);
+            }
+            else
+            {
+                UpdateDeathPose(dt);
+            }
+
+            animator.UpdateAnimation(dt);
+        }
+    }
+
+    void EnterDeadState()
+    {
+        state = DEAD;
+        deathAnimFinished = false;
+        deathPoseTimer = 0.0f;
+        animator.m_CurrentTime = 0.0f;
+        animator.PlayAnimation(&deathAnim, nullptr, 0.0f, 0.0f, 0.0f);
+    }
+
+    void UpdateDeathAnimation(float dt)
+    {
+        float duration = deathAnim.GetDuration() / deathAnim.GetTicksPerSecond() / 2.0f;
+
+        if (animator.m_CurrentTime >= duration)
+        {
+            deathAnimFinished = true;
+            animator.PlayAnimation(&deathAnimLastframe, nullptr, 0.0f, 0.0f, 0.0f);
+            animator.m_CurrentTime = 0.0f;
+        }
+    }
+
+    void UpdateDeathPose(float dt)
+    {
+        deathPoseTimer += dt;
+
+        if (deathPoseTimer >= deathPoseDuration)
+        {
+            Respawn();
+        }
+    }
+
+    void Respawn()
+    {
+        health = 100;
+        isDead = false;
+        velocity = glm::vec3(0.0f);
+        isJumping = false;
+        position = respawnPosition;
+        yaw = respawnYaw;
+        state = IDLE;
+        animator.m_CurrentTime = 0.0f;
+        animator.PlayAnimation(&idleAnim, nullptr, 0.0f, 0.0f, 0.0f);
+    }
+
+    void UpdateInput(bool up, bool down, bool left, bool right, bool tggrenade)
+    {
         inputDir = glm::vec3(0.0f);
-        if (up) inputDir.z -= 1.0f;
-        if (down) inputDir.z += 1.0f;
-        if (left) inputDir.x -= 1.0f;
-        if (right) inputDir.x += 1.0f;
+        if (up)
+            inputDir.z -= 1.0f;
+        if (down)
+            inputDir.z += 1.0f;
+        if (left)
+            inputDir.x -= 1.0f;
+        if (right)
+            inputDir.x += 1.0f;
 
         bool wantsToMove = (glm::length(inputDir) > 0.1f);
         if (wantsToMove)
             inputDir = glm::normalize(inputDir);
 
-        // --- grenade toggle edge detection ---
+        HandleGrenadeToggle(tggrenade);
+    }
+
+    void HandleGrenadeToggle(bool tggrenade)
+    {
         bool grenadeEdge = (tggrenade && !wasGrenadeTogglePressed);
         wasGrenadeTogglePressed = tggrenade;
 
-        if (grenadeEdge) {
+        if (grenadeEdge)
+        {
             holdingGrenade = !holdingGrenade;
-
-            // Optional: force animation restart when switching modes
-            set = GetCurrentAnimSet();
+            AnimSet set = GetCurrentAnimSet();
             animator.PlayAnimation(set.idle, nullptr, 0.0f, 0.0f, 0.0f);
         }
+    }
 
-
-        //------------------------------------------------------------
-        // Acceleration / deceleration
-        //------------------------------------------------------------
+    void UpdateMovement(float dt)
+    {
         velocity = glm::vec3(0.0f);
-
         const float accel = 100.0f;
-        const float decel = 14.0f;
 
-        if (wantsToMove)
+        if (glm::length(inputDir) > 0.1f)
             velocity += inputDir * accel * dt;
 
         isMoving = glm::length(velocity) > 0.05f;
@@ -208,27 +299,16 @@ public:
             float diff = fmodf(targetYaw - yaw + 540.0f, 360.0f) - 180.0f;
             yaw += diff * 10.0f * dt; // smooth turning
         }
+    }
 
-        //------------------------------------------------------------
-        // Jump physics
-        //------------------------------------------------------------
+    void UpdateJump(float dt, const AnimSet &set)
+    {
         const float jumpForce = 8.5f;
         const float gravity = -20.0f;
 
-        if (jump && !isJumping && position.y <= 0.01f)
+        if (false)
         {
-            isJumping = true;
-            jumpVelocity = jumpForce;
-            state = JUMP_START;
-            blendAmount = 0.0f;
-            jumpStartTimer = 0.0f;
-
-            animator.m_CurrentTime = 0.0f;        // <-- IMPORTANT FIX
-            animator.m_CurrentTime2 = 0.0f;
-
-            Animation* from = isMoving ? set.run : set.idle;
-            animator.PlayAnimation(from, set.jumpStart, 0.0f, 0.0f, 0.0f);
-        }
+        } // placeholder for jump input check
 
         if (isJumping)
         {
@@ -242,36 +322,90 @@ public:
                 state = JUMP_LAND;
                 blendAmount = 0.0f;
 
-                Animation* endAnim = isMoving ? set.run : set.idle;
+                Animation *endAnim = isMoving ? set.run : set.idle;
                 animator.PlayAnimation(set.jumpDown, endAnim, animator.m_CurrentTime, 0.0f, 0.0f);
             }
         }
+    }
 
-        //------------------------------------------------------------
-        // Shooting / throwing system
-        //------------------------------------------------------------
+    void InitiateJump(const AnimSet &set)
+    {
+        const float jumpForce = 8.5f;
+        if (!isJumping && position.y <= 0.01f)
+        {
+            isJumping = true;
+            jumpVelocity = jumpForce;
+            state = JUMP_START;
+            blendAmount = 0.0f;
+            jumpStartTimer = 0.0f;
+
+            animator.m_CurrentTime = 0.0f; // <-- IMPORTANT FIX
+            animator.m_CurrentTime2 = 0.0f;
+
+            Animation *from = isMoving ? set.run : set.idle;
+            animator.PlayAnimation(from, set.jumpStart, 0.0f, 0.0f, 0.0f);
+        }
+    }
+
+    void UpdateShooting(float dt, const AnimSet &set)
+    {
         if (fireTimer > 0.0f)
             fireTimer -= dt;
 
-        bool shootPressedEdge = (shoot && !wasShootPressed);
-        wasShootPressed = shoot;
+        // Only track shoot press if NOT holding grenade (continuous fire)
+        if (!holdingGrenade)
+        {
+            wasShootPressed = false;
+        }
+        // If holding grenade, wasShootPressed is managed in HandleGrenadeThrow
+    }
 
-        if (shootPressedEdge && fireTimer <= 0.0f && !isJumping && !isMoving)
+    void HandleShoot(const AnimSet &set)
+    {
+        // Only allow hitscan shooting when NOT holding grenade
+        if (!holdingGrenade && fireTimer <= 0.0f && !isJumping && !isMoving)
         {
             fireTimer = fireRate;
             shootBlendAmount = 1.0f;
 
-            Animation* baseAnim = isMoving ? set.run : set.idle;
+            // Fire hitscan ray
+            FireHitscan();
+
+            Animation *baseAnim = isMoving ? set.run : set.idle;
             animator.PlayAnimation(baseAnim, set.shoot, 0.0f, 0.0f, shootBlendAmount);
 
             animator.m_CurrentTime = 0.0f;
             state = SHOOT;
         }
+    }
 
-        //------------------------------------------------------------
-        // Animation State Machine
-        //------------------------------------------------------------
-        auto EaseInOut = [](float x) { return x * x * (3.0f - 2.0f * x); };
+    void HandleGrenadeThrow(bool shoot, const AnimSet &set)
+    {
+        // Only allow grenade throw if holding grenade
+        if (!holdingGrenade)
+            return;
+
+        // Edge detection: fire only on button press, not hold
+        bool throwEdge = (shoot && !wasShootPressed);
+        wasShootPressed = shoot;
+
+        if (throwEdge && !isJumping && !isMoving)
+        {
+            shootBlendAmount = 1.0f;
+
+            // Throw grenade animation
+            Animation *baseAnim = isMoving ? set.run : set.idle;
+            animator.PlayAnimation(baseAnim, set.shoot, 0.0f, 0.0f, shootBlendAmount);
+
+            animator.m_CurrentTime = 0.0f;
+            state = SHOOT;
+        }
+    }
+
+    void UpdateAnimationStateMachine(float dt, const AnimSet &set)
+    {
+        auto EaseInOut = [](float x)
+        { return x * x * (3.0f - 2.0f * x); };
 
         switch (state)
         {
@@ -300,7 +434,11 @@ public:
         break;
 
         case RUN:
-            if (!isMoving) { state = RUN_IDLE; blendAmount = 0.0f; }
+            if (!isMoving)
+            {
+                state = RUN_IDLE;
+                blendAmount = 0.0f;
+            }
             animator.PlayAnimation(set.run, nullptr, animator.m_CurrentTime, animator.m_CurrentTime2, 0.0f);
             break;
 
@@ -322,7 +460,7 @@ public:
         case JUMP_START:
         {
             jumpStartTimer += dt;
-            float jumpStartDuration = set.jumpStart->GetDuration() / (set.jumpStart->GetTicksPerSecond() );
+            float jumpStartDuration = set.jumpStart->GetDuration() / (set.jumpStart->GetTicksPerSecond());
             animator.PlayAnimation(set.jumpStart, nullptr, animator.m_CurrentTime, 0.0f, 0.0f);
 
             if (jumpStartTimer >= jumpStartDuration)
@@ -335,25 +473,24 @@ public:
         break;
 
         case JUMP_MID:
-        {
-            if (blendAmount == 0.0f) {
+            if (blendAmount == 0.0f)
+            {
                 animator.PlayAnimation(set.jumpLoop, nullptr, 0.0f, 0.0f, 0.0f);
             }
 
-            if (jumpVelocity < -4.0f) {
+            if (jumpVelocity < -4.0f)
+            {
                 state = JUMP_LAND;
                 blendAmount = 0.0f;
             }
-        }
-        break;
-
+            break;
 
         case JUMP_LAND:
         {
             blendAmount += blendRate * 1.4f;
             float eased = EaseInOut(glm::clamp(blendAmount, 0.0f, 1.0f));
 
-            Animation* endAnim = isMoving ? set.run : set.idle;
+            Animation *endAnim = isMoving ? set.run : set.idle;
             animator.PlayAnimation(set.jumpDown, endAnim, animator.m_CurrentTime, animator.m_CurrentTime2, eased);
 
             if (blendAmount >= 1.0f)
@@ -369,31 +506,81 @@ public:
         {
             float duration = set.shoot->GetDuration() / set.shoot->GetTicksPerSecond();
 
-            if (!shoot || animator.m_CurrentTime >= duration)
+            if (animator.m_CurrentTime >= duration)
             {
                 state = isMoving ? RUN : IDLE;
                 shootBlendAmount = 0.0f;
 
-                Animation* baseAnim = isMoving ? set.run : set.idle;
+                Animation *baseAnim = isMoving ? set.run : set.idle;
                 animator.PlayAnimation(baseAnim, nullptr, animator.m_CurrentTime, 0.0f, 0.0f);
             }
         }
         break;
         }
+    }
+
+public:
+    // ============================================================
+    // PUBLIC UPDATE METHOD
+    // ============================================================
+    void Update(float dt, bool up, bool down, bool left, bool right, bool jump, bool shoot, bool tggrenade)
+    {
+        // Check death state first
+        if (health <= 0)
+        {
+            UpdateDeathState(dt);
+            return;
+        }
+
+        AnimSet set = GetCurrentAnimSet();
+
+        UpdateInput(up, down, left, right, tggrenade);
+        UpdateMovement(dt);
+
+        if (jump)
+            InitiateJump(set);
+
+        UpdateJump(dt, set);
+
+        // Handle shooting differently based on weapon type
+        if (holdingGrenade)
+        {
+            HandleGrenadeThrow(shoot, set);
+        }
+        else
+        {
+            if (shoot)
+                HandleShoot(set);
+        }
+
+        UpdateShooting(dt, set);
+        UpdateAnimationStateMachine(dt, set);
 
         animator.UpdateAnimation(dt);
     }
 
+    void FireHitscan()
+    {
+        // Calculate forward direction based on player yaw
+        float yawRad = glm::radians(yaw);
+        glm::vec3 fireDir(sin(yawRad), 0.0f, cos(yawRad));
 
+        // Fire from hand position
+        glm::vec3 firePos = position + glm::vec3(0.0f, 0.5f, 0.0f);
 
+        // Create hitscan ray - store it temporarily or use it immediately
+        // You'll call this in your game loop to check collisions
+        lastHitscan = Hitscan(firePos, fireDir, 10.0f);
+    }
 
-
+    // Store last hitscan for collision checking in game loop
+    Hitscan lastHitscan = Hitscan(glm::vec3(0), glm::vec3(0, 0, 1), 10.0f);
 
     // ----------------------------------------------------
     // DRAW FUNCTION (unchanged)
     // ----------------------------------------------------
-    void Draw(Shader& animShader, Shader& lightingShader,
-        const glm::mat4& view, const glm::mat4& projection)
+    void Draw(Shader &animShader, Shader &lightingShader,
+              const glm::mat4 &view, const glm::mat4 &projection)
     {
         //------------------------------------------------------------
         // 1. Draw the animated player model
@@ -411,7 +598,7 @@ public:
         glm::mat4 modelMat = glm::mat4(1.0f);
         modelMat = glm::translate(modelMat, position);
         modelMat = glm::rotate(modelMat, glm::radians(yaw), glm::vec3(0, 1, 0));
-        modelMat = glm::scale(modelMat, glm::vec3(0.5f));   // your character scale
+        modelMat = glm::scale(modelMat, glm::vec3(0.5f)); // your character scale
         animShader.setMat4("model", modelMat);
 
         model.Draw(animShader);
@@ -423,7 +610,7 @@ public:
 
         if (animator.m_BoneWorldTransforms.find(handName) == animator.m_BoneWorldTransforms.end())
         {
-            //std::cout << "ERROR: Hand bone NOT FOUND: " << handName << std::endl;
+            std::cout << "ERROR: Hand bone NOT FOUND: " << handName << std::endl;
             return;
         }
 
@@ -432,10 +619,10 @@ public:
 
         // small alignment offset (start small)
         glm::mat4 gunOffset = glm::mat4(1.0f);
-        //gunOffset = glm::translate(gunOffset, glm::vec3(0.05f, -0.05f, 0.15f));
+        // gunOffset = glm::translate(gunOffset, glm::vec3(0.05f, -0.05f, 0.15f));
         gunOffset = glm::rotate(gunOffset, glm::radians(-90.0f), glm::vec3(0, 1, 0));
         gunOffset = glm::rotate(gunOffset, glm::radians(-90.0f), glm::vec3(1, 0, 0));
-        //gunOffset = glm::scale(gunOffset, glm::vec3(0.5f));  // adjust to your gun size
+        // gunOffset = glm::scale(gunOffset, glm::vec3(0.5f));  // adjust to your gun size
 
         // FINAL world transform:
         //      Player transform * Bone transform * alignment
@@ -449,10 +636,9 @@ public:
         lightingShader.setMat4("view", view);
         lightingShader.setMat4("model", gunMatrix);
 
-        if(!holdingGrenade) gunModel.Draw(lightingShader);
+        if (!holdingGrenade)
+            gunModel.Draw(lightingShader);
     }
-
 };
-
 
 #endif // PLAYER_H

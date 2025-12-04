@@ -37,3 +37,8 @@ Thumbs.db
 # OS files
 .DS_Store
 Thumbs.db
+
+# External libraries
+assimp/
+glm/
+GLFW/

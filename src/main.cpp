@@ -253,14 +253,33 @@ int main()
         FileSystem::getPath("src/player/object/Jump Down.dae"),
         FileSystem::getPath("src/player/object/Firing Rifle.dae"),
         FileSystem::getPath("src/playergun/heavy_rifle.obj"),
-		FileSystem::getPath("src/player/object/grenade_anim/Standing Idle.dae"),
-		FileSystem::getPath("src/player/object/grenade_anim/Standing Run Forward.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Idle.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Run Forward.dae"),
         FileSystem::getPath("src/player/object/grenade_anim/Standing Jump.dae"),
         FileSystem::getPath("src/player/object/grenade_anim/Falling Idle.dae"),
         FileSystem::getPath("src/player/object/grenade_anim/Jump Landing.dae"),
         FileSystem::getPath("src/player/object/grenade_anim/Standing 1H Magic Attack 01.dae"),
-        glm::vec3(5.0f, 0.0f, -5.0f)
-    );
+        FileSystem::getPath("src/player/object/Dying.dae"),
+        FileSystem::getPath("src/player/object/Dying_last_frame.dae"),
+        glm::vec3(5.0f, 0.0f, 5.0f));
+    Player player2(
+        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
+        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
+        FileSystem::getPath("src/player/object/Rifle Run.dae"),
+        FileSystem::getPath("src/player/object/Jump Up.dae"),
+        FileSystem::getPath("src/player/object/Jump Loop.dae"),
+        FileSystem::getPath("src/player/object/Jump Down.dae"),
+        FileSystem::getPath("src/player/object/Firing Rifle.dae"),
+        FileSystem::getPath("src/playergun/heavy_rifle.obj"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Idle.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Run Forward.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Jump.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Falling Idle.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Jump Landing.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing 1H Magic Attack 01.dae"),
+        FileSystem::getPath("src/player/object/Dying.dae"),
+        FileSystem::getPath("src/player/object/Dying_last_frame.dae"),
+        glm::vec3(-5.0f, 0.0f, 5.0f));
 	// สร้าง Bounding Boxes สำหรับกำแพงปราสาท
 	castleWalls = createCastleWallBoundingBoxes();
 	
@@ -313,6 +332,15 @@ int main()
             glfwGetKey(window, GLFW_KEY_PERIOD) == GLFW_PRESS,
 			glfwGetKey(window, GLFW_KEY_COMMA) == GLFW_PRESS
             );
+        player2.Update(deltaTime,
+            glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS,
+            glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS,
+            glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS,
+            glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS,
+            glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS,
+            glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS,
+            glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS
+        );
 
 		//animator.UpdateAnimation(deltaTime);
 
@@ -388,6 +416,7 @@ int main()
         demon.Draw(projection, view, camera.Position);
 
         player1.Draw(animShader, modelShader, view, projection);
+        player2.Draw(animShader, modelShader, view, projection);
         
         // สร้าง Bounding Box สำหรับตัวละคร (ขนาดประมาณ)
         float charRadius = 1.0f; // ปรับให้เหมาะสมกับขนาดตัวละคร
