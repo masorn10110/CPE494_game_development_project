@@ -33,6 +33,7 @@ Camera camera(glm::vec3(-0.228665f, 19.0239f, 6.79832f), glm::vec3(0.0f, 1.5f, 0
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
+unsigned int playerNoTarget = rand() % 2;
 
 bool cameraRotationEnabled = false;
 
@@ -411,7 +412,13 @@ int main()
             // มี collision - ย้อนกลับไปตำแหน่งเดิม
             characterPosition = previousPosition;
         }
-        
+
+        if(!demon.IsCastingAttack() && !demon.IsWarningPhase())
+        {
+            glm::vec3 targetPosition = playerNoTarget ? player1.position : player1.position;
+            demon.LookAtPosition(targetPosition);
+        }
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

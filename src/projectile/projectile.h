@@ -105,9 +105,9 @@ inline void Projectile::Reset()
 // 🔴 ใช้ Projectile:: นำหน้า
 inline glm::vec3 Projectile::GetRandomTarget(const glm::vec3 &forwardDir)
 {
-    const float AREA_WIDTH = 2.0f;
-    const float AREA_DEPTH = 5.0f;
-    const float DISTANCE_FRONT = 5.0f;
+    const float AREA_WIDTH = 7.0f;
+    const float AREA_DEPTH = 6.0f;
+    const float DISTANCE_FRONT = 1.0f;
 
     // dist(rng) ถูกเรียกใช้ถูกต้องแล้ว
     glm::vec3 rightDir = glm::normalize(glm::cross(forwardDir, glm::vec3(0.0f, 1.0f, 0.0f)));
@@ -132,7 +132,7 @@ inline void Projectile::Launch(const glm::vec3 &startPos, const glm::vec3 &forwa
     // ตั้งค่าการหมุนเริ่มต้นตามทิศทางแนวนอน
     m_currentRotationY = glm::degrees(glm::atan(forwardDir.x, forwardDir.z));
 
-    targetPosition = GetRandomTarget(forwardDir);
+    targetPosition = GetRandomTarget(forwardDir) + startPos;
     verticalVelocity = 10.0f;
     lifetime = 0.0f;
 }
@@ -221,7 +221,7 @@ inline void Projectile::Draw(const glm::mat4 &projection, const glm::mat4 &view,
         // 🌟 FIX: ใช้ absolute sine เพื่อให้ขนาดสั่นไปมาระหว่าง 1.0 ถึง 1.1
         currentScaleFactor = 1.0f + pulseMagnitude * glm::abs(glm::sin(lifetime * pulseSpeed));
     }
-    
+
     // currentScale *= currentScaleFactor; // 🌟 FIX: ใช้ factor ปรับ Scale
 
     // Logic Scale Impact เดิม (Scale Explosion)
@@ -236,7 +236,8 @@ inline void Projectile::Draw(const glm::mat4 &projection, const glm::mat4 &view,
     {
         // ... (Logic การหมุนตามทิศทางเหมือนเดิม) ...
         glm::vec3 originalForward = glm::vec3(0.0f, 0.0f, -1.0f);
-        if (!m_headFollowsDirection) originalForward = -originalForward;
+        if (!m_headFollowsDirection)
+            originalForward = -originalForward;
         glm::vec3 currentDirection = m_direction;
         glm::vec3 rotationAxis = glm::cross(originalForward, currentDirection);
         float rotationAngle = glm::angle(originalForward, currentDirection);
@@ -251,7 +252,7 @@ inline void Projectile::Draw(const glm::mat4 &projection, const glm::mat4 &view,
     }
 
     // 🌟 3. ปรับ Scale
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(currentScale)); 
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(currentScale));
 
     // 🌟 4. วาด
     shader->use();

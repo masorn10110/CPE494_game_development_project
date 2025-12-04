@@ -9,6 +9,12 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/gtx/norm.hpp>
+#include <glm/gtx/compatibility.hpp>
+
 #include <learnopengl/filesystem.h>
 #include <learnopengl/shader_m.h>
 #include <learnopengl/animator.h>
@@ -20,6 +26,38 @@
 #include <cstdlib> // สำหรับ rand()
 #include "../projectile/projectile.h"
 #include "../wall/stonewall.h"
+#include "../aoe/aoe.h"
+
+inline bool checkLineCircleIntersection(glm::vec2 p1, glm::vec2 p2, glm::vec2 center, float radius)
+{
+    glm::vec2 d = p2 - p1;
+    glm::vec2 f = p1 - center;
+
+    float a = glm::dot(d, d);
+    float b = 2.0f * glm::dot(f, d);
+    float c = glm::dot(f, f) - radius * radius;
+
+    float discriminant = b * b - 4 * a * c;
+
+    if (discriminant < 0)
+    {
+        return false; // ไม่มีการตัดกัน
+    }
+    else
+    {
+        // มีการตัดกัน แต่ต้องเช็คว่าจุดตัดอยู่ภายใน Segment p1-p2 หรือไม่
+        discriminant = sqrt(discriminant);
+        float t1 = (-b - discriminant) / (2 * a);
+        float t2 = (-b + discriminant) / (2 * a);
+
+        // ถ้า t อยู่ระหว่าง 0 ถึง 1 แสดงว่าจุดตัดอยู่บนเส้นที่เราลากพอดี
+        if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 // --------------------------------------------------------------------------------
 // 🔴 Structs (Crystal)
@@ -93,13 +131,28 @@ private:
     bool m_isMoving = false;
 
     // Logic สำหรับ Rotation และ Position
-    glm::vec3 m_position = glm::vec3(0.0f, -0.4f, 0.0f);
+    glm::vec3 m_position = glm::vec3(0.0f, -0.4f, -3.0f);
     glm::vec3 m_forward = glm::vec3(0.0f, 0.0f, -1.0f);
     float m_rotationY = 0.0f;
+
+    float m_targetRotationY = 0.0f;
+    const float ROTATION_SPEED = 20.0f;
 
     int m_handBoneID;
     float m_stateTime = -1.0f;
     float m_hurtTimer = 0.0f;
+
+    float m_autoAttackCooldown = 8.0f;
+    float m_autoAttackTimer = 0.0f;
+
+    // 🌟 NEW: ตัวแปรสำหรับการเตือนภัย (Warning Phase)
+    bool m_isWarningPhase = false;       // กำลังแสดง AoE หรือไม่
+    float m_warningTimer = 0.0f;         // นับเวลาถอยหลังช่วงเตือนภัย
+    const float WARNING_DURATION = 4.0f; // ระยะเวลาเตือนภัย 4 วินาที
+
+    // 🌟 NEW: เก็บเป้าหมายที่จะโจมตีหลังจากเตือนเสร็จ
+    glm::vec3 m_pendingAttackTarget;
+    int m_pendingAttackType = 0; // 0, 1, 2 (สุ่มไว้ล่วงหน้า)
 
     // Crystal Attack Logic
     std::vector<CrystalLayer> m_activeAttack;
@@ -117,7 +170,7 @@ private:
     Model m_fireballModel;
     Shader m_fireballShader;
 
-    const int FIREBALL_BURST_COUNT = 10;
+    const int FIREBALL_BURST_COUNT = 15;
     const float FIREBALL_SPREAD_ANGLE = 8.0f;
 
     Model m_wallModel;
@@ -127,6 +180,8 @@ private:
 
     glm::mat4 m_rightHandBoneMatrix; // World Space Matrix ของมือขวา
     glm::vec3 m_forwardDirection;
+
+    AoEIndicator *m_aoeIndicator;
 
     // 🔴 ฟังก์ชันช่วยสุ่ม/จัดการ Attack
     void updateCrystalAttack(float deltaTime, float currentFrame);
@@ -172,7 +227,7 @@ public:
           m_fireballModel(fbModel),
           m_fireballShader(fbShader),
           m_wallModel(wallModel), m_wallShader(wallShader), m_wallEmissiveID(wallEmissiveID),
-          m_stoneWallEffect(wallModel, wallShader, 0.3f)
+          m_stoneWallEffect(wallModel, wallShader, 0.1f)
     {
         try
         {
@@ -183,6 +238,7 @@ public:
             std::cerr << "Error: Bone 'mixamorig_RightHand' not found in model." << std::endl;
             m_handBoneID = -1;
         }
+        m_aoeIndicator = new AoEIndicator("aoe.vs", "aoe.fs");
         m_isAttacking_Anim02 = false;
         m_attackAnim02_Timer = 0.0f;
         m_rightHandBoneMatrix = glm::mat4(1.0f);
@@ -197,7 +253,10 @@ public:
     void Move(float deltaTime, bool isForward);
     void StopMove();
     void Rotate(float deltaTime, float direction);
-    void Attack();       // 🌟 2. สุ่มแอนิเมชัน 3 แบบ
+    void LookAtPosition(const glm::vec3 &targetPos);
+    void UpdateRotationTowardTarget(float deltaTime);
+    void Attack(); // 🌟 2. สุ่มแอนิเมชัน 3 แบบ
+    void Attack(const glm::vec3 &targetPos, int attackType);
     void AttackAnim02(); // 🌟 เพิ่ม Public Method
     void TakeDamage();   // 🌟 1. ถูกโจมตี (เปลี่ยนไป HURT)
     void TriggerDeath(); // 🌟 1. ตายทันที (ไม่ต้องใช้ปุ่ม)
@@ -210,6 +269,7 @@ public:
     float GetRotationY() const { return m_rotationY; }
     bool IsDead() const { return m_isDead; }
     bool IsCastingAttack() const { return m_isAttacking; }
+    bool IsWarningPhase() const { return m_isWarningPhase; }
     const std::vector<CrystalLayer> &GetActiveAttackCrystals() const { return m_activeAttack; }
 };
 
@@ -222,7 +282,7 @@ inline glm::mat4 Demon::GetModelMatrix() const
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, m_position);
     model = glm::rotate(model, glm::radians(m_rotationY), glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(.5f, .5f, .5f));
+    model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
     return model;
 }
 
@@ -244,6 +304,50 @@ inline void Demon::Move(float deltaTime, bool isForward)
 inline void Demon::StopMove()
 {
     m_isMoving = false;
+}
+
+inline void Demon::LookAtPosition(const glm::vec3 &targetPos)
+{
+    glm::vec3 directionVector = targetPos - m_position;
+    directionVector.y = 0.0f;
+
+    if (glm::length(directionVector) > 0.01f)
+    {
+        directionVector = glm::normalize(directionVector);
+        float targetAngleRad = glm::atan(directionVector.x, directionVector.z);
+
+        // 🔴 NOTE: ต้องตรวจสอบว่า 0 องศาคือ Z- หรือ Z+
+        // เนื่องจาก Demon เริ่มต้นหันไปทาง Z ลบ (-Z), และ atan2(x, z) วัดจาก +Z
+        // สูตรนี้ควรให้ค่ามุมที่ถูกต้อง (Yaw)
+        m_targetRotationY = glm::degrees(targetAngleRad);
+    }
+}
+
+inline void Demon::UpdateRotationTowardTarget(float deltaTime)
+{
+    float currentAngle = m_rotationY;
+    float targetAngle = m_targetRotationY;
+
+    // 1. ปรับ Target Angle ให้เป็นมุมที่สั้นที่สุด
+    float diff = targetAngle - currentAngle;
+    while (diff > 180.0f)
+        diff -= 360.0f;
+    while (diff < -180.0f)
+        diff += 360.0f;
+
+    // 2. คำนวณการหมุนที่ต้องทำ
+    float maxRotation = ROTATION_SPEED * deltaTime;
+
+    // 3. หมุนอย่างนุ่มนวล
+    if (glm::abs(diff) > maxRotation)
+    {
+        // ใช้ glm::sign สำหรับทิศทาง +1 หรือ -1
+        m_rotationY += glm::sign(diff) * maxRotation;
+    }
+    else
+    {
+        m_rotationY = targetAngle;
+    }
 }
 
 inline void Demon::Rotate(float deltaTime, float direction)
@@ -280,22 +384,32 @@ inline void Demon::TakeDamage()
 }
 
 // 🌟 Attack (สุ่มแอนิเมชัน 3 แบบ)
-inline void Demon::Attack()
+inline void Demon::Attack(const glm::vec3 &targetPos, int attackType = -1)
 {
     if (m_isDead || m_isAttacking || (m_charState != AnimState::IDLE && m_charState != AnimState::WALK))
         return;
 
-    Animation *nextAnim = nullptr;
-    int randomType = rand() % 3; // 0, 1, or 2
+    LookAtPosition(targetPos);
 
-    if (randomType == 0)
+    Animation *nextAnim = nullptr;
+    int type = (attackType != -1) ? attackType : (rand() % 3); // ใช้ค่าที่ส่งมา หรือสุ่มใหม่ถ้าไม่มี
+
+    if (type == 0)
         nextAnim = &m_attackAnim01;
-    else if (randomType == 1)
+    else if (type == 1)
         nextAnim = &m_attackAnim02;
-    else if (randomType == 2)
+    else
         nextAnim = &m_attackAnim03;
 
     TriggerAttack(nextAnim);
+}
+
+// overload เดิม (สำหรับการกดปุ่ม K ทดสอบ)
+inline void Demon::Attack()
+{
+    // ใช้เป้าหมายปัจจุบัน หรือตำแหน่งข้างหน้า
+    glm::vec3 dummyTarget = m_position + m_forward * 5.0f;
+    Attack(dummyTarget, -1); // สุ่ม
 }
 
 // 🌟 AttackAnim02 (Public Method)
@@ -338,19 +452,28 @@ inline void Demon::TriggerAttack(Animation *nextAnim)
 
 inline void Demon::ShootFireball()
 {
-    glm::vec3 startPos = m_rightHandBoneMatrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    // 🌟 1. กำหนด Local Offset (ตำแหน่งสัมพัทธ์กับ Demon World Position)
+    // Y: ความสูงที่ Fireball ควรจะออก (จากระดับพื้น -0.4f), Z: ห่างจากตัว Demon
+    float spawnHeight = 1.5f;
+    float spawnForwardDistance = 1.0f; // พุ่งออกจาก Demon 1.0 หน่วย
+
+    // 🌟 2. คำนวณ World Position: Base Position + Offset Forward + Offset Height
+    glm::vec3 startPos = m_position;
+
+    // ชดเชยการเลื่อนตำแหน่งในแนวไปข้างหน้า (ตามทิศทาง m_forward ที่คำนวณจาก m_rotationY)
+    startPos += m_forward * spawnForwardDistance;
+
+    // ชดเชยความสูง (Y-axis)
+    startPos.y += spawnHeight;
 
     for (int i = 0; i < FIREBALL_BURST_COUNT; ++i)
     {
-        // 1. สร้าง Fireball ใหม่ (สมมติว่า Projectile มี Constructor แบบนี้)
         Projectile newFireball(m_fireballModel, m_fireballShader, 0.5f, false);
 
-        // 2. คำนวณทิศทางที่มีการกระจาย (Spread)
-        // คำนวณค่า Offset องศา (-1, 0, 1) * SpreadAngle สำหรับ 3 ลูก
+        // ... (Logic การกระจาย) ...
         float offsetIndex = (float)(i - (FIREBALL_BURST_COUNT - 1) / 2.0f);
         float angleOffset = offsetIndex * FIREBALL_SPREAD_ANGLE;
 
-        // หมุนเวกเตอร์ m_forward รอบแกน Y (yaw)
         glm::vec3 rotatedForward = glm::rotateY(m_forward, glm::radians(angleOffset));
 
         newFireball.Launch(startPos, rotatedForward);
@@ -366,7 +489,6 @@ inline void Demon::UpdateBoneMatrices(const std::vector<glm::mat4> &finalBoneMat
         glm::mat4 modelMatrix = GetModelMatrix(); // Model Matrix ของ Demon
         glm::mat4 boneMatrix = finalBoneMatrices[m_handBoneID];
 
-        // World Matrix ของมือขวา = Demon's Model Matrix * Hand's Bone Matrix
         m_rightHandBoneMatrix = modelMatrix * boneMatrix;
     }
 }
@@ -434,7 +556,7 @@ inline void Demon::Draw(const glm::mat4 &projection, const glm::mat4 &view, cons
                 crystalModelMatrix = glm::translate(crystalModelMatrix, crystal.Position);
                 crystalModelMatrix = glm::rotate(crystalModelMatrix, glm::radians(crystal.RotationY), glm::vec3(0.0f, 1.0f, 0.0f));
 
-                float baseScale = 1.5f;
+                float baseScale = 4.0f;
                 float scale = baseScale + (layer.layer * 0.05f);
 
                 crystalModelMatrix = glm::scale(crystalModelMatrix, glm::vec3(scale));
@@ -449,6 +571,113 @@ inline void Demon::Draw(const glm::mat4 &projection, const glm::mat4 &view, cons
     {
         fireball.Draw(projection, view, viewPos);
     }
+
+    if (m_isWarningPhase && m_aoeIndicator)
+    {
+        // ใช้ m_position และ m_forward (ซึ่งหันไปหา Target แล้ว)
+
+        if (m_pendingAttackType == 0) // Crystal (Cone) - Attack 01
+        {
+            // ใช้ค่าเดียวกับตอนร่ายจริง
+            m_aoeIndicator->DrawCone(view, projection, m_position, m_forward, 20.0f, 45.0f);
+        }
+        else if (m_pendingAttackType == 1) // Fireball (Box) - Attack 02
+        {
+            // ใช้ค่าเดียวกับตอนร่ายจริง (GetRandomTarget ใช้ AREA_WIDTH=8.0, DEPTH=10.0)
+            // DrawRectangle วาดจากจุดกึ่งกลางไปข้างหน้า
+            // ปรับขนาดให้ตรงกับพื้นที่สุ่มของ Fireball
+            m_aoeIndicator->DrawRectangle(view, projection, m_position, m_forward, 12.0f, 8.0f);
+        }
+        else if (m_pendingAttackType == 2) // StoneWall (Box) - Attack 03
+        {
+            // 🌟 FIX STONEWALL POSITION: คำนวณให้ตรงกับ StoneWall::Cast()
+            // ใน Cast: m_centerPosition = casterPos + forwardDir * WALL_DEFAULT_DISTANCE (6.0f)
+            //          + rightDir * sideOffset (1.5f)
+
+            // 1. คำนวณ Right Vector
+            glm::vec3 rightDir = glm::normalize(glm::cross(m_forward, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+            // 2. คำนวณ Center เหมือนใน Cast()
+            float dist = 13.0f; // WALL_DEFAULT_DISTANCE
+            float sideOffset = 1.5f;
+            // glm::vec3 wallCenter = m_position + (m_forward * dist) + (rightDir * sideOffset);
+            glm::vec3 wallCenter = m_position + (m_forward * dist);
+            wallCenter.y = 0.02f; // ยกขึ้นเหนือพื้นนิดหน่อย
+
+            // 3. คำนวณขนาด
+            float wallLength = 1.0f * 25.0f; // Length Multiplier (1) * Scale (25.0f)
+            float wallThickness = 1.0f;
+
+            // 4. วาด
+            m_aoeIndicator->DrawBoxAtCenter(view, projection,
+                                            wallCenter,
+                                            rightDir, // หันข้าง (แนวกำแพง)
+                                            wallLength,
+                                            wallThickness);
+        }
+    }
+
+    // if (m_charState == AnimState::IDLE_ATTACK01 || m_charState == AnimState::ATTACK01_IDLE)
+    // {
+    //     // รัศมี 10.0, มุมกระจาย (คำนวณใน initCone ไว้แล้ว)
+    //     // แสดงผลจนกว่าจะจบ State
+    //     if (m_stateTime < EFFECT_DURATION)
+    //     {
+    //         m_aoeIndicator->DrawCone(view, projection, m_position, m_forward, 20.0f, 45.0f);
+    //     }
+    // }
+
+    // // 2. Fireball (Rectangle) - Attack 02
+    // if (m_isAttacking_Anim02)
+    // {
+    //     // พื้นที่สี่เหลี่ยม กว้าง 4 ยาว 6 (ตาม Logic Fireball Random)
+    //     // ตำแหน่งเริ่มที่ Demon พุ่งไปข้างหน้า
+    //     m_aoeIndicator->DrawRectangle(view, projection, m_position, m_forward, 12.0f, 30.0f);
+    // }
+
+    // // 3. Stone Wall (Rectangle) - Attack 03
+    // if (m_charState == AnimState::IDLE_ATTACK03 || m_charState == AnimState::ATTACK03_IDLE)
+    // {
+    //     if (m_stoneWallEffect.IsActive())
+    //     {
+    //         // ... (Code วาดโมเดลกำแพงเดิม) ...
+    //         // ...
+    //         m_stoneWallEffect.Draw(projection, view, viewPos);
+    //         glDisable(GL_BLEND);
+
+    //         // 🔴🔴 DRAW AOE INDICATOR (พื้นสีแดง) 🔴🔴
+    //         if (m_aoeIndicator) // ตรวจสอบว่ามีตัววาดหรือไม่
+    //         {
+    //             // ดึงข้อมูลจาก Wall
+    //             glm::vec3 wallCenter = m_stoneWallEffect.GetCenterPosition();
+    //             glm::vec3 wallForward = m_stoneWallEffect.GetForwardDirection();
+
+    //             // คำนวณขนาดพื้นที่สีแดง
+    //             // ความยาวกำแพง (ด้านข้าง) = Multiplier * SegmentWidth (1.0f)
+    //             float wallLength = (float)m_stoneWallEffect.GetLengthMultiplier() * 25.0f;
+
+    //             // ความหนากำแพง (ด้านลึก) = ให้กว้างกว่าตัวกำแพงจริงหน่อยเพื่อให้เห็นชัด (เช่น 1.5 หน่วย)
+    //             float wallThickness = 2.0f;
+
+    //             // ⚠️ สลับด้าน: เนื่องจากกำแพงวางตัวขวาง (แนว X) แต่โมเดล Quad ปกติวางแนว Z
+    //             // เราจึงต้องส่งค่าสลับกัน หรือ หมุน 90 องศา
+    //             // วิธีง่ายสุด: ใช้ DrawBoxAtCenter แต่สลับค่า Width/Length และหมุนเพิ่ม
+
+    //             // หมุน forward ของ Indicator ไป 90 องศาเพื่อให้ขนานกับแนวกำแพง
+    //             glm::vec3 wallRight = glm::normalize(glm::cross(wallForward, glm::vec3(0, 1, 0)));
+
+    //             // วาดสี่เหลี่ยม
+    //             // ใช้ wallRight เป็นทิศทางหลัก เพื่อให้สี่เหลี่ยมหันข้างตามกำแพง
+    //             // Width (แกน X ของกล่อง) = wallLength
+    //             // Length (แกน Z ของกล่อง) = wallThickness
+    //             m_aoeIndicator->DrawBoxAtCenter(view, projection,
+    //                                             wallCenter,
+    //                                             wallRight,      // หันไปทางขวา (แนวกำแพง)
+    //                                             wallLength,     // ความยาวกำแพง
+    //                                             wallThickness); // ความหนาพื้นที่
+    //         }
+    //     }
+    // }
 
     if (m_stoneWallEffect.IsActive())
     {
@@ -470,7 +699,12 @@ inline void Demon::Draw(const glm::mat4 &projection, const glm::mat4 &view, cons
 }
 inline void Demon::updateCrystalAttack(float deltaTime, float currentFrame)
 {
-    if (m_stateTime >= 0.0f) // โค้ดที่ถูกต้อง
+    // กำหนดข้อมูลบ่อน้ำ (Fountains) - ปรับค่าตาม Bounding Box ที่ให้มา
+    const glm::vec2 FOUNTAIN_RIGHT_POS(5.9f, 2.75f);
+    const glm::vec2 FOUNTAIN_LEFT_POS(-6.3f, 2.75f);
+    const float FOUNTAIN_RADIUS = 1.8f; // เผื่อระยะรัศมีนิดหน่อย
+
+    if (m_stateTime >= 0.0f)
     {
         m_stateTime += deltaTime;
 
@@ -480,15 +714,12 @@ inline void Demon::updateCrystalAttack(float deltaTime, float currentFrame)
             CrystalLayer newLayer;
             newLayer.layer = m_currentLayer;
 
-            // 🔴 ค่าที่ปรับเพื่อควบคุมการกระจายตัว (เหมือนที่ปรับในขั้นตอนก่อนหน้า)
-            float zOffset = 0.5f + (m_currentLayer * 0.7f);
+            float zOffset = 0.5f + (m_currentLayer * 0.1f);
             float radius = (m_currentLayer * 0.5f);
             int numCrystals = glm::min(m_currentLayer * 2, 12);
 
-            glm::mat4 demonBaseModel = glm::mat4(1.0f);
-            demonBaseModel = glm::translate(demonBaseModel, glm::vec3(0.0f, -0.4f, 0.0f));
-            demonBaseModel = glm::rotate(demonBaseModel, glm::radians(GetRotationY()), glm::vec3(0.0f, 1.0f, 0.0f));
-            demonBaseModel = glm::scale(demonBaseModel, glm::vec3(.5f, .5f, .5f));
+            glm::mat4 demonBaseModel = GetModelMatrix();
+            glm::vec3 demonPos = m_position; // ตำแหน่ง Demon (จุดเริ่มของเส้น)
 
             for (int i = 0; i < numCrystals; ++i)
             {
@@ -497,22 +728,39 @@ inline void Demon::updateCrystalAttack(float deltaTime, float currentFrame)
 
                 glm::vec3 localPos = glm::vec3(
                     radius * glm::sin(glm::radians(angle)),
-                    0.0f, // 🔴 คงระดับความสูงไว้ที่ 0.0f (ระดับเท้า Demon)
+                    0.0f,
                     zOffset + radius * glm::cos(glm::radians(angle)));
 
+                // คำนวณตำแหน่งโลกของ Crystal
                 crystal.Position = glm::vec3(demonBaseModel * glm::vec4(localPos, 1.0f));
                 crystal.RotationY = angle + (currentFrame * 100.0f);
 
-                newLayer.crystals.push_back(crystal);
+                // 🔴🔴 CHECK COLLISION: Demon -> Crystal ตัดผ่านบ่อน้ำหรือไม่ 🔴🔴
+
+                // แปลงเป็น 2D (XZ plane)
+                glm::vec2 startPoint(demonPos.x, demonPos.z);
+                glm::vec2 endPoint(crystal.Position.x, crystal.Position.z);
+
+                bool hitRight = checkLineCircleIntersection(startPoint, endPoint, FOUNTAIN_RIGHT_POS, FOUNTAIN_RADIUS);
+                bool hitLeft = checkLineCircleIntersection(startPoint, endPoint, FOUNTAIN_LEFT_POS, FOUNTAIN_RADIUS);
+
+                // ถ้าไม่ชนบ่อน้ำเลย ให้เพิ่ม Crystal เข้าไป
+                if (!hitRight && !hitLeft)
+                {
+                    newLayer.crystals.push_back(crystal);
+                }
             }
+
+            // เพิ่ม Layer แม้ว่าจะไม่มี Crystal ใน Layer นั้น (เพื่อรักษาลำดับเวลา)
+            // หรือจะเช็คว่า !newLayer.crystals.empty() ก็ได้ถ้าไม่อยากเก็บ Layer ว่าง
             m_activeAttack.push_back(newLayer);
         }
 
-        if (m_stateTime >= EFFECT_DURATION) // ใช้ m_stateTime ในการกำหนดระยะเวลาเอฟเฟกต์
+        if (m_stateTime >= EFFECT_DURATION)
         {
             m_activeAttack.clear();
             m_currentLayer = 0;
-            m_stateTime = -1.0f; // Reset to Not Triggered
+            m_stateTime = -1.0f;
         }
     }
 }
@@ -527,6 +775,63 @@ inline void Demon::Update(float deltaTime, float currentFrame)
             m_animator.UpdateAnimation(deltaTime);
         }
         return;
+    }
+
+    // std::cout << m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
+
+    if (!m_isWarningPhase && !m_isAttacking)
+    {
+        m_autoAttackTimer += deltaTime;
+
+        if (m_autoAttackTimer >= m_autoAttackCooldown)
+        {
+            // 1. เริ่ม Warning Phase
+            m_isWarningPhase = true;
+            m_warningTimer = 0.0f;
+
+            // 2. สุ่มประเภทการโจมตีและกำหนดเป้าหมายล่วงหน้า
+            m_pendingAttackType = rand() % 3;
+
+            // สมมติเป้าหมาย (ปรับให้ Dynamic ได้ตามต้องการ เช่น ตำแหน่งผู้เล่นล่าสุด)
+            // m_pendingAttackTarget = glm::vec3(20.0f, m_position.y, 20.0f);
+
+            // 3. หันหน้าไปหาเป้าหมายทันที (หรือจะค่อยๆ หันก็ได้)
+            // LookAtPosition(m_pendingAttackTarget);
+
+            m_autoAttackTimer = 0.0f; // รีเซ็ต Cooldown
+        }
+    }
+
+    // 🌟🌟 Logic ช่วง Warning Phase 🌟🌟
+    if (m_isWarningPhase)
+    {
+        m_warningTimer += deltaTime;
+
+        // ถ้าครบเวลาเตือนแล้ว -> เริ่มโจมตีจริง
+        if (m_warningTimer >= WARNING_DURATION)
+        {
+            m_isWarningPhase = false;
+
+            // เรียก Attack ตามประเภทที่สุ่มไว้
+            Attack(m_pendingAttackTarget, m_pendingAttackType);
+        }
+    }
+
+    // if (m_charState == AnimState::IDLE)
+    // {
+    //     m_autoAttackTimer += deltaTime;
+
+    //     if (m_autoAttackTimer >= m_autoAttackCooldown)
+    //     {
+    //         Attack();
+
+    //         m_autoAttackTimer = 0.0f;
+    //     }
+    // }
+
+    if (!m_isAttacking && !m_isWarningPhase)
+    {
+        UpdateRotationTowardTarget(deltaTime);
     }
 
     m_forward.x = glm::sin(glm::radians(m_rotationY)); // กลับเครื่องหมายของ sin
