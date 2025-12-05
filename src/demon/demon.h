@@ -183,6 +183,9 @@ private:
 
     AoEIndicator *m_aoeIndicator;
 
+    // 🔴 Collision radius for hitscan detection
+    static constexpr float DEMON_COLLISION_RADIUS = 1.5f;
+
     // 🔴 ฟังก์ชันช่วยสุ่ม/จัดการ Attack
     void updateCrystalAttack(float deltaTime, float currentFrame);
     void TriggerAttack(Animation *nextAnim);
@@ -271,6 +274,10 @@ public:
     bool IsCastingAttack() const { return m_isAttacking; }
     bool IsWarningPhase() const { return m_isWarningPhase; }
     const std::vector<CrystalLayer> &GetActiveAttackCrystals() const { return m_activeAttack; }
+    float GetCollisionRadius() const { return DEMON_COLLISION_RADIUS; }
+
+    // 🌟 NEW: Get unscaled world position for collision
+    glm::vec3 GetWorldPosition() const { return m_position; }
 };
 
 // --------------------------------------------------------------------------------

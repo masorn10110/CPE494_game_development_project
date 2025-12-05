@@ -13,7 +13,7 @@
 #include <learnopengl/shader_m.h>
 #include <learnopengl/animator.h>
 #include <learnopengl/model_animation.h>
-#include "hitscan.h"
+#include "../playergun/hitscan.h"
 
 class Player
 {
@@ -97,6 +97,8 @@ public:
     bool isDead = false;
     glm::vec3 respawnPosition;
     float respawnYaw;
+
+    float playerradius = 0.5f; // for hitscan collision
 
     Player(const std::string &modelPath,
            const std::string &idlePath,
@@ -557,6 +559,7 @@ public:
         UpdateAnimationStateMachine(dt, set);
 
         animator.UpdateAnimation(dt);
+        lastHitscan.Update(dt);
     }
 
     void FireHitscan()
@@ -579,7 +582,7 @@ public:
     // ----------------------------------------------------
     // DRAW FUNCTION (unchanged)
     // ----------------------------------------------------
-    void Draw(Shader &animShader, Shader &lightingShader,
+    void Draw(Shader &animShader, Shader &lightingShader, Shader &hitscanShader,
               const glm::mat4 &view, const glm::mat4 &projection)
     {
         //------------------------------------------------------------
@@ -638,6 +641,9 @@ public:
 
         if (!holdingGrenade)
             gunModel.Draw(lightingShader);
+
+        lastHitscan.Draw(hitscanShader, view, projection);
+
     }
 };
 
