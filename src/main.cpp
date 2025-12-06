@@ -17,6 +17,7 @@
 #include "stb_image.h"
 #include "player/player.h"
 #include "projectile/projectile.h"
+#include "collision/collision.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
@@ -34,6 +35,7 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 unsigned int playerNoTarget = rand() % 2;
+bool onetime = true;
 
 bool cameraRotationEnabled = false;
 
@@ -52,49 +54,49 @@ bool isMoving = false;
 glm::vec3 lightPos(100.0f, 200.0f, 50.0f); // ตำแหน่งแสง
 glm::vec3 lightColor(1.0f, 0.9f, 0.7f);    // สีแสง (ขาว)
 
-// Bounding Box structure
-struct BoundingBox
-{
-    glm::vec3 min;
-    glm::vec3 max;
+// // Bounding Box structure
+// struct BoundingBox
+// {
+//     glm::vec3 min;
+//     glm::vec3 max;
 
-    BoundingBox() : min(glm::vec3(0.0f)), max(glm::vec3(0.0f)) {}
-    BoundingBox(glm::vec3 min, glm::vec3 max) : min(min), max(max) {}
+//     BoundingBox() : min(glm::vec3(0.0f)), max(glm::vec3(0.0f)) {}
+//     BoundingBox(glm::vec3 min, glm::vec3 max) : min(min), max(max) {}
 
-    // Transform AABB
-    BoundingBox transform(const glm::mat4 &modelMatrix)
-    {
-        glm::vec3 corners[8] = {
-            glm::vec3(min.x, min.y, min.z),
-            glm::vec3(max.x, min.y, min.z),
-            glm::vec3(min.x, max.y, min.z),
-            glm::vec3(max.x, max.y, min.z),
-            glm::vec3(min.x, min.y, max.z),
-            glm::vec3(max.x, min.y, max.z),
-            glm::vec3(min.x, max.y, max.z),
-            glm::vec3(max.x, max.y, max.z)};
+//     // Transform AABB
+//     BoundingBox transform(const glm::mat4 &modelMatrix)
+//     {
+//         glm::vec3 corners[8] = {
+//             glm::vec3(min.x, min.y, min.z),
+//             glm::vec3(max.x, min.y, min.z),
+//             glm::vec3(min.x, max.y, min.z),
+//             glm::vec3(max.x, max.y, min.z),
+//             glm::vec3(min.x, min.y, max.z),
+//             glm::vec3(max.x, min.y, max.z),
+//             glm::vec3(min.x, max.y, max.z),
+//             glm::vec3(max.x, max.y, max.z)};
 
-        glm::vec3 newMin = glm::vec3(modelMatrix * glm::vec4(corners[0], 1.0f));
-        glm::vec3 newMax = newMin;
+//         glm::vec3 newMin = glm::vec3(modelMatrix * glm::vec4(corners[0], 1.0f));
+//         glm::vec3 newMax = newMin;
 
-        for (int i = 1; i < 8; i++)
-        {
-            glm::vec3 transformed = glm::vec3(modelMatrix * glm::vec4(corners[i], 1.0f));
-            newMin = glm::min(newMin, transformed);
-            newMax = glm::max(newMax, transformed);
-        }
+//         for (int i = 1; i < 8; i++)
+//         {
+//             glm::vec3 transformed = glm::vec3(modelMatrix * glm::vec4(corners[i], 1.0f));
+//             newMin = glm::min(newMin, transformed);
+//             newMax = glm::max(newMax, transformed);
+//         }
 
-        return BoundingBox(newMin, newMax);
-    }
-};
+//         return BoundingBox(newMin, newMax);
+//     }
+// };
 
-// ฟังก์ชันเช็ค collision ระหว่าง 2 AABB
-bool checkAABBCollision(const BoundingBox &a, const BoundingBox &b)
-{
-    return (a.min.x <= b.max.x && a.max.x >= b.min.x) &&
-           (a.min.y <= b.max.y && a.max.y >= b.min.y) &&
-           (a.min.z <= b.max.z && a.max.z >= b.min.z);
-}
+// // ฟังก์ชันเช็ค collision ระหว่าง 2 AABB
+// bool checkAABBCollision(const BoundingBox &a, const BoundingBox &b)
+// {
+//     return (a.min.x <= b.max.x && a.max.x >= b.min.x) &&
+//            (a.min.y <= b.max.y && a.max.y >= b.min.y) &&
+//            (a.min.z <= b.max.z && a.max.z >= b.min.z);
+// }
 
 // สร้าง Bounding Boxes สำหรับกำแพงปราสาท (หลังจาก scale 0.5)
 std::vector<BoundingBox> createCastleWallBoundingBoxes()
@@ -319,7 +321,7 @@ int main()
         lastFrame = currentFrame;
 
         // เก็บตำแหน่งก่อนหน้าเพื่อใช้ในการ rollback
-        previousPosition = characterPosition;
+        // previousPosition = player1.position;
 
         // input
         // -----
@@ -457,36 +459,61 @@ int main()
         player2.Draw(animShader, modelShader, hitscanShader, view, projection);
 
         // สร้าง Bounding Box สำหรับตัวละคร (ขนาดประมาณ)
-        float charRadius = 1.0f; // ปรับให้เหมาะสมกับขนาดตัวละคร
-        characterBBox = BoundingBox(
-            characterPosition - glm::vec3(charRadius, 0.0f, charRadius),
-            characterPosition + glm::vec3(charRadius, 3.0f, charRadius));
+        // float charRadius = 1.0f; // ปรับให้เหมาะสมกับขนาดตัวละคร
+        // characterBBox = BoundingBox(
+        //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
+        //     player1.position + glm::vec3(player1.playerradius, 3.0f, player1.playerradius));
+
+        CheckWallCollision(
+            player1.position,
+            player1.previousPosition,
+            player1.playerradius,
+            castleWalls);
+        CheckWallCollision(
+            player2.position,
+            player2.previousPosition,
+            player2.playerradius,
+            castleWalls);
+
+        // characterBBox = BoundingBox(
+        //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
+        //     player1.position + glm::vec3(player1.playerradius, 3.0f, player1.playerradius));
 
         // เช็ค collision กับกำแพงทั้งหมด
-        bool collisionDetected = false;
-        for (size_t i = 0; i < castleWalls.size(); i++)
-        {
-            if (checkAABBCollision(characterBBox, castleWalls[i]))
-            {
-                collisionDetected = true;
-                if (debugCollision)
-                {
-                    std::cout << "Collision with wall " << i << std::endl;
-                }
-                break;
-            }
-        }
+        // bool collisionDetected = false;
+        // for (size_t i = 0; i < castleWalls.size(); i++)
+        // {
+        //     if (CheckAABBCollision(characterBBox, castleWalls[i]))
+        //     {
+        //         collisionDetected = true;
+        //         if (debugCollision)
+        //         {
+        //             std::cout << "Collision with wall " << i << std::endl;
+        //         }
+        //         break;
+        //     }
+        // }
 
-        if (collisionDetected)
-        {
-            // มี collision - ย้อนกลับไปตำแหน่งเดิม
-            characterPosition = previousPosition;
-        }
+        // if (collisionDetected)
+        // {
+        //     // มี collision - ย้อนกลับไปตำแหน่งเดิม
+        //     player1.position = previousPosition;
+        //
 
         if (!demon.IsCastingAttack() && !demon.IsWarningPhase())
         {
-            glm::vec3 targetPosition = playerNoTarget ? player1.position : player1.position;
+            if (onetime)
+            {
+                playerNoTarget = rand() % 2;
+                onetime = false;
+                printf("Demon is targeting Player %d\n", playerNoTarget ? 1 : 2);
+            }
+            glm::vec3 targetPosition = playerNoTarget ? player1.position : player2.position;
             demon.LookAtPosition(targetPosition);
+        }
+        else
+        {
+            onetime = true;
         }
 
         glfwSwapBuffers(window);

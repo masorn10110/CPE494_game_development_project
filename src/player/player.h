@@ -14,11 +14,13 @@
 #include <learnopengl/animator.h>
 #include <learnopengl/model_animation.h>
 #include "../playergun/hitscan.h"
+#include "../collision/collision.h"
 
 class Player
 {
 public:
     glm::vec3 position;
+    glm::vec3 previousPosition;
     glm::vec3 size;
     float yaw;
 
@@ -136,6 +138,7 @@ public:
           gunModel(gunPath)
     {
         position = startPos;
+        previousPosition = startPos;
         respawnPosition = startPos;
         size = glm::vec3(0.5f, 1.0f, 0.5f);
         yaw = 180.0f;
@@ -527,6 +530,7 @@ public:
     // ============================================================
     void Update(float dt, bool up, bool down, bool left, bool right, bool jump, bool shoot, bool tggrenade)
     {
+        previousPosition = position;
         // Check death state first
         if (health <= 0)
         {
