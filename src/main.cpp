@@ -137,8 +137,28 @@ std::vector<BoundingBox> createCastleWallBoundingBoxes()
     return walls;
 }
 
+std::vector<BoundingBox> createFountainBoundingBoxes()
+{
+    std::vector<BoundingBox> fountains;
+
+    // Right Fountain
+    fountains.push_back(BoundingBox(
+        glm::vec3(5.0f, 0.0f, 1.6f), // min x,y,z
+        glm::vec3(7.0f, 3.0f, 3.8f)  // max x,y,z
+        ));
+
+    // Left Fountain
+    fountains.push_back(BoundingBox(
+        glm::vec3(-7.0f, 0.0f, 1.6f), // min x,y,z
+        glm::vec3(-5.0f, 3.0f, 3.8f)  // max x,y,z
+        ));
+
+    return fountains;
+}
+
 BoundingBox characterBBox;
 std::vector<BoundingBox> castleWalls;
+std::vector<BoundingBox> fountainWalls;
 
 // Animation states
 /*enum AnimState {
@@ -284,6 +304,7 @@ int main()
         glm::vec3(-5.0f, 0.0f, 5.0f));
     // สร้าง Bounding Boxes สำหรับกำแพงปราสาท
     castleWalls = createCastleWallBoundingBoxes();
+    fountainWalls = createFountainBoundingBoxes();
 
     std::cout << "\n=== Castle Walls Bounding Boxes ===" << std::endl;
     const char *wallNames[] = {"North", "South", "East", "West"};
@@ -464,16 +485,11 @@ int main()
         //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
         //     player1.position + glm::vec3(player1.playerradius, 3.0f, player1.playerradius));
 
-        CheckWallCollision(
-            player1.position,
-            player1.previousPosition,
-            player1.playerradius,
-            castleWalls);
-        CheckWallCollision(
-            player2.position,
-            player2.previousPosition,
-            player2.playerradius,
-            castleWalls);
+        CheckWallCollision(player1.position, player1.previousPosition, player1.playerradius, castleWalls);
+        CheckWallCollision(player1.position, player1.previousPosition, player1.playerradius, fountainWalls);
+
+        CheckWallCollision(player2.position, player2.previousPosition, player2.playerradius, castleWalls);
+        CheckWallCollision(player2.position, player2.previousPosition, player2.playerradius, fountainWalls);
 
         // characterBBox = BoundingBox(
         //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
@@ -617,6 +633,9 @@ void processInput(GLFWwindow *window, Player &player)
         std::cout << "\n=== Info ===" << std::endl;
         std::cout << "Camera: (" << camera.Position.x << ", " << camera.Position.y << ", " << camera.Position.z << ")" << std::endl;
         std::cout << "Player1 Position: (" << playerPos.x << ", " << playerPos.y << ", " << playerPos.z << ")" << std::endl;
+        characterBBox = BoundingBox(
+            player.position - glm::vec3(player.playerradius, 0.0f, player.playerradius),
+            player.position + glm::vec3(player.playerradius, 3.0f, player.playerradius));
         std::cout << "Character BBox: Min(" << characterBBox.min.x << ", " << characterBBox.min.y << ", " << characterBBox.min.z
                   << ") Max(" << characterBBox.max.x << ", " << characterBBox.max.y << ", " << characterBBox.max.z << ")" << std::endl;
         std::cout << "==================\n"
