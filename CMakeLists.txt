@@ -19,6 +19,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 # Include paths
 # -----------------------------
 include_directories(${CMAKE_SOURCE_DIR}/includes)
+include_directories(${FREETYPE_INCLUDE_DIRS})
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
 
@@ -37,10 +38,8 @@ message(STATUS "Using GLFW at: ${GLFW3_INCLUDE_DIR}")
 find_package(ASSIMP REQUIRED)
 message(STATUS "Using Assimp at: ${ASSIMP_INCLUDE_DIR}")
 
-if(APPLE)
-  find_package(Freetype REQUIRED)
-  message(STATUS "Using Freetype at: ${FREETYPE_INCLUDE_DIRS}")
-endif()
+find_package(Freetype REQUIRED)
+message(STATUS "Using Freetype at: ${FREETYPE_INCLUDE_DIRS}")
 
 # Platform-specific linking
 if(WIN32)
@@ -50,7 +49,7 @@ elseif(UNIX AND NOT APPLE)
   find_package(OpenGL REQUIRED)
   find_package(X11 REQUIRED)
   add_definitions(${OPENGL_DEFINITIONS})
-  set(LIBS ${GLFW3_LIBRARY} ${OPENGL_LIBRARIES} ${ASSIMP_LIBRARY} X11 Xrandr Xinerama Xi Xxf86vm Xcursor dl pthread freetype)
+  set(LIBS ${GLFW3_LIBRARY} ${OPENGL_LIBRARIES} ${ASSIMP_LIBRARY} ${FREETYPE_DIRS} X11 Xrandr Xinerama Xi Xxf86vm Xcursor dl pthread freetype)
 elseif(APPLE)
   find_library(COCOA_LIBRARY Cocoa)
   find_library(OpenGL_LIBRARY OpenGL)
@@ -83,8 +82,16 @@ include_directories(${CMAKE_BINARY_DIR}/configuration)
 # -----------------------------
 # Create executable
 # -----------------------------
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${FREETYPE_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${LIBS})
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/includes
+    ${FREETYPE_INCLUDE_DIRS}
+    ${GLM_INCLUDE_DIR}
+    ${GLFW3_INCLUDE_DIR}
+    ${ASSIMP_INCLUDE_DIR}
+)
 
 if(MSVC)
   target_compile_options(${PROJECT_NAME} PRIVATE /std:c++17 /MP)

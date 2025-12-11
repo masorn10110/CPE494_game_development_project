@@ -18,6 +18,8 @@
 #include "player/player.h"
 #include "projectile/projectile.h"
 #include "collision/collision.h"
+#include "menu/menu.h"
+#include "menu/text_renderer.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
@@ -160,6 +162,25 @@ BoundingBox characterBBox;
 std::vector<BoundingBox> castleWalls;
 std::vector<BoundingBox> fountainWalls;
 
+enum GameState {
+    MENU,
+    PLAYING
+};
+GameState gameState = MENU;
+
+// 🎮 ฟังก์ชันเช็คว่าเมาส์คลิกปุ่มหรือไม่
+bool isMouseOverButton(double mouseX, double mouseY, glm::vec2 buttonPos, glm::vec2 buttonSize) {
+    return mouseX >= buttonPos.x && mouseX <= buttonPos.x + buttonSize.x &&
+           mouseY >= buttonPos.y && mouseY <= buttonPos.y + buttonSize.y;
+}
+
+// 🎮 Mouse button callback
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+
+// เพิ่มตัวแปร global สำหรับ mouse
+double mouseX = 0.0, mouseY = 0.0;
+bool menuClickProcessed = false;
+
 // Animation states
 /*enum AnimState {
     IDLE,
@@ -195,8 +216,10 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -204,6 +227,18 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+    
+    UIManager* uiManager = new UIManager(SCR_WIDTH, SCR_HEIGHT);
+    TextRenderer* Text = new TextRenderer(SCR_WIDTH, SCR_HEIGHT);
+    Text->Load(FileSystem::getPath("resource/fonts/OCRAEXT.TTF").c_str(), 24);
+    //textRenderer->Load("resources/fonts/arial.ttf", 48);
+    // 🎮 กำหนดตำแหน่งและขนาดปุ่ม
+    glm::vec2 startButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2);
+    glm::vec2 quitButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 + 70);
+    glm::vec2 buttonSize(200, 50);
+        
+    // glm::vec2 resumeButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 - 50);
+    // glm::vec2 menuButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 + 20);
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(true);
@@ -344,198 +379,291 @@ int main()
         // เก็บตำแหน่งก่อนหน้าเพื่อใช้ในการ rollback
         // previousPosition = player1.position;
 
-        // input
+        glfwGetCursorPos(window, &mouseX, &mouseY);
+
+        // 🎮 MENU STATE
+        if (gameState == MENU)
+        {
+            glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            
+            // Disable depth test for 2D UI
+            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            
+            // 🎮 วาดชื่อเกม (ด้านบน)
+            Text->RenderText("DEMON BOSS BATTLE", 
+                        SCR_WIDTH / 2 - 180.0f - 50.0f,    // จัดกลาง
+                        100.0f,        // ด้านบน
+                        2.0f,                       // scale
+                        glm::vec3(1.0f, 0.3f, 0.3f)); // สีแดง
+
+            // 🎮 Start Button - วาดพื้นหลังปุ่ม
+            bool hoverStart = isMouseOverButton(mouseX, mouseY, startButtonPos, buttonSize);
+            glm::vec3 startColor = hoverStart ? glm::vec3(0.3f, 0.6f, 0.3f) : glm::vec3(0.2f, 0.4f, 0.2f);
+            uiManager->DrawRect(startButtonPos, buttonSize, startColor, 0.9f);
+            
+            // 🎮 วาดข้อความบนปุ่ม Start
+            Text->RenderText("START GAME", 
+                        startButtonPos.x + 30.0f,          // เยื้องเข้ามาใน button
+                        startButtonPos.y - 32.0f,  // Y coordinate (กลับด้าน)
+                        0.8f,                              // scale เล็กลง
+                        glm::vec3(1.0f, 1.0f, 1.0f));      // สีขาว
+
+            // 🎮 Quit Button - วาดพื้นหลังปุ่ม
+            bool hoverQuit = isMouseOverButton(mouseX, mouseY, quitButtonPos, buttonSize);
+            glm::vec3 quitColor = hoverQuit ? glm::vec3(0.6f, 0.3f, 0.3f) : glm::vec3(0.4f, 0.2f, 0.2f);
+            uiManager->DrawRect(quitButtonPos, buttonSize, quitColor, 0.9f);
+            
+            // 🎮 วาดข้อความบนปุ่ม Quit
+            Text->RenderText("QUIT", 
+                        quitButtonPos.x + 75.0f,           // จัดกลางในปุ่ม
+                        quitButtonPos.y - 32.0f,
+                        0.8f,
+                        glm::vec3(1.0f, 1.0f, 1.0f));
+
+            // 🎮 คำแนะนำ (ด้านล่าง)
+            Text->RenderText("Click START to begin", 
+                        SCR_WIDTH / 2 - 70.0f, 
+                        SCR_HEIGHT / 2 + 100.0f,
+                        0.4f, 
+                        glm::vec3(0.7f, 0.7f, 0.7f));  // สีเทา
+
+            glEnable(GL_DEPTH_TEST);
+            glDisable(GL_BLEND);
+            
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+            continue;
+        }
+
+        // playing state
         // -----
-        processInput(window, player1);
-        demon.Update(deltaTime, currentFrame);
-        player1.Update(deltaTime,
-                       glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_PERIOD) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_COMMA) == GLFW_PRESS);
-        player2.Update(deltaTime,
-                       glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS,
-                       glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS);
-
-        // ============================================================
-        // 🎯 CHECK HITSCAN COLLISIONS - Player1 shoots Player2
-        // ============================================================
-        glm::vec3 hitPoint;
-
-        if (player1.lastHitscan.CheckHit(player2.position, player2.playerradius, hitPoint))
+        if (gameState == PLAYING) 
         {
-            player2.health -= 10;
-            std::cout << "Player2 hit! Health: " << player2.health << std::endl;
-        }
-
-        // ============================================================
-        // 🎯 CHECK HITSCAN COLLISIONS - Player2 shoots Player1
-        // ============================================================
-        if (player2.lastHitscan.CheckHit(player1.position, player1.playerradius, hitPoint))
-        {
-            player1.health -= 10;
-            std::cout << "Player1 hit! Health: " << player1.health << std::endl;
-        }
-
-        // ============================================================
-        // 🎯 CHECK HITSCAN COLLISIONS - Player1 shoots Demon
-        // ============================================================
-        if (player1.lastHitscan.CheckHit(demon.GetWorldPosition(), demon.GetCollisionRadius(), hitPoint))
-        {
-            demon.TakeDamage();
-            std::cout << "Demon hit by Player1!" << std::endl;
-        }
-
-        // ============================================================
-        // 🎯 CHECK HITSCAN COLLISIONS - Player2 shoots Demon
-        // ============================================================
-        if (player2.lastHitscan.CheckHit(demon.GetWorldPosition(), demon.GetCollisionRadius(), hitPoint))
-        {
-            demon.TakeDamage();
-            std::cout << "Demon hit by Player1!" << std::endl;
-        }
-        // animator.UpdateAnimation(deltaTime);
-
-        glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
-                                                (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
-        glm::mat4 view = camera.GetViewMatrix();
-
-        if (movingLight)
-        {
-            lightPos.x = sin(currentFrame) * 50.0f;
-            lightPos.z = cos(currentFrame) * 50.0f;
-        }
-
-        // เปิด wireframe mode เพื่อดูว่ามี geometry หรือไม่
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-        //===============
-        // castle model
-        //===============
-        // view/projection transformations
-        castleShader.use();
-        castleShader.setMat4("projection", projection);
-        castleShader.setMat4("view", view);
-
-        // ส่งค่า lighting uniforms
-        castleShader.setVec3("lightPos", lightPos);
-        castleShader.setVec3("viewPos", camera.Position);
-        castleShader.setVec3("lightColor", lightColor);
-
-        glm::mat4 castleModel_mat = glm::mat4(1.0f);
-        castleModel_mat = glm::translate(castleModel_mat, glm::vec3(0.0f, -1.0f, 0.0f));
-        castleModel_mat = glm::scale(castleModel_mat, glm::vec3(0.5f, 0.5f, 0.5f));
-        castleShader.setMat4("model", castleModel_mat);
-        castleModel.Draw(castleShader);
-
-        //===============
-        // character model
-        //===============
-        charShader.use();
-        charShader.setMat4("projection", projection);
-        charShader.setMat4("view", view);
-
-        // ส่งค่า lighting uniforms
-        charShader.setVec3("lightPos", lightPos);
-        charShader.setVec3("viewPos", camera.Position);
-        charShader.setVec3("lightColor", lightColor);
-
-        /*auto transforms = animator.GetFinalBoneMatrices();
-        for (int i = 0; i < transforms.size(); ++i)
-            charShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);*/
-
-        // คำนวณ model matrix ของตัวละคร
-        /*glm::mat4 characterModel_mat = glm::mat4(1.0f);
-        characterModel_mat = glm::translate(characterModel_mat, characterPosition);
-        characterModel_mat = glm::rotate(characterModel_mat, glm::radians(characterRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-        characterModel_mat = glm::scale(characterModel_mat, glm::vec3(0.8f, 0.8f, 0.8f));
-        charShader.setMat4("model", characterModel_mat);
-        charModel.Draw(charShader);*/
-
-        ourShader.use();
-        ourShader.setMat4("projection", projection);
-        ourShader.setMat4("view", view);
-        ourShader.setMat4("model", demon.GetModelMatrix()); // ใช้ Getter ของ Demon
-
-        // Demon Bone Transform Setup
-        auto transforms = demon.GetFinalBoneMatrices();
-        for (int i = 0; i < transforms.size(); ++i)
-            ourShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
-
-        // Draw Demon, Staff, Crystal และ Fireball (ทั้งหมดถูกจัดการผ่าน Demon::Draw)
-        demon.Draw(projection, view, camera.Position);
-
-        player1.Draw(animShader, modelShader, hitscanShader, view, projection);
-        player2.Draw(animShader, modelShader, hitscanShader, view, projection);
-
-        // สร้าง Bounding Box สำหรับตัวละคร (ขนาดประมาณ)
-        // float charRadius = 1.0f; // ปรับให้เหมาะสมกับขนาดตัวละคร
-        // characterBBox = BoundingBox(
-        //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
-        //     player1.position + glm::vec3(player1.playerradius, 3.0f, player1.playerradius));
-
-        CheckWallCollision(player1.position, player1.previousPosition, player1.playerradius, castleWalls);
-        CheckWallCollision(player1.position, player1.previousPosition, player1.playerradius, fountainWalls);
-
-        CheckWallCollision(player2.position, player2.previousPosition, player2.playerradius, castleWalls);
-        CheckWallCollision(player2.position, player2.previousPosition, player2.playerradius, fountainWalls);
-
-        // characterBBox = BoundingBox(
-        //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
-        //     player1.position + glm::vec3(player1.playerradius, 3.0f, player1.playerradius));
-
-        // เช็ค collision กับกำแพงทั้งหมด
-        // bool collisionDetected = false;
-        // for (size_t i = 0; i < castleWalls.size(); i++)
-        // {
-        //     if (CheckAABBCollision(characterBBox, castleWalls[i]))
-        //     {
-        //         collisionDetected = true;
-        //         if (debugCollision)
-        //         {
-        //             std::cout << "Collision with wall " << i << std::endl;
-        //         }
-        //         break;
-        //     }
-        // }
-
-        // if (collisionDetected)
-        // {
-        //     // มี collision - ย้อนกลับไปตำแหน่งเดิม
-        //     player1.position = previousPosition;
-        //
-
-        if (!demon.IsCastingAttack() && !demon.IsWarningPhase())
-        {
-            if (onetime)
+            // 🎮 Check ESC สำหรับออกเกม
+            static bool escPressed = false;
+            if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !escPressed)
             {
-                playerNoTarget = rand() % 2;
-                onetime = false;
-                printf("Demon is targeting Player %d\n", playerNoTarget ? 1 : 2);
+                escPressed = true;
+                glfwSetWindowShouldClose(window, true);
             }
-            glm::vec3 targetPosition = playerNoTarget ? player1.position : player2.position;
-            demon.LookAtPosition(targetPosition);
-        }
-        else
-        {
-            onetime = true;
-        }
+            if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE)
+                escPressed = false;
 
+            processInput(window, player1);
+            demon.Update(deltaTime, currentFrame);
+            player1.Update(deltaTime,
+                        glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_PERIOD) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_COMMA) == GLFW_PRESS);
+            player2.Update(deltaTime,
+                        glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS,
+                        glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS);
+
+            // ============================================================
+            // 🎯 CHECK HITSCAN COLLISIONS - Player1 shoots Player2
+            // ============================================================
+            glm::vec3 hitPoint;
+
+            if (player1.lastHitscan.CheckHit(player2.position, player2.playerradius, hitPoint))
+            {
+                player2.health -= 10;
+                std::cout << "Player2 hit! Health: " << player2.health << std::endl;
+            }
+
+            // ============================================================
+            // 🎯 CHECK HITSCAN COLLISIONS - Player2 shoots Player1
+            // ============================================================
+            if (player2.lastHitscan.CheckHit(player1.position, player1.playerradius, hitPoint))
+            {
+                player1.health -= 10;
+                std::cout << "Player1 hit! Health: " << player1.health << std::endl;
+            }
+
+            // ============================================================
+            // 🎯 CHECK HITSCAN COLLISIONS - Player1 shoots Demon
+            // ============================================================
+            if (player1.lastHitscan.CheckHit(demon.GetWorldPosition(), demon.GetCollisionRadius(), hitPoint))
+            {
+                demon.TakeDamage();
+                std::cout << "Demon hit by Player1!" << std::endl;
+            }
+
+            // ============================================================
+            // 🎯 CHECK HITSCAN COLLISIONS - Player2 shoots Demon
+            // ============================================================
+            if (player2.lastHitscan.CheckHit(demon.GetWorldPosition(), demon.GetCollisionRadius(), hitPoint))
+            {
+                demon.TakeDamage();
+                std::cout << "Demon hit by Player1!" << std::endl;
+            }
+            // animator.UpdateAnimation(deltaTime);
+
+            glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
+                                                    (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+            glm::mat4 view = camera.GetViewMatrix();
+
+            if (movingLight)
+            {
+                lightPos.x = sin(currentFrame) * 50.0f;
+                lightPos.z = cos(currentFrame) * 50.0f;
+            }
+
+            // เปิด wireframe mode เพื่อดูว่ามี geometry หรือไม่
+            // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+            //===============
+            // castle model
+            //===============
+            // view/projection transformations
+            castleShader.use();
+            castleShader.setMat4("projection", projection);
+            castleShader.setMat4("view", view);
+
+            // ส่งค่า lighting uniforms
+            castleShader.setVec3("lightPos", lightPos);
+            castleShader.setVec3("viewPos", camera.Position);
+            castleShader.setVec3("lightColor", lightColor);
+
+            glm::mat4 castleModel_mat = glm::mat4(1.0f);
+            castleModel_mat = glm::translate(castleModel_mat, glm::vec3(0.0f, -1.0f, 0.0f));
+            castleModel_mat = glm::scale(castleModel_mat, glm::vec3(0.5f, 0.5f, 0.5f));
+            castleShader.setMat4("model", castleModel_mat);
+            castleModel.Draw(castleShader);
+
+            //===============
+            // character model
+            //===============
+            charShader.use();
+            charShader.setMat4("projection", projection);
+            charShader.setMat4("view", view);
+
+            // ส่งค่า lighting uniforms
+            charShader.setVec3("lightPos", lightPos);
+            charShader.setVec3("viewPos", camera.Position);
+            charShader.setVec3("lightColor", lightColor);
+
+            /*auto transforms = animator.GetFinalBoneMatrices();
+            for (int i = 0; i < transforms.size(); ++i)
+                charShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);*/
+
+            // คำนวณ model matrix ของตัวละคร
+            /*glm::mat4 characterModel_mat = glm::mat4(1.0f);
+            characterModel_mat = glm::translate(characterModel_mat, characterPosition);
+            characterModel_mat = glm::rotate(characterModel_mat, glm::radians(characterRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+            characterModel_mat = glm::scale(characterModel_mat, glm::vec3(0.8f, 0.8f, 0.8f));
+            charShader.setMat4("model", characterModel_mat);
+            charModel.Draw(charShader);*/
+
+            ourShader.use();
+            ourShader.setMat4("projection", projection);
+            ourShader.setMat4("view", view);
+            ourShader.setMat4("model", demon.GetModelMatrix()); // ใช้ Getter ของ Demon
+
+            // Demon Bone Transform Setup
+            auto transforms = demon.GetFinalBoneMatrices();
+            for (int i = 0; i < transforms.size(); ++i)
+                ourShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+
+            // Draw Demon, Staff, Crystal และ Fireball (ทั้งหมดถูกจัดการผ่าน Demon::Draw)
+            demon.Draw(projection, view, camera.Position);
+
+            player1.Draw(animShader, modelShader, hitscanShader, view, projection);
+            player2.Draw(animShader, modelShader, hitscanShader, view, projection);
+
+            // สร้าง Bounding Box สำหรับตัวละคร (ขนาดประมาณ)
+            // float charRadius = 1.0f; // ปรับให้เหมาะสมกับขนาดตัวละคร
+            // characterBBox = BoundingBox(
+            //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
+            //     player1.position + glm::vec3(player1.playerradius, 3.0f, player1.playerradius));
+
+            CheckWallCollision(player1.position, player1.previousPosition, player1.playerradius, castleWalls);
+            CheckWallCollision(player1.position, player1.previousPosition, player1.playerradius, fountainWalls);
+
+            CheckWallCollision(player2.position, player2.previousPosition, player2.playerradius, castleWalls);
+            CheckWallCollision(player2.position, player2.previousPosition, player2.playerradius, fountainWalls);
+
+            // characterBBox = BoundingBox(
+            //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
+            //     player1.position + glm::vec3(player1.playerradius, 3.0f, player1.playerradius));
+
+            // เช็ค collision กับกำแพงทั้งหมด
+            // bool collisionDetected = false;
+            // for (size_t i = 0; i < castleWalls.size(); i++)
+            // {
+            //     if (CheckAABBCollision(characterBBox, castleWalls[i]))
+            //     {
+            //         collisionDetected = true;
+            //         if (debugCollision)
+            //         {
+            //             std::cout << "Collision with wall " << i << std::endl;
+            //         }
+            //         break;
+            //     }
+            // }
+
+            // if (collisionDetected)
+            // {
+            //     // มี collision - ย้อนกลับไปตำแหน่งเดิม
+            //     player1.position = previousPosition;
+            //
+
+            if (!demon.IsCastingAttack() && !demon.IsWarningPhase())
+            {
+                if (onetime)
+                {
+                    playerNoTarget = rand() % 2;
+                    onetime = false;
+                    printf("Demon is targeting Player %d\n", playerNoTarget ? 1 : 2);
+                }
+                glm::vec3 targetPosition = playerNoTarget ? player1.position : player2.position;
+                demon.LookAtPosition(targetPosition);
+            }
+            else
+            {
+                onetime = true;
+            }
+
+            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            // 🎮 ตัวเลข 4 ที่มุมซ้ายบน คะแนน
+            Text->RenderText("4", 
+                                   20.0f,                    // x position (ซ้าย)
+                                   50.0f,       // y position (บน)
+                                   1.0f,                     // scale
+                                   glm::vec3(1.0f, 1.0f, 1.0f)); // สีขาว
+
+            // 🎮 ตัวเลข 4 ที่มุมขวาบน คะแนน
+            Text->RenderText("4", 
+                                   SCR_WIDTH - 50.0f,        // x position (ขวา)
+                                   50.0f,       // y position (บน)
+                                   1.0f,                     // scale
+                                   glm::vec3(1.0f, 1.0f, 1.0f)); // สีขาว
+
+            glEnable(GL_DEPTH_TEST);
+            glDisable(GL_BLEND);
+        }
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
+    delete uiManager, Text;
     glfwTerminate();
     return 0;
 }
@@ -544,8 +672,8 @@ int main()
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window, Player &player)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+    // if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    //     glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -724,4 +852,30 @@ unsigned int TextureFromFile(const char *path)
         stbi_image_free(data);
     }
     return textureID;
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        glm::vec2 startButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 - 50);
+        glm::vec2 quitButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 + 20);
+        glm::vec2 buttonSize(200, 50);
+        // glm::vec2 resumeButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 - 50);
+        // glm::vec2 menuButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 + 20);
+        
+        if (gameState == MENU)
+        {
+            if (isMouseOverButton(mouseX, mouseY, startButtonPos, buttonSize))
+            {
+                gameState = PLAYING;
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                std::cout << "Game Started!" << std::endl;
+            }
+            else if (isMouseOverButton(mouseX, mouseY, quitButtonPos, buttonSize))
+            {
+                glfwSetWindowShouldClose(window, true);
+            }
+        }
+    }
 }
