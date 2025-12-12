@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include "demon/demon.h"
 #include "stb_image.h"
 #include "player/player.h"
@@ -26,6 +27,8 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window, Player &player);
 unsigned int TextureFromFile(const char *path);
+void CheckHazardCollision(Player &player, const Demon &demon, float currentFrame);
+void CheckDemonWallCollision(Player &player, const Demon &demon);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -162,20 +165,22 @@ BoundingBox characterBBox;
 std::vector<BoundingBox> castleWalls;
 std::vector<BoundingBox> fountainWalls;
 
-enum GameState {
+enum GameState
+{
     MENU,
     PLAYING
 };
 GameState gameState = MENU;
 
 // 🎮 ฟังก์ชันเช็คว่าเมาส์คลิกปุ่มหรือไม่
-bool isMouseOverButton(double mouseX, double mouseY, glm::vec2 buttonPos, glm::vec2 buttonSize) {
+bool isMouseOverButton(double mouseX, double mouseY, glm::vec2 buttonPos, glm::vec2 buttonSize)
+{
     return mouseX >= buttonPos.x && mouseX <= buttonPos.x + buttonSize.x &&
            mouseY >= buttonPos.y && mouseY <= buttonPos.y + buttonSize.y;
 }
 
 // 🎮 Mouse button callback
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
 
 // เพิ่มตัวแปร global สำหรับ mouse
 double mouseX = 0.0, mouseY = 0.0;
@@ -217,9 +222,9 @@ int main()
 
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    
+
     glfwSetMouseButtonCallback(window, mouse_button_callback);
-    
+
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -227,16 +232,16 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-    
-    UIManager* uiManager = new UIManager(SCR_WIDTH, SCR_HEIGHT);
-    TextRenderer* Text = new TextRenderer(SCR_WIDTH, SCR_HEIGHT);
+
+    UIManager *uiManager = new UIManager(SCR_WIDTH, SCR_HEIGHT);
+    TextRenderer *Text = new TextRenderer(SCR_WIDTH, SCR_HEIGHT);
     Text->Load(FileSystem::getPath("resource/fonts/OCRAEXT.TTF").c_str(), 24);
-    //textRenderer->Load("resources/fonts/arial.ttf", 48);
-    // 🎮 กำหนดตำแหน่งและขนาดปุ่ม
+    // textRenderer->Load("resources/fonts/arial.ttf", 48);
+    //  🎮 กำหนดตำแหน่งและขนาดปุ่ม
     glm::vec2 startButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2);
     glm::vec2 quitButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 + 70);
     glm::vec2 buttonSize(200, 50);
-        
+
     // glm::vec2 resumeButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 - 50);
     // glm::vec2 menuButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 + 20);
 
@@ -296,7 +301,7 @@ int main()
     // --------------------------------------------------------------------
     Demon demon(ourShader, staffModel, staffShader, crystalModel, crystalShader, crystalDiffuseID,
                 fireballModel, fireballShader, // 👈 เพิ่ม Fireball Model/Shader
-                wallModel, wallShader, wallEmissiveID);
+                wallModel, wallShader, wallEmissiveID, 1000);
 
     Shader modelShader("model_loading_1.vs", "model_loading_1.fs");
     Shader animShader("anim_model_1.vs", "anim_model_1.fs");
@@ -386,53 +391,53 @@ int main()
         {
             glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            
+
             // Disable depth test for 2D UI
             glDisable(GL_DEPTH_TEST);
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            
+
             // 🎮 วาดชื่อเกม (ด้านบน)
-            Text->RenderText("DEMON BOSS BATTLE", 
-                        SCR_WIDTH / 2 - 180.0f - 50.0f,    // จัดกลาง
-                        100.0f,        // ด้านบน
-                        2.0f,                       // scale
-                        glm::vec3(1.0f, 0.3f, 0.3f)); // สีแดง
+            Text->RenderText("DEMON BOSS BATTLE",
+                             SCR_WIDTH / 2 - 180.0f - 50.0f, // จัดกลาง
+                             100.0f,                         // ด้านบน
+                             2.0f,                           // scale
+                             glm::vec3(1.0f, 0.3f, 0.3f));   // สีแดง
 
             // 🎮 Start Button - วาดพื้นหลังปุ่ม
             bool hoverStart = isMouseOverButton(mouseX, mouseY, startButtonPos, buttonSize);
             glm::vec3 startColor = hoverStart ? glm::vec3(0.3f, 0.6f, 0.3f) : glm::vec3(0.2f, 0.4f, 0.2f);
             uiManager->DrawRect(startButtonPos, buttonSize, startColor, 0.9f);
-            
+
             // 🎮 วาดข้อความบนปุ่ม Start
-            Text->RenderText("START GAME", 
-                        startButtonPos.x + 30.0f,          // เยื้องเข้ามาใน button
-                        startButtonPos.y - 32.0f,  // Y coordinate (กลับด้าน)
-                        0.8f,                              // scale เล็กลง
-                        glm::vec3(1.0f, 1.0f, 1.0f));      // สีขาว
+            Text->RenderText("START GAME",
+                             startButtonPos.x + 30.0f,     // เยื้องเข้ามาใน button
+                             startButtonPos.y - 32.0f,     // Y coordinate (กลับด้าน)
+                             0.8f,                         // scale เล็กลง
+                             glm::vec3(1.0f, 1.0f, 1.0f)); // สีขาว
 
             // 🎮 Quit Button - วาดพื้นหลังปุ่ม
             bool hoverQuit = isMouseOverButton(mouseX, mouseY, quitButtonPos, buttonSize);
             glm::vec3 quitColor = hoverQuit ? glm::vec3(0.6f, 0.3f, 0.3f) : glm::vec3(0.4f, 0.2f, 0.2f);
             uiManager->DrawRect(quitButtonPos, buttonSize, quitColor, 0.9f);
-            
+
             // 🎮 วาดข้อความบนปุ่ม Quit
-            Text->RenderText("QUIT", 
-                        quitButtonPos.x + 75.0f,           // จัดกลางในปุ่ม
-                        quitButtonPos.y - 32.0f,
-                        0.8f,
-                        glm::vec3(1.0f, 1.0f, 1.0f));
+            Text->RenderText("QUIT",
+                             quitButtonPos.x + 75.0f, // จัดกลางในปุ่ม
+                             quitButtonPos.y - 32.0f,
+                             0.8f,
+                             glm::vec3(1.0f, 1.0f, 1.0f));
 
             // 🎮 คำแนะนำ (ด้านล่าง)
-            Text->RenderText("Click START to begin", 
-                        SCR_WIDTH / 2 - 70.0f, 
-                        SCR_HEIGHT / 2 + 100.0f,
-                        0.4f, 
-                        glm::vec3(0.7f, 0.7f, 0.7f));  // สีเทา
+            Text->RenderText("Click START to begin",
+                             SCR_WIDTH / 2 - 70.0f,
+                             SCR_HEIGHT / 2 + 100.0f,
+                             0.4f,
+                             glm::vec3(0.7f, 0.7f, 0.7f)); // สีเทา
 
             glEnable(GL_DEPTH_TEST);
             glDisable(GL_BLEND);
-            
+
             glfwSwapBuffers(window);
             glfwPollEvents();
             continue;
@@ -440,7 +445,7 @@ int main()
 
         // playing state
         // -----
-        if (gameState == PLAYING) 
+        if (gameState == PLAYING)
         {
             // 🎮 Check ESC สำหรับออกเกม
             static bool escPressed = false;
@@ -454,61 +459,80 @@ int main()
 
             processInput(window, player1);
             demon.Update(deltaTime, currentFrame);
-            player1.Update(deltaTime,
-                        glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_PERIOD) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_COMMA) == GLFW_PRESS);
-            player2.Update(deltaTime,
-                        glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS,
-                        glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS);
-
+            if (!demon.IsDead())
+            {
+                player1.Update(deltaTime,
+                               glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_KP_1) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_KP_2) == GLFW_PRESS,
+                               deltaTime);
+                player2.Update(deltaTime,
+                               glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS,
+                               glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS,
+                               deltaTime);
+            }
             // ============================================================
             // 🎯 CHECK HITSCAN COLLISIONS - Player1 shoots Player2
             // ============================================================
             glm::vec3 hitPoint;
 
-            if (player1.lastHitscan.CheckHit(player2.position, player2.playerradius, hitPoint))
-            {
-                player2.health -= 10;
-                std::cout << "Player2 hit! Health: " << player2.health << std::endl;
-            }
+            // if (player1.lastHitscan.CheckHit(player2.position, player2.playerradius, hitPoint))
+            // {
+            //     player2.health -= 10;
+            //     std::cout << "Player2 hit! Health: " << player2.health << std::endl;
+            // }
 
-            // ============================================================
-            // 🎯 CHECK HITSCAN COLLISIONS - Player2 shoots Player1
-            // ============================================================
-            if (player2.lastHitscan.CheckHit(player1.position, player1.playerradius, hitPoint))
-            {
-                player1.health -= 10;
-                std::cout << "Player1 hit! Health: " << player1.health << std::endl;
-            }
+            // // ============================================================
+            // // 🎯 CHECK HITSCAN COLLISIONS - Player2 shoots Player1
+            // // ============================================================
+            // if (player2.lastHitscan.CheckHit(player1.position, player1.playerradius, hitPoint))
+            // {
+            //     player1.health -= 10;
+            //     std::cout << "Player1 hit! Health: " << player1.health << std::endl;
+            // }
 
             // ============================================================
             // 🎯 CHECK HITSCAN COLLISIONS - Player1 shoots Demon
             // ============================================================
-            if (player1.lastHitscan.CheckHit(demon.GetWorldPosition(), demon.GetCollisionRadius(), hitPoint))
+            if (player1.lastHitscan.CheckHit(demon.GetWorldPosition(), demon.GetCollisionRadius(), hitPoint) && !demon.IsDead())
             {
-                demon.TakeDamage();
+                demon.TakeDamage(10);
+                player1.score += 10;
+                if (demon.GetHealth() <= 0)
+                {
+                    player1.score += 100;
+                }
                 std::cout << "Demon hit by Player1!" << std::endl;
             }
 
             // ============================================================
             // 🎯 CHECK HITSCAN COLLISIONS - Player2 shoots Demon
             // ============================================================
-            if (player2.lastHitscan.CheckHit(demon.GetWorldPosition(), demon.GetCollisionRadius(), hitPoint))
+            if (player2.lastHitscan.CheckHit(demon.GetWorldPosition(), demon.GetCollisionRadius(), hitPoint) && !demon.IsDead())
             {
-                demon.TakeDamage();
-                std::cout << "Demon hit by Player1!" << std::endl;
+                demon.TakeDamage(10);
+                player2.score += 10;
+                if (demon.GetHealth() <= 0)
+                {
+                    player2.score += 100;
+                }
+                std::cout << "Demon hit by Player2!" << std::endl;
             }
             // animator.UpdateAnimation(deltaTime);
+
+            if (demon.GetHealth() <= 0)
+            {
+                demon.TriggerDeath();
+            }
 
             glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -597,6 +621,13 @@ int main()
             CheckWallCollision(player2.position, player2.previousPosition, player2.playerradius, castleWalls);
             CheckWallCollision(player2.position, player2.previousPosition, player2.playerradius, fountainWalls);
 
+            CheckHazardCollision(player1, demon, currentFrame);
+            CheckHazardCollision(player2, demon, currentFrame);
+
+            // 2. เช็คการชนกำแพง Demon (และผลักออก)
+            CheckDemonWallCollision(player1, demon);
+            CheckDemonWallCollision(player2, demon);
+
             // characterBBox = BoundingBox(
             //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
             //     player1.position + glm::vec3(player1.playerradius, 3.0f, player1.playerradius));
@@ -641,20 +672,19 @@ int main()
             glDisable(GL_DEPTH_TEST);
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
             // 🎮 ตัวเลข 4 ที่มุมซ้ายบน คะแนน
-            Text->RenderText("4", 
-                                   20.0f,                    // x position (ซ้าย)
-                                   50.0f,       // y position (บน)
-                                   1.0f,                     // scale
-                                   glm::vec3(1.0f, 1.0f, 1.0f)); // สีขาว
+            Text->RenderText(std::to_string(player2.score),
+                             20.0f,                        // x position (ซ้าย)
+                             50.0f,                        // y position (บน)
+                             1.0f,                         // scale
+                             glm::vec3(1.0f, 1.0f, 1.0f)); // สีขาว
 
             // 🎮 ตัวเลข 4 ที่มุมขวาบน คะแนน
-            Text->RenderText("4", 
-                                   SCR_WIDTH - 50.0f,        // x position (ขวา)
-                                   50.0f,       // y position (บน)
-                                   1.0f,                     // scale
-                                   glm::vec3(1.0f, 1.0f, 1.0f)); // สีขาว
+            Text->RenderText(std::to_string(player1.score),
+                             SCR_WIDTH - 50.0f,            // x position (ขวา)
+                             50.0f,                        // y position (บน)
+                             1.0f,                         // scale
+                             glm::vec3(1.0f, 1.0f, 1.0f)); // สีขาว
 
             glEnable(GL_DEPTH_TEST);
             glDisable(GL_BLEND);
@@ -675,25 +705,25 @@ void processInput(GLFWwindow *window, Player &player)
     // if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     //     glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+    // if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    //     camera.ProcessKeyboard(FORWARD, deltaTime);
+    // if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    //     camera.ProcessKeyboard(BACKWARD, deltaTime);
+    // if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    //     camera.ProcessKeyboard(LEFT, deltaTime);
+    // if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    //     camera.ProcessKeyboard(RIGHT, deltaTime);
 
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
-    {
-        if (!cameraRotationEnabled)
-        {
-            cameraRotationEnabled = true;
-            firstMouse = true; // รีเซ็ตเมื่อเริ่มหมุน
-        }
-    }
-    else
-        cameraRotationEnabled = false;
+    // if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+    // {
+    //     if (!cameraRotationEnabled)
+    //     {
+    //         cameraRotationEnabled = true;
+    //         firstMouse = true; // รีเซ็ตเมื่อเริ่มหมุน
+    //     }
+    // }
+    // else
+    //     cameraRotationEnabled = false;
 
     // Character movement (Arrow Keys)
     // isMoving = false;
@@ -854,7 +884,7 @@ unsigned int TextureFromFile(const char *path)
     return textureID;
 }
 
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
     {
@@ -863,7 +893,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
         glm::vec2 buttonSize(200, 50);
         // glm::vec2 resumeButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 - 50);
         // glm::vec2 menuButtonPos(SCR_WIDTH / 2 - 100, SCR_HEIGHT / 2 + 20);
-        
+
         if (gameState == MENU)
         {
             if (isMouseOverButton(mouseX, mouseY, startButtonPos, buttonSize))
@@ -877,5 +907,121 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
                 glfwSetWindowShouldClose(window, true);
             }
         }
+    }
+}
+
+void CheckHazardCollision(Player &player, const Demon &demon, float currentFrame)
+{
+
+    // 1. Fireball Collision (Sphere-Sphere)
+    const auto &fireballs = demon.GetActiveFireballs();
+    for (const auto &fb : fireballs)
+    {
+        if (fb.GetState() != INACTIVE)
+        { // สมมติว่ามี GetState() หรือ IsActive()
+            float dist = glm::distance(player.position, fb.GetPosition());
+            float hitRadius = 1.5f; // รัศมีระเบิดของ Fireball
+
+            if (dist < (player.playerradius + hitRadius) && player.invulnerabilityTimer <= 0.0f)
+            {
+                // ลดเลือด (อาจต้องเพิ่ม cooldown การโดนซ้ำ)
+                player.invulnerabilityTimer = 3.0f;
+                player.health -= 10; // สร้างฟังก์ชัน TakeDamage ใน Player
+                // std::cout << "Hit by Fireball!" << std::endl;
+            }
+        }
+    }
+
+    // 2. Crystal Collision (Sphere-Sphere)
+    const auto &crystalLayers = demon.GetActiveAttackCrystals();
+    for (const auto &layer : crystalLayers)
+    {
+        for (const auto &crystal : layer.crystals)
+        {
+            // เช็คเฉพาะ Crystal ที่ active (อาจต้องดู logic การ spawn ว่า active เมื่อไหร่)
+            float dist = glm::distance(player.position, crystal.Position);
+            float crystalRadius = 0.8f;
+
+            if (dist < (player.playerradius + crystalRadius) && player.invulnerabilityTimer <= 0.0f)
+            {
+                player.invulnerabilityTimer = 3.0f;
+                player.health -= 30;
+                // std::cout << "Hit by Crystal!" << std::endl;
+            }
+        }
+    }
+
+    // 3. Wall Damage (Box-Sphere)
+    // เช็คว่าอยู่ใน area ของ wall หรือไม่ (ถ้าต้องการ damage แบบเผาไหม้)
+    // หรือเช็คตอนชน (Collision) ในหัวข้อถัดไป
+}
+
+void CheckDemonWallCollision(Player &player, const Demon &demon)
+{
+    const StoneWall &wall = demon.GetStoneWall();
+
+    if (!wall.IsActive())
+        return;
+
+    // ข้อมูลกำแพง
+    glm::vec3 wallCenter = wall.GetCenterPosition();
+    glm::vec3 wallDir = wall.GetForwardDirection();
+    glm::vec3 wallRight = glm::normalize(glm::cross(wallDir, glm::vec3(0, 1, 0)));
+
+    // ขนาดกำแพง (Half Extents)
+    float multiplier = (float)wall.GetLengthMultiplier();
+    if (multiplier <= 0.0f)
+        multiplier = 1.0f;
+
+    float halfLen = multiplier * 25.0f * 0.5f;
+    float halfThick = 0.5f;
+    float wallHeight = 2.5f;
+
+    // Offset จุดเช็ค (ตามที่คุณใส่ไว้)
+    wallCenter -= wallRight * 0.2f;
+
+    // 1. เช็คความสูง (Y-Axis)
+    if (player.position.y > wallCenter.y + wallHeight)
+    {
+        return;
+    }
+
+    // 2. แปลงตำแหน่งผู้เล่นให้อยู่ใน Local Space
+    glm::vec3 relPos = player.position - wallCenter;
+
+    // Project ลงบนแกน
+    float distAlongLength = glm::dot(relPos, wallRight); // ระยะตามแนว wallRight (ซ้าย/ขวา)
+    float distAlongThick = glm::dot(relPos, wallDir);    // ระยะตามแนว wallDir (หน้า/หลัง)
+
+    // 3. เช็คขอบเขต
+    float boundsLen = halfLen + player.playerradius;
+    float boundsThick = halfThick + player.playerradius;
+
+    // DEBUG LOG
+    // std::cout << "Side Dist: " << abs(distAlongLength) << " / Bounds: " << boundsThick << std::endl;
+    // std::cout << "Fwd Dist: " << abs(distAlongThick) << " / Bounds: " << boundsLen << std::endl;
+
+    // เงื่อนไขการชน (Logic สลับแกนของคุณ: Thick เทียบ Len, Length เทียบ Thick)
+    if (abs(distAlongThick) < boundsLen && abs(distAlongLength) < boundsThick && !player.isJumping)
+    {
+        // std::cout << "💥 COLLISION! Pushing Left/Right..." << std::endl;
+
+        // Damage (ถ้าต้องการ)
+        // player.TakeDamage(1);
+
+        // 🌟🌟 FIX: ผลักออกทาง ซ้าย/ขวา (wallRight) เท่านั้น 🌟🌟
+
+        // 1. คำนวณระยะที่จมลงไปในแกน wallRight (ใช้ boundsThick เพราะคุณสลับแกนไว้)
+        float pushDist = boundsThick - abs(distAlongLength);
+
+        // 2. กำหนดทิศทาง: ถ้าอยู่ฝั่งขวา (+) ให้ผลักไปขวา, ถ้าอยู่ฝั่งซ้าย (-) ให้ผลักไปซ้าย
+        glm::vec3 pushDir = (distAlongLength > 0) ? wallRight : -wallRight;
+
+        // 3. ปรับ Vector ให้ขนานพื้น
+        pushDir.y = 0.0f;
+        pushDir = glm::normalize(pushDir);
+
+        // 4. ผลักตัวละคร
+        player.position += pushDir * pushDist;
     }
 }

@@ -99,8 +99,11 @@ public:
     bool isDead = false;
     glm::vec3 respawnPosition;
     float respawnYaw;
+    float invulnerabilityTimer = 0.0f;
 
     float playerradius = 0.5f; // for hitscan collision
+
+    unsigned int score = 0;
 
     Player(const std::string &modelPath,
            const std::string &idlePath,
@@ -195,6 +198,7 @@ private:
         {
             if (state != DEAD)
             {
+                this->score -= 50;
                 EnterDeadState();
             }
 
@@ -528,7 +532,7 @@ public:
     // ============================================================
     // PUBLIC UPDATE METHOD
     // ============================================================
-    void Update(float dt, bool up, bool down, bool left, bool right, bool jump, bool shoot, bool tggrenade)
+    void Update(float dt, bool up, bool down, bool left, bool right, bool jump, bool shoot, bool tggrenade, float deltaTime)
     {
         previousPosition = position;
         // Check death state first
@@ -536,6 +540,12 @@ public:
         {
             UpdateDeathState(dt);
             return;
+        }
+
+
+        if (invulnerabilityTimer > 0.0f)
+        {
+            invulnerabilityTimer -= deltaTime;
         }
 
         AnimSet set = GetCurrentAnimSet();
@@ -647,7 +657,6 @@ public:
             gunModel.Draw(lightingShader);
 
         lastHitscan.Draw(hitscanShader, view, projection);
-
     }
 };
 

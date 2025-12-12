@@ -98,6 +98,8 @@ enum class AnimState
     DEAD
 };
 
+inline std::string AnimStateToString(AnimState state);
+
 // --------------------------------------------------------------------------------
 // 🔴 Class Declaration (Demon)
 // --------------------------------------------------------------------------------
@@ -142,7 +144,7 @@ private:
     float m_stateTime = -1.0f;
     float m_hurtTimer = 0.0f;
 
-    float m_autoAttackCooldown = 8.0f;
+    float m_autoAttackCooldown = 4.0f;
     float m_autoAttackTimer = 0.0f;
 
     // 🌟 NEW: ตัวแปรสำหรับการเตือนภัย (Warning Phase)
@@ -153,6 +155,8 @@ private:
     // 🌟 NEW: เก็บเป้าหมายที่จะโจมตีหลังจากเตือนเสร็จ
     glm::vec3 m_pendingAttackTarget;
     int m_pendingAttackType = 0; // 0, 1, 2 (สุ่มไว้ล่วงหน้า)
+
+    int m_health;
 
     // Crystal Attack Logic
     std::vector<CrystalLayer> m_activeAttack;
@@ -211,7 +215,7 @@ public:
     Demon(Shader &mainShader, Model &staffModel, Shader &staffShader,
           Model &crystalModel, Shader &crystalShader, unsigned int crystalTexID,
           Model &fbModel, Shader &fbShader,
-          Model &wallModel, Shader &wallShader, unsigned int wallEmissiveID)
+          Model &wallModel, Shader &wallShader, unsigned int wallEmissiveID, unsigned int health)
         : m_model(FileSystem::getPath("src/demon/object/Whiteclown N Hallin.dae")),
           m_idleAnim(FileSystem::getPath("src/demon/object/standing idle.dae"), &m_model),
           m_walkAnim(FileSystem::getPath("src/demon/object/Standing Walk Forward.dae"), &m_model),
@@ -219,7 +223,7 @@ public:
           m_attackAnim02(FileSystem::getPath("src/demon/object/Standing 1H Magic Attack 03.dae"), &m_model),
           m_attackAnim03(FileSystem::getPath("src/demon/object/Standing 2H Cast Spell 01.dae"), &m_model),
           m_hurtAnim(FileSystem::getPath("src/demon/object/Standing React Small From Front.dae"), &m_model),
-          m_deadAnim(FileSystem::getPath("src/demon/object/Standing React Death Backward.dae"), &m_model),
+          m_deadAnim(FileSystem::getPath("src/demon/object/Standing React Death Forward.dae"), &m_model),
           m_animator(&m_idleAnim),
           m_shader(mainShader),
           m_staffModel(staffModel),
@@ -230,7 +234,8 @@ public:
           m_fireballModel(fbModel),
           m_fireballShader(fbShader),
           m_wallModel(wallModel), m_wallShader(wallShader), m_wallEmissiveID(wallEmissiveID),
-          m_stoneWallEffect(wallModel, wallShader, 0.1f)
+          m_stoneWallEffect(wallModel, wallShader, 0.1f),
+          m_health(health)
     {
         try
         {
@@ -260,9 +265,9 @@ public:
     void UpdateRotationTowardTarget(float deltaTime);
     void Attack(); // 🌟 2. สุ่มแอนิเมชัน 3 แบบ
     void Attack(const glm::vec3 &targetPos, int attackType);
-    void AttackAnim02(); // 🌟 เพิ่ม Public Method
-    void TakeDamage();   // 🌟 1. ถูกโจมตี (เปลี่ยนไป HURT)
-    void TriggerDeath(); // 🌟 1. ตายทันที (ไม่ต้องใช้ปุ่ม)
+    void AttackAnim02();                  // 🌟 เพิ่ม Public Method
+    void TakeDamage(unsigned int damage); // 🌟 1. ถูกโจมตี (เปลี่ยนไป HURT)
+    void TriggerDeath();                  // 🌟 1. ตายทันที (ไม่ต้องใช้ปุ่ม)
 
     // Getters
     int GetHandBoneID() const { return m_handBoneID; }
@@ -275,9 +280,15 @@ public:
     bool IsWarningPhase() const { return m_isWarningPhase; }
     const std::vector<CrystalLayer> &GetActiveAttackCrystals() const { return m_activeAttack; }
     float GetCollisionRadius() const { return DEMON_COLLISION_RADIUS; }
+    int GetHealth() { return m_health; }
+    const std::vector<Projectile>& GetActiveFireballs() const { return m_activeFireballs; }
+    const StoneWall& GetStoneWall() const { return m_stoneWallEffect; }
 
     // 🌟 NEW: Get unscaled world position for collision
-    glm::vec3 GetWorldPosition() const { return m_position; }
+    glm::vec3 GetWorldPosition() const
+    {
+        return m_position;
+    }
 };
 
 // --------------------------------------------------------------------------------
@@ -376,9 +387,15 @@ inline void Demon::TriggerDeath()
 }
 
 // 🌟 TakeDamage (Public Method)
-inline void Demon::TakeDamage()
+inline void Demon::TakeDamage(unsigned int damage)
 {
+    m_health = m_health - damage;
+
     if (m_isDead || m_charState == AnimState::HURT || m_charState == AnimState::HURT_IDLE)
+        return;
+
+    // std::cout << "Demon took damage! HP: " << m_health << std::endl;
+    if (m_autoAttackCooldown <= 0)
         return;
 
     if (m_charState == AnimState::IDLE || m_charState == AnimState::WALK)
@@ -393,10 +410,11 @@ inline void Demon::TakeDamage()
 // 🌟 Attack (สุ่มแอนิเมชัน 3 แบบ)
 inline void Demon::Attack(const glm::vec3 &targetPos, int attackType = -1)
 {
-    if (m_isDead || m_isAttacking || (m_charState != AnimState::IDLE && m_charState != AnimState::WALK))
+    if (m_isDead || m_isAttacking)
         return;
 
     LookAtPosition(targetPos);
+    m_charState = AnimState::IDLE;
 
     Animation *nextAnim = nullptr;
     int type = (attackType != -1) ? attackType : (rand() % 3); // ใช้ค่าที่ส่งมา หรือสุ่มใหม่ถ้าไม่มี
@@ -437,19 +455,19 @@ inline void Demon::TriggerAttack(Animation *nextAnim)
     m_stateTime = -1.0f;
 
     // กำหนด State Machine ที่ถูกต้องตามแอนิเมชัน
-    AnimState nextBlendState;
-    if (nextAnim == &m_attackAnim01)
-    {
-        nextBlendState = AnimState::IDLE_ATTACK01;
-    }
-    else if (nextAnim == &m_attackAnim02)
-    {
-        nextBlendState = AnimState::IDLE_ATTACK02;
-    }
-    else
-    {
-        nextBlendState = AnimState::IDLE_ATTACK03;
-    }
+    AnimState nextBlendState = AnimState::IDLE_ATTACK03;
+    // if (nextAnim == &m_attackAnim01)
+    // {
+    //     nextBlendState = AnimState::IDLE_ATTACK01;
+    // }
+    // else if (nextAnim == &m_attackAnim02)
+    // {
+    //     nextBlendState = AnimState::IDLE_ATTACK02;
+    // }
+    // else
+    // {
+    //     nextBlendState = AnimState::IDLE_ATTACK03;
+    // }
     Animation *currentAnim = (m_charState == AnimState::IDLE) ? &m_idleAnim : &m_walkAnim;
 
     m_blendAmount = 0.0f;
@@ -877,6 +895,8 @@ inline void Demon::Update(float deltaTime, float currentFrame)
         }
     }
 
+    // std::cout << "Current State: " << AnimStateToString(m_charState) << std::endl;
+
     // 3. State Machine update (ใช้ State Handler ที่ไม่มี Input)
     switch (m_charState)
     {
@@ -990,7 +1010,7 @@ inline void Demon::handleStateAttack01Idle()
         m_stateTime = 0.0f;
     }
 
-    if (m_animator.m_CurrentTime >= m_attackAnim01.GetDuration() * 0.99f)
+    if (m_animator.m_CurrentTime >= m_attackAnim01.GetDuration() * 0.90f)
     {
         m_blendAmount += m_blendRate;
         m_blendAmount = glm::min(m_blendAmount, 1.0f);
@@ -1033,7 +1053,7 @@ inline void Demon::handleStateAttack02Idle()
         m_isAttacking_Anim02 = true;  // Flag เพื่อให้ Update() รู้ว่าต้องยิง
     }
 
-    if (m_animator.m_CurrentTime >= m_attackAnim02.GetDuration() * 0.99f)
+    if (m_animator.m_CurrentTime >= m_attackAnim02.GetDuration() * 0.90f)
     {
         m_blendAmount += m_blendRate;
         m_blendAmount = glm::min(m_blendAmount, 1.0f);
@@ -1079,7 +1099,7 @@ inline void Demon::handleStateAttack03Idle()
         m_stoneWallEffect.Cast(m_position, m_forward, wallCount, wallDuration);
     }
 
-    if (m_animator.m_CurrentTime >= m_attackAnim03.GetDuration() * 0.99f)
+    if (m_animator.m_CurrentTime >= m_attackAnim03.GetDuration() * 0.90f)
     {
         m_blendAmount += m_blendRate;
         m_blendAmount = glm::min(m_blendAmount, 1.0f);
@@ -1099,8 +1119,9 @@ inline void Demon::handleStateAttack03Idle()
 inline void Demon::handleStateHurt()
 {
     m_animator.PlayAnimation(&m_hurtAnim, NULL, m_animator.m_CurrentTime, 0.0f, m_blendAmount);
-    m_hurtTimer += m_animator.m_DeltaTime;
-    if (m_hurtTimer >= m_hurtAnim.GetDuration())
+    // m_hurtTimer += m_animator.m_DeltaTime;
+    // std::cout << m_hurtTimer << " " << m_deadAnim.GetDuration() - (m_deadAnim.GetDuration() * 0.1) << std::endl;
+    if (m_animator.m_CurrentTime >= m_hurtAnim.GetDuration() - (m_hurtAnim.GetDuration() * 0.1))
     {
         m_blendAmount = 0.0f;
         m_animator.PlayAnimation(&m_hurtAnim, &m_idleAnim, m_animator.m_CurrentTime, 0.0f, m_blendAmount);
@@ -1128,6 +1149,46 @@ inline void Demon::handleStateDead()
     if (m_animator.m_CurrentTime >= m_deadAnim.GetDuration() * 0.99)
     {
         m_animator.m_CurrentTime = m_deadAnim.GetDuration();
+    }
+}
+inline std::string AnimStateToString(AnimState state)
+{
+    switch (state)
+    {
+    case AnimState::IDLE:
+        return "IDLE";
+
+    case AnimState::IDLE_ATTACK01:
+        return "IDLE_ATTACK01";
+    case AnimState::ATTACK01_IDLE:
+        return "ATTACK01_IDLE";
+
+    case AnimState::IDLE_ATTACK02:
+        return "IDLE_ATTACK02";
+    case AnimState::ATTACK02_IDLE:
+        return "ATTACK02_IDLE";
+
+    case AnimState::IDLE_ATTACK03:
+        return "IDLE_ATTACK03";
+    case AnimState::ATTACK03_IDLE:
+        return "ATTACK03_IDLE";
+
+    case AnimState::IDLE_WALK:
+        return "IDLE_WALK";
+    case AnimState::WALK_IDLE:
+        return "WALK_IDLE";
+    case AnimState::WALK:
+        return "WALK";
+
+    case AnimState::HURT:
+        return "HURT";
+    case AnimState::HURT_IDLE:
+        return "HURT_IDLE";
+    case AnimState::DEAD:
+        return "DEAD";
+
+    default:
+        return "UNKNOWN";
     }
 }
 #endif // DEMON_H
