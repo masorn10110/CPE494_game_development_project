@@ -281,13 +281,52 @@ public:
     const std::vector<CrystalLayer> &GetActiveAttackCrystals() const { return m_activeAttack; }
     float GetCollisionRadius() const { return DEMON_COLLISION_RADIUS; }
     int GetHealth() { return m_health; }
-    const std::vector<Projectile>& GetActiveFireballs() const { return m_activeFireballs; }
-    const StoneWall& GetStoneWall() const { return m_stoneWallEffect; }
+    const std::vector<Projectile> &GetActiveFireballs() const { return m_activeFireballs; }
+    const StoneWall &GetStoneWall() const { return m_stoneWallEffect; }
 
     // 🌟 NEW: Get unscaled world position for collision
     glm::vec3 GetWorldPosition() const
     {
         return m_position;
+    }
+    void Reset(unsigned int health, glm::vec3 startPos)
+    {
+        // 1. รีเซ็ตค่าพื้นฐาน
+        m_health = health;
+        m_position = startPos;
+        m_isDead = false;
+        m_isMoving = false;
+
+        // 2. รีเซ็ตการหมุน
+        m_rotationY = 0.0f; // หรือค่าเริ่มต้นที่ต้องการ (เช่น 180 ถ้าหันหน้ามาหาผู้เล่น)
+        m_targetRotationY = 0.0f;
+        m_forward = glm::vec3(0.0f, 0.0f, -1.0f); // รีเซ็ตทิศทาง
+
+        // 3. รีเซ็ต Animation State กลับไปท่า Idle
+        m_charState = AnimState::IDLE;
+        m_animator.PlayAnimation(&m_idleAnim, nullptr, 0.0f, 0.0f, 0.0f);
+        m_blendAmount = 0.0f;
+
+        // 4. รีเซ็ต Timers และ Flags การโจมตี
+        m_autoAttackTimer = 0.0f;
+        m_isAttacking = false;
+        m_isWarningPhase = false;
+        m_warningTimer = 0.0f;
+        m_stateTime = -1.0f;
+        m_hurtTimer = 0.0f;
+
+        m_isAttacking_Anim02 = false;
+        m_attackAnim02_Timer = 0.0f;
+
+        // 5. เคลียร์ Object ที่ค้างอยู่ในฉาก
+        m_activeFireballs.clear(); // ลบลูกไฟทั้งหมด
+        m_activeAttack.clear();    // ลบ Crystal ทั้งหมด
+        m_currentLayer = 0;
+
+        // 6. รีเซ็ตกำแพง (ต้องเพิ่ม Reset ใน StoneWall ก่อน ตามข้อ 1)
+        m_stoneWallEffect.Reset();
+
+        // std::cout << "Demon Reset Completed!" << std::endl;
     }
 };
 

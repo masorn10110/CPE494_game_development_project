@@ -80,7 +80,7 @@ public:
     float shootTimer = 0.0f;     // countdown
     bool isShooting = false;     // for blending (optional)
     // --- Shooting / fire rate ---
-    float fireRate = 0.25f;    // seconds per shot
+    float fireRate = 1.0f;    // seconds per shot
     float fireTimer = 0.0f;    // counts down
     bool shootPressed = false; // input tracking
     bool wasShootPressed = false;
@@ -542,7 +542,6 @@ public:
             return;
         }
 
-
         if (invulnerabilityTimer > 0.0f)
         {
             invulnerabilityTimer -= deltaTime;
@@ -657,6 +656,54 @@ public:
             gunModel.Draw(lightingShader);
 
         lastHitscan.Draw(hitscanShader, view, projection);
+    }
+
+    void Reset(glm::vec3 startPos)
+    {
+        // 1. รีเซ็ตสถานะพื้นฐาน
+        position = startPos;
+        previousPosition = startPos;
+        respawnPosition = startPos; // ถ้าอยากเปลี่ยนจุดเกิดให้เปลี่ยนที่นี่ด้วย
+
+        yaw = 180.0f; // หรือค่าเริ่มต้นที่คุณต้องการ
+        velocity = glm::vec3(0.0f);
+
+        health = 100;
+        score = 0; // รีเซ็ตคะแนนด้วย (ถ้าต้องการ)
+
+        isDead = false;
+        deathAnimFinished = false;
+        deathPoseTimer = 0.0f;
+
+        isMoving = false;
+        isJumping = false;
+        jumpVelocity = 0.0f;
+
+        // 2. รีเซ็ตสถานะการโจมตี
+        isShooting = false;
+        shootTimer = 0.0f;
+        fireTimer = 0.0f;
+        shootPressed = false;
+        wasShootPressed = false;
+
+        holdingGrenade = false;
+        wasGrenadeTogglePressed = false;
+
+        // 3. รีเซ็ต Animation State
+        state = IDLE;
+        blendAmount = 0.0f;
+        shootBlendAmount = 0.0f;
+        jumpStartTimer = 0.0f;
+
+        animator.m_CurrentTime = 0.0f;
+        animator.m_CurrentTime2 = 0.0f;
+        animator.PlayAnimation(&idleAnim, nullptr, 0.0f, 0.0f, 0.0f);
+
+        // 4. รีเซ็ตค่าอมตะ (Invulnerability)
+        invulnerabilityTimer = 0.0f;
+
+        // 5. รีเซ็ต Hitscan (ย้ายไปจุดปลอดภัย)
+        lastHitscan = Hitscan(glm::vec3(0), glm::vec3(0, 0, 1), 10.0f);
     }
 };
 

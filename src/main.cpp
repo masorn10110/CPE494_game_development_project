@@ -48,6 +48,9 @@ bool cameraRotationEnabled = false;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+float gameOverTimer = 0.0f;
+const float GAME_OVER_DELAY = 5.0f;
+
 // Character control
 glm::vec3 characterPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 previousPosition = glm::vec3(0.0f, 0.0f, 0.0f); // เก็บตำแหน่งก่อนหน้า
@@ -186,13 +189,6 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 double mouseX = 0.0, mouseY = 0.0;
 bool menuClickProcessed = false;
 
-// Animation states
-/*enum AnimState {
-    IDLE,
-    WALK,
-};*/
-// AnimState currentState = IDLE;
-
 int main()
 {
     // glfw: initialize and configure
@@ -232,6 +228,74 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+    Player player1(
+        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
+        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
+        FileSystem::getPath("src/player/object/Rifle Run.dae"),
+        FileSystem::getPath("src/player/object/Jump Up.dae"),
+        FileSystem::getPath("src/player/object/Jump Loop.dae"),
+        FileSystem::getPath("src/player/object/Jump Down.dae"),
+        FileSystem::getPath("src/player/object/Firing Rifle.dae"),
+        FileSystem::getPath("src/playergun/object/heavy_rifle.obj"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Idle.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Run Forward.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Jump.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Falling Idle.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Jump Landing.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing 1H Magic Attack 01.dae"),
+        FileSystem::getPath("src/player/object/Dying.dae"),
+        FileSystem::getPath("src/player/object/Dying_last_frame.dae"),
+        glm::vec3(5.0f, 0.0f, 5.0f));
+    Player player2(
+        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
+        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
+        FileSystem::getPath("src/player/object/Rifle Run.dae"),
+        FileSystem::getPath("src/player/object/Jump Up.dae"),
+        FileSystem::getPath("src/player/object/Jump Loop.dae"),
+        FileSystem::getPath("src/player/object/Jump Down.dae"),
+        FileSystem::getPath("src/player/object/Firing Rifle.dae"),
+        FileSystem::getPath("src/playergun/object/heavy_rifle.obj"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Idle.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Run Forward.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing Jump.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Falling Idle.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Jump Landing.dae"),
+        FileSystem::getPath("src/player/object/grenade_anim/Standing 1H Magic Attack 01.dae"),
+        FileSystem::getPath("src/player/object/Dying.dae"),
+        FileSystem::getPath("src/player/object/Dying_last_frame.dae"),
+        glm::vec3(-5.0f, 0.0f, 5.0f));
+    // --- โหลด Model และ Shader สำหรับ Staff/Crystal ---
+    Shader staffShader("model_loading_staff.vs", "model_loading_staff.fs");
+    Model staffModel(FileSystem::getPath("src/staff/Staff.obj"));
+    Shader ourShader("anim_model_demon.vs", "anim_model_demon.fs");
+
+    unsigned int crystalDiffuseID = TextureFromFile(
+        FileSystem::getPath("src/crystal/textures/crystal_m_Base_color.png").c_str());
+
+    Shader crystalShader("model_loading_crystal.vs", "model_loading_crystal.fs");
+    Model crystalModel(FileSystem::getPath("src/crystal/stylized_crystal_SM.obj"));
+
+    // --------------------------------------------------------------------
+    // 🚀 ส่วนที่ 1: โหลดโมเดล Projectile (Fireball/Meteor)
+    // --------------------------------------------------------------------
+    Shader fireballShader("model_loading_fireball.vs", "model_loading_fireball.fs");
+    Model fireballModel(FileSystem::getPath("src/fireball/scene.gltf"));
+
+    Model wallModel(FileSystem::getPath("src/wall/stonewallL.exported.obj"));
+    Shader wallShader("model_loading_stonewall.vs", "model_loading_stonewall.fs");
+    unsigned int wallEmissiveID = TextureFromFile(
+        FileSystem::getPath("src/wall/textures/stonewall_Emissive.png").c_str());
+
+    // --------------------------------------------------------------------
+    // 🌟 ส่วนที่ 2: สร้าง Demon Object (ส่ง Projectile Model เข้าไปด้วย)
+    // --------------------------------------------------------------------
+
+    Shader modelShader("model_loading_1.vs", "model_loading_1.fs");
+    Shader animShader("anim_model_1.vs", "anim_model_1.fs");
+
+    Demon demon(ourShader, staffModel, staffShader, crystalModel, crystalShader, crystalDiffuseID,
+                fireballModel, fireballShader, // 👈 เพิ่ม Fireball Model/Shader
+                wallModel, wallShader, wallEmissiveID, 100);
 
     UIManager *uiManager = new UIManager(SCR_WIDTH, SCR_HEIGHT);
     TextRenderer *Text = new TextRenderer(SCR_WIDTH, SCR_HEIGHT);
@@ -274,74 +338,7 @@ int main()
         return -1;
     }
 
-    // --- โหลด Model และ Shader สำหรับ Staff/Crystal ---
-    Shader staffShader("model_loading_staff.vs", "model_loading_staff.fs");
-    Model staffModel(FileSystem::getPath("src/staff/Staff.obj"));
-    Shader ourShader("anim_model_demon.vs", "anim_model_demon.fs");
-
-    unsigned int crystalDiffuseID = TextureFromFile(
-        FileSystem::getPath("src/crystal/textures/crystal_m_Base_color.png").c_str());
-
-    Shader crystalShader("model_loading_crystal.vs", "model_loading_crystal.fs");
-    Model crystalModel(FileSystem::getPath("src/crystal/stylized_crystal_SM.obj"));
-
-    // --------------------------------------------------------------------
-    // 🚀 ส่วนที่ 1: โหลดโมเดล Projectile (Fireball/Meteor)
-    // --------------------------------------------------------------------
-    Shader fireballShader("model_loading_fireball.vs", "model_loading_fireball.fs");
-    Model fireballModel(FileSystem::getPath("src/fireball/scene.gltf"));
-
-    Model wallModel(FileSystem::getPath("src/wall/stonewallL.exported.obj"));
-    Shader wallShader("model_loading_stonewall.vs", "model_loading_stonewall.fs");
-    unsigned int wallEmissiveID = TextureFromFile(
-        FileSystem::getPath("src/wall/textures/stonewall_Emissive.png").c_str());
-
-    // --------------------------------------------------------------------
-    // 🌟 ส่วนที่ 2: สร้าง Demon Object (ส่ง Projectile Model เข้าไปด้วย)
-    // --------------------------------------------------------------------
-    Demon demon(ourShader, staffModel, staffShader, crystalModel, crystalShader, crystalDiffuseID,
-                fireballModel, fireballShader, // 👈 เพิ่ม Fireball Model/Shader
-                wallModel, wallShader, wallEmissiveID, 1000);
-
-    Shader modelShader("model_loading_1.vs", "model_loading_1.fs");
-    Shader animShader("anim_model_1.vs", "anim_model_1.fs");
     Shader hitscanShader("hitscan.vs", "hitscan.fs");
-    Player player1(
-        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
-        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
-        FileSystem::getPath("src/player/object/Rifle Run.dae"),
-        FileSystem::getPath("src/player/object/Jump Up.dae"),
-        FileSystem::getPath("src/player/object/Jump Loop.dae"),
-        FileSystem::getPath("src/player/object/Jump Down.dae"),
-        FileSystem::getPath("src/player/object/Firing Rifle.dae"),
-        FileSystem::getPath("src/playergun/object/heavy_rifle.obj"),
-        FileSystem::getPath("src/player/object/grenade_anim/Standing Idle.dae"),
-        FileSystem::getPath("src/player/object/grenade_anim/Standing Run Forward.dae"),
-        FileSystem::getPath("src/player/object/grenade_anim/Standing Jump.dae"),
-        FileSystem::getPath("src/player/object/grenade_anim/Falling Idle.dae"),
-        FileSystem::getPath("src/player/object/grenade_anim/Jump Landing.dae"),
-        FileSystem::getPath("src/player/object/grenade_anim/Standing 1H Magic Attack 01.dae"),
-        FileSystem::getPath("src/player/object/Dying.dae"),
-        FileSystem::getPath("src/player/object/Dying_last_frame.dae"),
-        glm::vec3(5.0f, 0.0f, 5.0f));
-    Player player2(
-        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
-        FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
-        FileSystem::getPath("src/player/object/Rifle Run.dae"),
-        FileSystem::getPath("src/player/object/Jump Up.dae"),
-        FileSystem::getPath("src/player/object/Jump Loop.dae"),
-        FileSystem::getPath("src/player/object/Jump Down.dae"),
-        FileSystem::getPath("src/player/object/Firing Rifle.dae"),
-        FileSystem::getPath("src/playergun/object/heavy_rifle.obj"),
-        FileSystem::getPath("src/player/object/grenade_anim/Standing Idle.dae"),
-        FileSystem::getPath("src/player/object/grenade_anim/Standing Run Forward.dae"),
-        FileSystem::getPath("src/player/object/grenade_anim/Standing Jump.dae"),
-        FileSystem::getPath("src/player/object/grenade_anim/Falling Idle.dae"),
-        FileSystem::getPath("src/player/object/grenade_anim/Jump Landing.dae"),
-        FileSystem::getPath("src/player/object/grenade_anim/Standing 1H Magic Attack 01.dae"),
-        FileSystem::getPath("src/player/object/Dying.dae"),
-        FileSystem::getPath("src/player/object/Dying_last_frame.dae"),
-        glm::vec3(-5.0f, 0.0f, 5.0f));
     // สร้าง Bounding Boxes สำหรับกำแพงปราสาท
     castleWalls = createCastleWallBoundingBoxes();
     fountainWalls = createFountainBoundingBoxes();
@@ -511,7 +508,7 @@ int main()
                 {
                     player1.score += 100;
                 }
-                std::cout << "Demon hit by Player1!" << std::endl;
+                // std::cout << "Demon hit by Player1!" << std::endl;
             }
 
             // ============================================================
@@ -525,13 +522,39 @@ int main()
                 {
                     player2.score += 100;
                 }
-                std::cout << "Demon hit by Player2!" << std::endl;
+                // std::cout << "Demon hit by Player2!" << std::endl;
             }
             // animator.UpdateAnimation(deltaTime);
 
             if (demon.GetHealth() <= 0)
             {
                 demon.TriggerDeath();
+
+                // 🌟 NEW: เริ่มนับเวลาถอยหลังเมื่อบอสตาย
+                gameOverTimer += deltaTime;
+
+                // 🌟 NEW: เมื่อครบ 5 วินาที ให้ตัดเข้าหน้า Menu
+                if (gameOverTimer >= GAME_OVER_DELAY)
+                {
+                    // 1. เปลี่ยน State
+                    gameState = MENU;
+
+                    // 2. รีเซ็ตค่า Timer
+                    gameOverTimer = 0.0f;
+
+                    // 3. คืนค่าเมาส์ให้กดปุ่มได้
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+                    // 4. รีเซ็ตเกมใหม่ทั้งหมด (เพื่อให้พร้อมเล่นรอบหน้า)
+                    demon.Reset(100, glm::vec3(0.0f, -0.4f, -3.0f));
+                    player1.Reset(glm::vec3(5.0f, 0.0f, 5.0f));
+                    player2.Reset(glm::vec3(-5.0f, 0.0f, 5.0f));
+
+                    // รีเซ็ตอื่นๆ ถ้ามี (เช่น กล้อง)
+                    // camera.Position = ...
+
+                    std::cout << "Returning to Menu..." << std::endl;
+                }
             }
 
             glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
@@ -678,6 +701,21 @@ int main()
                              50.0f,                        // y position (บน)
                              1.0f,                         // scale
                              glm::vec3(1.0f, 1.0f, 1.0f)); // สีขาว
+
+            if (demon.GetHealth() <= 0)
+            {
+                std::string winText = (player1.score == player2.score) ? "Draw" : (player1.score > player2.score ? "Player 1 Wins!" : "Player 2 Wins!");
+
+                // จัดกึ่งกลาง (คำนวณตำแหน่ง X คร่าวๆ)
+                float textScale = 2.0f;
+                float textWidth = winText.length() * 15.0f * textScale; // ประมาณความกว้าง
+
+                Text->RenderText(winText,
+                                 SCR_WIDTH / 2 - textWidth / 2,
+                                 SCR_HEIGHT / 2,
+                                 textScale,
+                                 glm::vec3(1.0f, 0.8f, 0.2f)); // สีทอง
+            }
 
             // 🎮 ตัวเลข 4 ที่มุมขวาบน คะแนน
             Text->RenderText(std::to_string(player1.score),
@@ -978,7 +1016,7 @@ void CheckDemonWallCollision(Player &player, const Demon &demon)
     float wallHeight = 2.5f;
 
     // Offset จุดเช็ค (ตามที่คุณใส่ไว้)
-    wallCenter -= wallRight * 0.2f;
+    wallCenter -= wallRight * 1.f;
 
     // 1. เช็คความสูง (Y-Axis)
     if (player.position.y > wallCenter.y + wallHeight)

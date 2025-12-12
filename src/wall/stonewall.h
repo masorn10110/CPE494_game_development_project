@@ -49,6 +49,10 @@ public:
     glm::vec3 GetForwardDirection() const { return m_forwardDirection; }
     int GetLengthMultiplier() const { return m_lengthMultiplier; }
     bool IsActive() const { return m_lifetime < m_duration; }
+    void Reset()
+    {
+        m_lifetime = m_duration + 1.0f; // ตั้งค่าให้เกินเวลา เพื่อให้ IsActive() เป็น false
+    }
 };
 
 // ====================================================================
