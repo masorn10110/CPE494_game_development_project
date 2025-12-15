@@ -21,6 +21,8 @@
 #include "collision/collision.h"
 #include "menu/menu.h"
 #include "menu/text_renderer.h"
+#include <irrklang/irrKlang.h>
+using namespace irrklang;
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
@@ -174,7 +176,10 @@ enum GameState
     MENU,
     PLAYING
 };
+
 GameState gameState = MENU;
+
+    ISoundEngine* SoundEngine = createIrrKlangDevice();
 
 // 🎮 ฟังก์ชันเช็คว่าเมาส์คลิกปุ่มหรือไม่
 bool isMouseOverButton(double mouseX, double mouseY, glm::vec2 buttonPos, glm::vec2 buttonSize)
@@ -378,6 +383,13 @@ int main()
     bool movingLight = true;
     bool debugCollision = false;
 
+    if (!SoundEngine) {
+        std::cout << "Failed to initialize sound engine!" << std::endl;
+        return -1;
+    }
+    SoundEngine->play2D("menu.mp3", true);
+    SoundEngine->setSoundVolume(0.1f);
+    
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -558,6 +570,8 @@ int main()
                     player1.Reset(glm::vec3(5.0f, 0.0f, 5.0f));
                     player2.Reset(glm::vec3(-5.0f, 0.0f, 5.0f));
 
+                    SoundEngine->stopAllSounds();
+                    SoundEngine->play2D("menu.mp3", true);
                     // รีเซ็ตอื่นๆ ถ้ามี (เช่น กล้อง)
                     // camera.Position = ...
 
@@ -938,6 +952,8 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         {
             if (isMouseOverButton(mouseX, mouseY, startButtonPos, buttonSize))
             {
+                SoundEngine->stopAllSounds();
+                SoundEngine->play2D("menu.mp3", true);
                 gameState = PLAYING;
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                 std::cout << "Game Started!" << std::endl;

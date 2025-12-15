@@ -108,6 +108,7 @@ file(GLOB_RECURSE SHADERS
     "src/*.tes"
     "src/*.gs"
     "src/*.cs"
+    "src/*.mp3"
 )
 
 foreach(SHADER ${SHADERS})

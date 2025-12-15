@@ -44,7 +44,6 @@ inline bool CheckWallCollision(
     {
         if (CheckAABBCollision(charBox, wall))
         {
-            characterPosition = previousPosition; // rollback
             return true;
         }
     }

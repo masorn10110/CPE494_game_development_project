@@ -556,19 +556,34 @@ private:
     void ResolveWallCollisions(const std::vector<BoundingBox>& worldWalls)
     {
         glm::vec3 nextPos = position;
+        glm::vec3 safePos = previousPosition; // track last safe position
 
         // X axis
         nextPos.x += velocity.x;
-        if (CheckWallCollision(nextPos, previousPosition, playerradius, worldWalls))
-            nextPos.x = position.x;
+        if (CheckWallCollision(nextPos, safePos, playerradius, worldWalls))
+        {
+            nextPos.x = safePos.x; // rollback X
+        }
+        else
+        {
+            safePos.x = nextPos.x; // update safe X
+        }
 
         // Z axis
         nextPos.z += velocity.z;
-        if (CheckWallCollision(nextPos, previousPosition, playerradius, worldWalls))
-            nextPos.z = position.z;
+        if (CheckWallCollision(nextPos, safePos, playerradius, worldWalls))
+        {
+            nextPos.z = safePos.z; // rollback Z
+        }
+        else
+        {
+            safePos.z = nextPos.z; // update safe Z
+        }
 
         position = nextPos;
+        previousPosition = safePos; // update overall safe position
     }
+
     void UpdateStun(float dt)
     {
         if (!isStunned) return;
@@ -591,7 +606,6 @@ public:
     // ============================================================
     void Update(float dt, bool up, bool down, bool left, bool right, bool jump, bool shoot, bool tggrenade, float deltaTime, const std::vector<BoundingBox>& worldWalls, Player* target)
     {
-        previousPosition = position;
         // Check death state first
         if (health <= 0)
         {
