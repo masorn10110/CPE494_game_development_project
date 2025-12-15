@@ -800,12 +800,12 @@ public:
         holdingGrenade = false;
         wasGrenadeTogglePressed = false;
 
-        bool grenadeActive = false;
-        bool isStunned = false;
-        float stunTimer = 0.0f;
-        float stunDuration = 0.0f;
-        float grenadeCooldown = 2.0f; // seconds between grenade throws
-        float grenadeTimer = 0.0f;
+        grenadeActive = false;
+        isStunned = false;
+        stunTimer = 0.0f;
+        stunDuration = 0.0f;
+        grenadeCooldown = 7.0f; // seconds between grenade throws
+        grenadeTimer = 0.0f;
 
         // 3. รีเซ็ต Animation State
         state = IDLE;
