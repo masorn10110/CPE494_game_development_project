@@ -167,6 +167,7 @@ std::vector<BoundingBox> createFountainBoundingBoxes()
 BoundingBox characterBBox;
 std::vector<BoundingBox> castleWalls;
 std::vector<BoundingBox> fountainWalls;
+std::vector<BoundingBox> worldWalls;
 
 enum GameState
 {
@@ -197,11 +198,11 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    
-    #ifdef __APPLE__
+
+#ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    #endif
-    
+#endif
+
     // glfw window creation
     // --------------------
     GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
@@ -215,12 +216,12 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
-    
+
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    
+
     glfwSetMouseButtonCallback(window, mouse_button_callback);
-    
+
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -246,6 +247,7 @@ int main()
         FileSystem::getPath("src/player/object/grenade_anim/Standing 1H Magic Attack 01.dae"),
         FileSystem::getPath("src/player/object/Dying.dae"),
         FileSystem::getPath("src/player/object/Dying_last_frame.dae"),
+        FileSystem::getPath("src/player/object/Stun.dae"),
         glm::vec3(5.0f, 0.0f, 5.0f));
     Player player2(
         FileSystem::getPath("src/player/object/Rifle Aiming Idle.dae"),
@@ -264,6 +266,7 @@ int main()
         FileSystem::getPath("src/player/object/grenade_anim/Standing 1H Magic Attack 01.dae"),
         FileSystem::getPath("src/player/object/Dying.dae"),
         FileSystem::getPath("src/player/object/Dying_last_frame.dae"),
+        FileSystem::getPath("src/player/object/Stun.dae"),
         glm::vec3(-5.0f, 0.0f, 5.0f));
     // --- โหลด Model และ Shader สำหรับ Staff/Crystal ---
     Shader staffShader("model_loading_staff.vs", "model_loading_staff.fs");
@@ -342,15 +345,20 @@ int main()
     // สร้าง Bounding Boxes สำหรับกำแพงปราสาท
     castleWalls = createCastleWallBoundingBoxes();
     fountainWalls = createFountainBoundingBoxes();
+    worldWalls.insert(worldWalls.end(),
+                      castleWalls.begin(), castleWalls.end());
+
+    worldWalls.insert(worldWalls.end(),
+                      fountainWalls.begin(), fountainWalls.end());
 
     std::cout << "\n=== Castle Walls Bounding Boxes ===" << std::endl;
     const char *wallNames[] = {"North", "South", "East", "West"};
     for (size_t i = 0; i < castleWalls.size(); i++)
     {
         std::cout << wallNames[i] << " Wall: Min("
-                  << castleWalls[i].min.x << ", " << castleWalls[i].min.y << ", " << castleWalls[i].min.z
+                  << castleWalls[i].minCorner.x << ", " << castleWalls[i].minCorner.y << ", " << castleWalls[i].minCorner.z
                   << ") Max("
-                  << castleWalls[i].max.x << ", " << castleWalls[i].max.y << ", " << castleWalls[i].max.z << ")" << std::endl;
+                  << castleWalls[i].maxCorner.x << ", " << castleWalls[i].maxCorner.y << ", " << castleWalls[i].maxCorner.z << ")" << std::endl;
     }
 
     // Animation walkAnimation(FileSystem::getPath("resource/maximo/Standard Walk/Standard Walk.dae"), &charModel);
@@ -466,7 +474,7 @@ int main()
                                glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS,
                                glfwGetKey(window, GLFW_KEY_KP_1) == GLFW_PRESS,
                                glfwGetKey(window, GLFW_KEY_KP_2) == GLFW_PRESS,
-                               deltaTime);
+                               deltaTime, worldWalls, &player2);
                 player2.Update(deltaTime,
                                glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS,
                                glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS,
@@ -475,7 +483,7 @@ int main()
                                glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS,
                                glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS,
                                glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS,
-                               deltaTime);
+                               deltaTime, worldWalls, &player1);
             }
             // ============================================================
             // 🎯 CHECK HITSCAN COLLISIONS - Player1 shoots Player2
@@ -637,12 +645,6 @@ int main()
             // characterBBox = BoundingBox(
             //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
             //     player1.position + glm::vec3(player1.playerradius, 3.0f, player1.playerradius));
-
-            CheckWallCollision(player1.position, player1.previousPosition, player1.playerradius, castleWalls);
-            CheckWallCollision(player1.position, player1.previousPosition, player1.playerradius, fountainWalls);
-
-            CheckWallCollision(player2.position, player2.previousPosition, player2.playerradius, castleWalls);
-            CheckWallCollision(player2.position, player2.previousPosition, player2.playerradius, fountainWalls);
 
             CheckHazardCollision(player1, demon, currentFrame);
             CheckHazardCollision(player2, demon, currentFrame);
@@ -832,8 +834,8 @@ void processInput(GLFWwindow *window, Player &player)
         characterBBox = BoundingBox(
             player.position - glm::vec3(player.playerradius, 0.0f, player.playerradius),
             player.position + glm::vec3(player.playerradius, 3.0f, player.playerradius));
-        std::cout << "Character BBox: Min(" << characterBBox.min.x << ", " << characterBBox.min.y << ", " << characterBBox.min.z
-                  << ") Max(" << characterBBox.max.x << ", " << characterBBox.max.y << ", " << characterBBox.max.z << ")" << std::endl;
+        std::cout << "Character BBox: Min(" << characterBBox.minCorner.x << ", " << characterBBox.minCorner.y << ", " << characterBBox.minCorner.z
+                  << ") Max(" << characterBBox.maxCorner.x << ", " << characterBBox.maxCorner.y << ", " << characterBBox.maxCorner.z << ")" << std::endl;
         std::cout << "==================\n"
                   << std::endl;
         std::cout << "\n--- Camera Constructor Code ---" << std::endl;

@@ -9,12 +9,13 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
-#include <learnopengl/filesystem.h>
+// #include <learnopengl/filesystem.h>
 #include <learnopengl/shader_m.h>
 #include <learnopengl/animator.h>
 #include <learnopengl/model_animation.h>
 #include "../playergun/hitscan.h"
 #include "../collision/collision.h"
+#include "../grenade/grenade.h"
 
 class Player
 {
@@ -54,6 +55,8 @@ public:
     Animation deathAnim;
     Animation deathAnimLastframe;
 
+    Animation stunAnim;
+
     Animator animator;
 
     // --- Blend system ---
@@ -67,6 +70,7 @@ public:
         JUMP_MID,
         JUMP_LAND,
         SHOOT,
+        STUNNED,
         DEAD
     };
     AnimState state = IDLE;
@@ -91,6 +95,11 @@ public:
 
     bool holdingGrenade = false;
     bool wasGrenadeTogglePressed = false;
+    HomingGrenade activeGrenade;
+    bool grenadeActive = false;
+    bool isStunned = false;
+    float stunTimer = 0.0f;
+    float stunDuration = 0.0f;
 
     int health = 100;
     bool deathAnimFinished = false;
@@ -121,6 +130,7 @@ public:
            const std::string &gThrow,
            const std::string &deathPath,
            const std::string &deathLastFramePath,
+           const std::string &stunPath,
            glm::vec3 startPos)
         : model(modelPath),
           idleAnim(idlePath, &model),
@@ -138,6 +148,7 @@ public:
           grenadeThrowAnim(gThrow, &model),
           deathAnim(deathPath, &model),
           deathAnimLastframe(deathLastFramePath, &model),
+          stunAnim(stunPath, &model),
           gunModel(gunPath)
     {
         position = startPos;
@@ -291,22 +302,23 @@ private:
         }
     }
 
-    void UpdateMovement(float dt)
+    void UpdateMovement(float dt, const std::vector<BoundingBox>& worldWalls)
     {
         velocity = glm::vec3(0.0f);
-        const float accel = 100.0f;
+        const float speed = 2.5f;
 
         if (glm::length(inputDir) > 0.1f)
-            velocity += inputDir * accel * dt;
+            velocity = inputDir * speed * dt;  // displacement this frame
 
-        isMoving = glm::length(velocity) > 0.05f;
-        position += velocity * dt;
+        isMoving = glm::length(velocity) > 0.01f;
+
+        ResolveWallCollisions(worldWalls);
 
         if (isMoving)
         {
             float targetYaw = glm::degrees(atan2(velocity.x, velocity.z));
             float diff = fmodf(targetYaw - yaw + 540.0f, 360.0f) - 180.0f;
-            yaw += diff * 10.0f * dt; // smooth turning
+            yaw += diff * 10.0f * dt;
         }
     }
 
@@ -388,7 +400,18 @@ private:
         }
     }
 
-    void HandleGrenadeThrow(bool shoot, const AnimSet &set)
+    void ThrowGrenade(Player* target)
+    {
+        if (grenadeActive) return; // only one grenade at a time
+
+        activeGrenade.position = position + glm::vec3(0.0f, 0.6f, 0.0f);
+        activeGrenade.target   = target;
+        activeGrenade.exploded = false;
+
+        grenadeActive = true;
+    }
+
+    void HandleGrenadeThrow(bool shoot, const AnimSet &set, Player* target)
     {
         // Only allow grenade throw if holding grenade
         if (!holdingGrenade)
@@ -408,6 +431,8 @@ private:
 
             animator.m_CurrentTime = 0.0f;
             state = SHOOT;
+
+            ThrowGrenade(target);
         }
     }
 
@@ -528,11 +553,43 @@ private:
         }
     }
 
+    void ResolveWallCollisions(const std::vector<BoundingBox>& worldWalls)
+    {
+        glm::vec3 nextPos = position;
+
+        // X axis
+        nextPos.x += velocity.x;
+        if (CheckWallCollision(nextPos, previousPosition, playerradius, worldWalls))
+            nextPos.x = position.x;
+
+        // Z axis
+        nextPos.z += velocity.z;
+        if (CheckWallCollision(nextPos, previousPosition, playerradius, worldWalls))
+            nextPos.z = position.z;
+
+        position = nextPos;
+    }
+    void UpdateStun(float dt)
+    {
+        if (!isStunned) return;
+
+        stunTimer -= dt;
+        velocity = glm::vec3(0.0f);
+        isMoving = false;
+
+        if (stunTimer <= 0.0f)
+        {
+            isStunned = false;
+            state = IDLE;
+            animator.PlayAnimation(&idleAnim, nullptr, 0.0f, 0.0f, 0.0f);
+        }
+    }
+
 public:
     // ============================================================
     // PUBLIC UPDATE METHOD
     // ============================================================
-    void Update(float dt, bool up, bool down, bool left, bool right, bool jump, bool shoot, bool tggrenade, float deltaTime)
+    void Update(float dt, bool up, bool down, bool left, bool right, bool jump, bool shoot, bool tggrenade, float deltaTime, const std::vector<BoundingBox>& worldWalls, Player* target)
     {
         previousPosition = position;
         // Check death state first
@@ -540,6 +597,13 @@ public:
         {
             UpdateDeathState(dt);
             return;
+        }
+
+        if (isStunned)
+        {
+            UpdateStun(dt);
+            animator.UpdateAnimation(dt);
+            return;   // 🚫 stop movement / shooting
         }
 
         if (invulnerabilityTimer > 0.0f)
@@ -550,7 +614,7 @@ public:
         AnimSet set = GetCurrentAnimSet();
 
         UpdateInput(up, down, left, right, tggrenade);
-        UpdateMovement(dt);
+        UpdateMovement(dt, worldWalls);
 
         if (jump)
             InitiateJump(set);
@@ -560,13 +624,22 @@ public:
         // Handle shooting differently based on weapon type
         if (holdingGrenade)
         {
-            HandleGrenadeThrow(shoot, set);
+            HandleGrenadeThrow(shoot, set, target);
         }
         else
         {
             if (shoot)
                 HandleShoot(set);
         }
+        if (grenadeActive)
+        {
+            activeGrenade.Update(dt);
+
+            if (activeGrenade.exploded)
+            {
+                grenadeActive = false;
+            }
+        }     
 
         UpdateShooting(dt, set);
         UpdateAnimationStateMachine(dt, set);
@@ -591,6 +664,21 @@ public:
 
     // Store last hitscan for collision checking in game loop
     Hitscan lastHitscan = Hitscan(glm::vec3(0), glm::vec3(0, 0, 1), 10.0f);
+
+    void ApplyStun(float duration)
+    {
+        if (health <= 0) return;
+
+        isStunned = true;
+        stunDuration = duration;
+        stunTimer = duration;
+
+        velocity = glm::vec3(0.0f);
+        state = STUNNED;
+
+        // Optional: play stunned animation or idle
+        animator.PlayAnimation(&stunAnim, nullptr, 0.0f, 0.0f, 0.0f);
+    }
 
     // ----------------------------------------------------
     // DRAW FUNCTION (unchanged)
@@ -688,6 +776,11 @@ public:
 
         holdingGrenade = false;
         wasGrenadeTogglePressed = false;
+
+        bool grenadeActive = false;
+        bool isStunned = false;
+        float stunTimer = 0.0f;
+        float stunDuration = 0.0f;
 
         // 3. รีเซ็ต Animation State
         state = IDLE;

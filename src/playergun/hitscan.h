@@ -112,11 +112,5 @@ public:
     }
 };
 
-// ----------------------------------------------------------
-// Static Variable Definitions (MUST be outside the class)
-// ----------------------------------------------------------
-unsigned int Hitscan::lineVAO = 0;
-unsigned int Hitscan::lineVBO = 0;
-bool Hitscan::lineInitialized = false;
 
 #endif // HITSCAN_H
