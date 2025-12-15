@@ -84,7 +84,7 @@ public:
     float shootTimer = 0.0f;     // countdown
     bool isShooting = false;     // for blending (optional)
     // --- Shooting / fire rate ---
-    float fireRate = 1.0f;    // seconds per shot
+    float fireRate = 1.0f;     // seconds per shot
     float fireTimer = 0.0f;    // counts down
     bool shootPressed = false; // input tracking
     bool wasShootPressed = false;
@@ -95,6 +95,8 @@ public:
 
     bool holdingGrenade = false;
     bool wasGrenadeTogglePressed = false;
+    float grenadeCooldown = 7.0f; // seconds between grenade throws
+    float grenadeTimer = 0.0f;    // countdown timer
     HomingGrenade activeGrenade;
     bool grenadeActive = false;
     bool isStunned = false;
@@ -302,13 +304,13 @@ private:
         }
     }
 
-    void UpdateMovement(float dt, const std::vector<BoundingBox>& worldWalls)
+    void UpdateMovement(float dt, const std::vector<BoundingBox> &worldWalls)
     {
         velocity = glm::vec3(0.0f);
         const float speed = 2.5f;
 
         if (glm::length(inputDir) > 0.1f)
-            velocity = inputDir * speed * dt;  // displacement this frame
+            velocity = inputDir * speed * dt; // displacement this frame
 
         isMoving = glm::length(velocity) > 0.01f;
 
@@ -400,41 +402,42 @@ private:
         }
     }
 
-    void ThrowGrenade(Player* target)
+    void ThrowGrenade(Player *target)
     {
-        if (grenadeActive) return; // only one grenade at a time
+        if (grenadeActive)
+            return; // only one grenade at a time
+        if (grenadeTimer > 0.0f)
+            return; // respect cooldown
 
         activeGrenade.position = position + glm::vec3(0.0f, 0.6f, 0.0f);
-        activeGrenade.target   = target;
+        activeGrenade.target = target;
         activeGrenade.exploded = false;
 
         grenadeActive = true;
+        grenadeTimer = grenadeCooldown; // reset cooldown
     }
 
     void HandleGrenadeThrow(bool shoot, const AnimSet &set, Player* target)
     {
-        // Only allow grenade throw if holding grenade
-        if (!holdingGrenade)
-            return;
+        if (!holdingGrenade) return;
 
-        // Edge detection: fire only on button press, not hold
         bool throwEdge = (shoot && !wasShootPressed);
         wasShootPressed = shoot;
 
-        if (throwEdge && !isJumping && !isMoving)
+        if (throwEdge && !isJumping && !isMoving && !grenadeActive && grenadeTimer <= 0.0f)
         {
-            shootBlendAmount = 1.0f;
-
-            // Throw grenade animation
+            // Play throw animation
             Animation *baseAnim = isMoving ? set.run : set.idle;
-            animator.PlayAnimation(baseAnim, set.shoot, 0.0f, 0.0f, shootBlendAmount);
+            animator.PlayAnimation(baseAnim, set.shoot, 0.0f, 0.0f, 1.0f);
 
             animator.m_CurrentTime = 0.0f;
             state = SHOOT;
 
-            ThrowGrenade(target);
+            // Activate grenade
+            ThrowGrenade(target); // <- must call this
         }
     }
+
 
     void UpdateAnimationStateMachine(float dt, const AnimSet &set)
     {
@@ -553,7 +556,7 @@ private:
         }
     }
 
-    void ResolveWallCollisions(const std::vector<BoundingBox>& worldWalls)
+    void ResolveWallCollisions(const std::vector<BoundingBox> &worldWalls)
     {
         glm::vec3 nextPos = position;
         glm::vec3 safePos = previousPosition; // track last safe position
@@ -586,7 +589,8 @@ private:
 
     void UpdateStun(float dt)
     {
-        if (!isStunned) return;
+        if (!isStunned)
+            return;
 
         stunTimer -= dt;
         velocity = glm::vec3(0.0f);
@@ -604,7 +608,7 @@ public:
     // ============================================================
     // PUBLIC UPDATE METHOD
     // ============================================================
-    void Update(float dt, bool up, bool down, bool left, bool right, bool jump, bool shoot, bool tggrenade, float deltaTime, const std::vector<BoundingBox>& worldWalls, Player* target)
+    void Update(float dt, bool up, bool down, bool left, bool right, bool jump, bool shoot, bool tggrenade, float deltaTime, const std::vector<BoundingBox> &worldWalls, Player *target)
     {
         // Check death state first
         if (health <= 0)
@@ -617,9 +621,11 @@ public:
         {
             UpdateStun(dt);
             animator.UpdateAnimation(dt);
-            return;   // 🚫 stop movement / shooting
+            return; // 🚫 stop movement / shooting
         }
-
+        // Update grenade cooldown timer
+        if (grenadeTimer > 0.0f)
+            grenadeTimer -= dt;
         if (invulnerabilityTimer > 0.0f)
         {
             invulnerabilityTimer -= deltaTime;
@@ -653,7 +659,7 @@ public:
             {
                 grenadeActive = false;
             }
-        }     
+        }
 
         UpdateShooting(dt, set);
         UpdateAnimationStateMachine(dt, set);
@@ -681,7 +687,8 @@ public:
 
     void ApplyStun(float duration)
     {
-        if (health <= 0) return;
+        if (health <= 0)
+            return;
 
         isStunned = true;
         stunDuration = duration;
@@ -697,7 +704,7 @@ public:
     // ----------------------------------------------------
     // DRAW FUNCTION (unchanged)
     // ----------------------------------------------------
-    void Draw(Shader &animShader, Shader &lightingShader, Shader &hitscanShader,
+    void Draw(Shader &animShader, Shader &lightingShader, Shader &hitscanShader, Shader &explodeShader,
               const glm::mat4 &view, const glm::mat4 &projection)
     {
         //------------------------------------------------------------
@@ -756,6 +763,8 @@ public:
 
         if (!holdingGrenade)
             gunModel.Draw(lightingShader);
+        if (grenadeActive)
+            activeGrenade.Draw(explodeShader, view, projection);
 
         lastHitscan.Draw(hitscanShader, view, projection);
     }
@@ -795,6 +804,8 @@ public:
         bool isStunned = false;
         float stunTimer = 0.0f;
         float stunDuration = 0.0f;
+        float grenadeCooldown = 2.0f; // seconds between grenade throws
+        float grenadeTimer = 0.0f;
 
         // 3. รีเซ็ต Animation State
         state = IDLE;

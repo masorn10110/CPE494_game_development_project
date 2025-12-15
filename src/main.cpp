@@ -273,6 +273,9 @@ int main()
         FileSystem::getPath("src/player/object/Dying_last_frame.dae"),
         FileSystem::getPath("src/player/object/Stun.dae"),
         glm::vec3(-5.0f, 0.0f, 5.0f));
+
+    Shader explodeShader("grenade.vs", "grenade.fs");
+
     // --- โหลด Model และ Shader สำหรับ Staff/Crystal ---
     Shader staffShader("model_loading_staff.vs", "model_loading_staff.fs");
     Model staffModel(FileSystem::getPath("src/staff/Staff.obj"));
@@ -651,8 +654,8 @@ int main()
             // Draw Demon, Staff, Crystal และ Fireball (ทั้งหมดถูกจัดการผ่าน Demon::Draw)
             demon.Draw(projection, view, camera.Position);
 
-            player1.Draw(animShader, modelShader, hitscanShader, view, projection);
-            player2.Draw(animShader, modelShader, hitscanShader, view, projection);
+            player1.Draw(animShader, modelShader, hitscanShader, explodeShader, view, projection);
+            player2.Draw(animShader, modelShader, hitscanShader, explodeShader, view, projection);
 
             // สร้าง Bounding Box สำหรับตัวละคร (ขนาดประมาณ)
             // float charRadius = 1.0f; // ปรับให้เหมาะสมกับขนาดตัวละคร
