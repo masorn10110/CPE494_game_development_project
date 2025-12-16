@@ -291,7 +291,7 @@ int main()
     // 🚀 ส่วนที่ 1: โหลดโมเดล Projectile (Fireball/Meteor)
     // --------------------------------------------------------------------
     Shader fireballShader("model_loading_fireball.vs", "model_loading_fireball.fs");
-    Model fireballModel(FileSystem::getPath("src/fireball/scene.gltf"));
+    Model fireballModel(FileSystem::getPath("src/fireball/Fire.obj"));
 
     Model wallModel(FileSystem::getPath("src/wall/stonewallL.exported.obj"));
     Shader wallShader("model_loading_stonewall.vs", "model_loading_stonewall.fs");
@@ -450,11 +450,31 @@ int main()
 
             // 🎮 คำแนะนำ (ด้านล่าง)
             Text->RenderText("Click START to begin",
-                             SCR_WIDTH / 2 - 70.0f,
+                             SCR_WIDTH / 2 - 100.0f,
                              SCR_HEIGHT / 2 + 100.0f,
-                             0.4f,
+                             0.6f,
                              glm::vec3(0.7f, 0.7f, 0.7f)); // สีเทา
-
+            
+            Text->RenderText("Use Arrow Keys to move Player 1",
+                             SCR_WIDTH / 2 - 140.0f,
+                             SCR_HEIGHT / 2 + 130.0f,
+                             0.6f,
+                             glm::vec3(0.7f, 0.7f, 0.7f)); // สีเทา
+            Text->RenderText("Use Shift to jump, 1 to shoot, 2 to throw grenade",
+                             SCR_WIDTH / 2 - 210.0f,
+                             SCR_HEIGHT / 2 + 150.0f,
+                             0.6f,
+                             glm::vec3(0.7f, 0.7f, 0.7f)); // สีเทา
+            Text->RenderText("Use WASD to move Player 2",
+                                SCR_WIDTH / 2 - 120.0f,
+                                SCR_HEIGHT / 2 + 180.0f,
+                                0.6f,
+                                glm::vec3(0.7f, 0.7f, 0.7f)); // สีเทา
+            Text->RenderText("Use Space to jump, J to shoot, K to throw grenade",
+                                SCR_WIDTH / 2 - 210.0f,
+                                SCR_HEIGHT / 2 + 200.0f,
+                                0.6f,
+                                glm::vec3(0.7f, 0.7f, 0.7f)); // สีเทา
             glEnable(GL_DEPTH_TEST);
             glDisable(GL_BLEND);
 
@@ -669,7 +689,7 @@ int main()
             // 2. เช็คการชนกำแพง Demon (และผลักออก)
             CheckDemonWallCollision(player1, demon);
             CheckDemonWallCollision(player2, demon);
-
+            std::cout << "Player1 Health:" << player1.health << " | Player2 Health:" << player2.health << " | Demon Health:" << demon.GetHealth() << "\r";
             // characterBBox = BoundingBox(
             //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
             //     player1.position + glm::vec3(player1.playerradius, 3.0f, player1.playerradius));
@@ -701,7 +721,7 @@ int main()
                 {
                     playerNoTarget = rand() % 2;
                     onetime = false;
-                    printf("Demon is targeting Player %d\n", playerNoTarget ? 1 : 2);
+                    // printf("Demon is targeting Player %d\n", playerNoTarget ? 1 : 2);
                 }
                 glm::vec3 targetPosition = playerNoTarget ? player1.position : player2.position;
                 demon.LookAtPosition(targetPosition);
@@ -986,7 +1006,7 @@ void CheckHazardCollision(Player &player, const Demon &demon, float currentFrame
                 // ลดเลือด (อาจต้องเพิ่ม cooldown การโดนซ้ำ)
                 player.invulnerabilityTimer = 3.0f;
                 player.health -= 10; // สร้างฟังก์ชัน TakeDamage ใน Player
-                // std::cout << "Hit by Fireball!" << std::endl;
+                // std::cout << "Hit by Fireball!"  << std::endl;
             }
         }
     }

@@ -144,7 +144,7 @@ private:
     float m_stateTime = -1.0f;
     float m_hurtTimer = 0.0f;
 
-    float m_autoAttackCooldown = 4.0f;
+    float m_autoAttackCooldown = 3.0f;
     float m_autoAttackTimer = 0.0f;
 
     // 🌟 NEW: ตัวแปรสำหรับการเตือนภัย (Warning Phase)
@@ -1133,7 +1133,7 @@ inline void Demon::handleStateAttack03Idle()
     {
         // 🧱 Logic การร่าย Stone Wall
         int wallCount = 1;         // จำนวน Segment กำแพง
-        float wallDuration = 4.0f; // อยู่ได้ 4 วินาที
+        float wallDuration = 10.0f; // อยู่ได้ 4 วินาที
 
         // ใช้ m_position และ m_forward เป็นจุดเริ่มต้นและทิศทาง
         m_stoneWallEffect.Cast(m_position, m_forward, wallCount, wallDuration);
