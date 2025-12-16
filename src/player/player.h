@@ -211,7 +211,7 @@ private:
         {
             if (state != DEAD)
             {
-                this->score -= 50;
+                this->score -= this->score > 50 ? 50 : this->score;
                 EnterDeadState();
             }
 

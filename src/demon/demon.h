@@ -457,7 +457,7 @@ inline void Demon::Attack(const glm::vec3 &targetPos, int attackType = -1)
 
     Animation *nextAnim = nullptr;
     int type = (attackType != -1) ? attackType : (rand() % 3); // ใช้ค่าที่ส่งมา หรือสุ่มใหม่ถ้าไม่มี
-
+    // std::cout << "Demon is performing Attack Type: " << type << std::endl;
     if (type == 0)
         nextAnim = &m_attackAnim01;
     else if (type == 1)
@@ -495,18 +495,18 @@ inline void Demon::TriggerAttack(Animation *nextAnim)
 
     // กำหนด State Machine ที่ถูกต้องตามแอนิเมชัน
     AnimState nextBlendState = AnimState::IDLE_ATTACK03;
-    // if (nextAnim == &m_attackAnim01)
-    // {
-    //     nextBlendState = AnimState::IDLE_ATTACK01;
-    // }
-    // else if (nextAnim == &m_attackAnim02)
-    // {
-    //     nextBlendState = AnimState::IDLE_ATTACK02;
-    // }
-    // else
-    // {
-    //     nextBlendState = AnimState::IDLE_ATTACK03;
-    // }
+    if (nextAnim == &m_attackAnim01)
+    {
+        nextBlendState = AnimState::IDLE_ATTACK01;
+    }
+    else if (nextAnim == &m_attackAnim02)
+    {
+        nextBlendState = AnimState::IDLE_ATTACK02;
+    }
+    else
+    {
+        nextBlendState = AnimState::IDLE_ATTACK03;
+    }
     Animation *currentAnim = (m_charState == AnimState::IDLE) ? &m_idleAnim : &m_walkAnim;
 
     m_blendAmount = 0.0f;
@@ -855,6 +855,7 @@ inline void Demon::Update(float deltaTime, float currentFrame)
 
             // 2. สุ่มประเภทการโจมตีและกำหนดเป้าหมายล่วงหน้า
             m_pendingAttackType = rand() % 3;
+            // std::cout << "Demon is preparing Attack Type: " << m_pendingAttackType << std::endl;
 
             // สมมติเป้าหมาย (ปรับให้ Dynamic ได้ตามต้องการ เช่น ตำแหน่งผู้เล่นล่าสุด)
             // m_pendingAttackTarget = glm::vec3(20.0f, m_position.y, 20.0f);
