@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 3.0)
+cmake_policy(VERSION 3.0)
+
 project(MyOpenGLProject)
 
 # -----------------------------
 # Compiler and general settings
 # -----------------------------
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# set(CMAKE_CXX_STANDARD 17)
+# set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_OSX_ARCHITECTURES "arm64")
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -22,6 +24,7 @@ include_directories(${CMAKE_SOURCE_DIR}/includes)
 include_directories(${FREETYPE_INCLUDE_DIRS})
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 # -----------------------------
 # Library linking
