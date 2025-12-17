@@ -8,6 +8,10 @@ without relying on Visual Studio project files.
 
 https://github.com/user-attachments/assets/48993d46-a070-433c-9679-1475dc478a92
 
+## Picture
+![alt text](https://github.com/masorn10110/CPE494_game_development_project/blob/main/image/image.png)
+![alt text](https://github.com/masorn10110/CPE494_game_development_project/blob/main/image/Screenshot%202025-12-17%20143146.png)
+
 ## 🧩 Requirements
 
 - CMake >= 3.0
@@ -75,3 +79,5 @@ CPE494_game_development_project /
 └── bin/ (generated)
 
 ```
+## itch.io link
+https://devil-hunters.itch.io/devil-hunters
