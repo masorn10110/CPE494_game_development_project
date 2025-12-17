@@ -21,7 +21,7 @@ Makefile
 Thumbs.db
 
 # Windows binaries (ถ้าเคยมี)
-*.lib
+#*.lib
 *.dll
 *.exe
 
@@ -38,10 +38,7 @@ Thumbs.db
 .DS_Store
 Thumbs.db
 
-# convert file
-convert.py
-!/convert.py
-
-#zip file
-**.zip
-**.gzip
+# External libraries
+assimp/
+glm/
+GLFW/

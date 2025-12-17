@@ -21,6 +21,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 # Include paths
 # -----------------------------
 include_directories(${CMAKE_SOURCE_DIR}/includes)
+include_directories(${FREETYPE_INCLUDE_DIRS})
+configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
@@ -39,20 +41,29 @@ message(STATUS "Using GLFW at: ${GLFW3_INCLUDE_DIR}")
 find_package(ASSIMP REQUIRED)
 message(STATUS "Using Assimp at: ${ASSIMP_INCLUDE_DIR}")
 
-if(APPLE)
-  find_package(Freetype REQUIRED)
-  message(STATUS "Using Freetype at: ${FREETYPE_INCLUDE_DIRS}")
-endif()
+find_package(FREETYPE REQUIRED)
+message(STATUS "Using FreeType at: ${FREETYPE_INCLUDE_DIRS}")
+
 
 # Platform-specific linking
 if(WIN32)
-  set(LIBS glfw3 opengl32 assimp freetype irrKlang)
+  # -------- Freetype --------
+  # Correct include and lib paths based on your folder structure
+  set(FREETYPE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/includes/freetype/include")
+  set(FREETYPE_LIBRARY "${CMAKE_SOURCE_DIR}/lib/freetype.lib")
+
+  # Alias for linking
+  set(FREETYPE_LIBRARIES ${FREETYPE_LIBRARY})
+
+  message(STATUS "Using FreeType include dir: ${FREETYPE_INCLUDE_DIRS}")
+  message(STATUS "Using FreeType library: ${FREETYPE_LIBRARIES}")
+  set(LIBS glfw3 opengl32 assimp freetype irrKlang GLAD STB_IMAGE)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 elseif(UNIX AND NOT APPLE)
   find_package(OpenGL REQUIRED)
   find_package(X11 REQUIRED)
   add_definitions(${OPENGL_DEFINITIONS})
-  set(LIBS ${GLFW3_LIBRARY} ${OPENGL_LIBRARIES} ${ASSIMP_LIBRARY} X11 Xrandr Xinerama Xi Xxf86vm Xcursor dl pthread freetype)
+  set(LIBS ${GLFW3_LIBRARY} ${OPENGL_LIBRARIES} ${ASSIMP_LIBRARY} ${FREETYPE_DIRS} X11 Xrandr Xinerama Xi Xxf86vm Xcursor dl pthread freetype)
 elseif(APPLE)
   find_library(COCOA_LIBRARY Cocoa)
   find_library(OpenGL_LIBRARY OpenGL)
@@ -88,6 +99,14 @@ include_directories(${CMAKE_BINARY_DIR}/configuration)
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/includes
+    ${FREETYPE_INCLUDE_DIRS}
+    ${GLM_INCLUDE_DIR}
+    ${GLFW3_INCLUDE_DIR}
+    ${ASSIMP_INCLUDE_DIR}
+)
+
 if(MSVC)
   target_compile_options(${PROJECT_NAME} PRIVATE /std:c++17 /MP)
   target_link_options(${PROJECT_NAME} PUBLIC /ignore:4099)
@@ -103,6 +122,8 @@ file(GLOB_RECURSE SHADERS
     "src/*.tes"
     "src/*.gs"
     "src/*.cs"
+    "dlls/*.dll"
+    "src/*.mp3"
 )
 
 foreach(SHADER ${SHADERS})

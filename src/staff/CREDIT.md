@@ -1,0 +1,1 @@
+“staff” (https://www.cgtrader.com/free-3d-models/military/gun/red-gem-staff) by [yungdari](https://www.cgtrader.com/designers/yungdari) is available under CGTrader’s free download license (usually requiring attribution).

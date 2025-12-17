@@ -103,6 +103,7 @@ public:
 		}
 
 		glm::mat4 globalTransformation = parentTransform * nodeTransform;
+		m_BoneWorldTransforms[nodeName] = globalTransformation; // Added by Boat
 
 		auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
 		if (boneInfoMap.find(nodeName) != boneInfoMap.end())
@@ -121,13 +122,21 @@ public:
 		return m_FinalBoneMatrices;
 	}
 
+	glm::mat4 GetBoneTransform(const std::string& name)	//added by Boat
+	{
+		if (m_BoneWorldTransforms.find(name) != m_BoneWorldTransforms.end())
+			return m_BoneWorldTransforms[name];
+
+		return glm::mat4(1.0f);
+	}
+
 //private:
 	std::vector<glm::mat4> m_FinalBoneMatrices;
+	std::map<std::string, glm::mat4> m_BoneWorldTransforms;	//added by Boat
 	Animation* m_CurrentAnimation;
 	Animation* m_CurrentAnimation2;
 	float m_CurrentTime;
 	float m_CurrentTime2;
 	float m_DeltaTime;
 	float m_blendAmount;
-
 };
