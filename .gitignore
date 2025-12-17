@@ -21,7 +21,7 @@ Makefile
 Thumbs.db
 
 # Windows binaries (ถ้าเคยมี)
-*.lib
+#*.lib
 *.dll
 *.exe
 

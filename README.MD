@@ -13,9 +13,10 @@ without relying on Visual Studio project files.
   - GLFW3
   - GLM
   - Assimp
-  - Freetype (optional, for text rendering)
+  - Freetype
 
 ## 🛠️ Build Instructions
+### **Linux/Macos**
 
 ```bash
 # clone this repository
@@ -32,6 +33,22 @@ cmake ..
 make # u can add -j n for fast complie ex. make -j 8
 
 ```
+### **Windows**
+```bash
+# clone this repository
+git clone --recurse-submodules https://github.com/masorn10110/CPE494_game_development_project.git
+cd CPE494_game_development_project
+
+# create build folder
+mkdir build && cd build
+
+# run cmake
+cmake ..
+
+# build
+cmake --build . --config Release -j
+
+```
 Executables will be generated inside bin/ organized by chapter.
 
 ```
@@ -44,10 +61,13 @@ CPE494_game_development_project /
 │   ├── glm/
 │   ├── learnopengl/
 │   └── stb_image.h
+├── resource/
 ├── src/
 │   ├── glad.c
 │   ├── stb_image.cpp
+│   ├── main.cpp
 │   └── ...
+├── build/ (generated)
 └── bin/ (generated)
 
 ```

@@ -38,12 +38,23 @@ message(STATUS "Using GLFW at: ${GLFW3_INCLUDE_DIR}")
 find_package(ASSIMP REQUIRED)
 message(STATUS "Using Assimp at: ${ASSIMP_INCLUDE_DIR}")
 
-find_package(Freetype REQUIRED)
-message(STATUS "Using Freetype at: ${FREETYPE_INCLUDE_DIRS}")
+find_package(FREETYPE REQUIRED)
+message(STATUS "Using FreeType at: ${FREETYPE_INCLUDE_DIRS}")
+
 
 # Platform-specific linking
 if(WIN32)
-  set(LIBS glfw3 opengl32 assimp freetype irrKlang)
+  # -------- Freetype --------
+  # Correct include and lib paths based on your folder structure
+  set(FREETYPE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/includes/freetype/include")
+  set(FREETYPE_LIBRARY "${CMAKE_SOURCE_DIR}/lib/freetype.lib")
+
+  # Alias for linking
+  set(FREETYPE_LIBRARIES ${FREETYPE_LIBRARY})
+
+  message(STATUS "Using FreeType include dir: ${FREETYPE_INCLUDE_DIRS}")
+  message(STATUS "Using FreeType library: ${FREETYPE_LIBRARIES}")
+  set(LIBS glfw3 opengl32 assimp freetype irrKlang GLAD STB_IMAGE)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 elseif(UNIX AND NOT APPLE)
   find_package(OpenGL REQUIRED)
@@ -82,7 +93,7 @@ include_directories(${CMAKE_BINARY_DIR}/configuration)
 # -----------------------------
 # Create executable
 # -----------------------------
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${FREETYPE_LIBRARIES})
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -108,6 +119,7 @@ file(GLOB_RECURSE SHADERS
     "src/*.tes"
     "src/*.gs"
     "src/*.cs"
+    "dlls/*.dll"
     "src/*.mp3"
 )
 
