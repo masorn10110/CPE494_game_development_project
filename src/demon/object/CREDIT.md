@@ -1,0 +1,1 @@
+“White Clown/Animation” (https://www.mixamo.com/) by Mixamo (Adobe) is provided for use under the Mixamo license (no attribution required).

@@ -307,7 +307,7 @@ int main()
 
     Demon demon(ourShader, staffModel, staffShader, crystalModel, crystalShader, crystalDiffuseID,
                 fireballModel, fireballShader, // 👈 เพิ่ม Fireball Model/Shader
-                wallModel, wallShader, wallEmissiveID, 100);
+                wallModel, wallShader, wallEmissiveID, 1000);
 
     UIManager *uiManager = new UIManager(SCR_WIDTH, SCR_HEIGHT);
     TextRenderer *Text = new TextRenderer(SCR_WIDTH, SCR_HEIGHT);
@@ -339,13 +339,6 @@ int main()
     if (castleModel.meshes.size() == 0)
     {
         std::cout << "Failed to load castle model" << std::endl;
-        return -1;
-    }
-
-    Model charModel(FileSystem::getPath("resource/maximo/Remy/Remy.dae"));
-    if (charModel.meshes.size() == 0)
-    {
-        std::cout << "Failed to load charmodel" << std::endl;
         return -1;
     }
 
@@ -589,7 +582,7 @@ int main()
                     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
                     // 4. รีเซ็ตเกมใหม่ทั้งหมด (เพื่อให้พร้อมเล่นรอบหน้า)
-                    demon.Reset(100, glm::vec3(0.0f, -0.4f, -3.0f));
+                    demon.Reset(1000, glm::vec3(0.0f, -0.4f, -3.0f));
                     player1.Reset(glm::vec3(5.0f, 0.0f, 5.0f));
                     player2.Reset(glm::vec3(-5.0f, 0.0f, 5.0f));
 
@@ -689,7 +682,7 @@ int main()
             // 2. เช็คการชนกำแพง Demon (และผลักออก)
             CheckDemonWallCollision(player1, demon);
             CheckDemonWallCollision(player2, demon);
-            std::cout << "Player1 Health:" << player1.health << " | Player2 Health:" << player2.health << " | Demon Health:" << demon.GetHealth() << "\r";
+            // std::cout << "Player1 Health:" << player1.health << " | Player2 Health:" << player2.health << " | Demon Health:" << demon.GetHealth() << "\r";
             // characterBBox = BoundingBox(
             //     player1.position - glm::vec3(player1.playerradius, 0.0f, player1.playerradius),
             //     player1.position + glm::vec3(player1.playerradius, 3.0f, player1.playerradius));
@@ -858,37 +851,37 @@ void processInput(GLFWwindow *window, Player &player)
             currentState = IDLE; // Switch to idle animation
     }*/
 
-    static bool pKeyPressed = false;
-    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && !pKeyPressed)
-    {
-        pKeyPressed = true;
-        glm::vec3 playerPos = player.position;
-        float playerYaw = player.yaw;
+    // static bool pKeyPressed = false;
+    // if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && !pKeyPressed)
+    // {
+    //     pKeyPressed = true;
+    //     glm::vec3 playerPos = player.position;
+    //     float playerYaw = player.yaw;
 
-        std::cout << "\n=== Info ===" << std::endl;
-        std::cout << "Camera: (" << camera.Position.x << ", " << camera.Position.y << ", " << camera.Position.z << ")" << std::endl;
-        std::cout << "Player1 Position: (" << playerPos.x << ", " << playerPos.y << ", " << playerPos.z << ")" << std::endl;
-        characterBBox = BoundingBox(
-            player.position - glm::vec3(player.playerradius, 0.0f, player.playerradius),
-            player.position + glm::vec3(player.playerradius, 3.0f, player.playerradius));
-        std::cout << "Character BBox: Min(" << characterBBox.minCorner.x << ", " << characterBBox.minCorner.y << ", " << characterBBox.minCorner.z
-                  << ") Max(" << characterBBox.maxCorner.x << ", " << characterBBox.maxCorner.y << ", " << characterBBox.maxCorner.z << ")" << std::endl;
-        std::cout << "==================\n"
-                  << std::endl;
-        std::cout << "\n--- Camera Constructor Code ---" << std::endl;
-        std::cout << "Camera camera(glm::vec3("
-                  << camera.Position.x << "f, "
-                  << camera.Position.y << "f, "
-                  << camera.Position.z << "f), glm::vec3(0.0f, 1.5f, 0.0f), "
-                  << camera.Yaw << "f, "
-                  << camera.Pitch << "f);" << std::endl;
-        std::cout << "-------------------------------" << std::endl;
+    //     std::cout << "\n=== Info ===" << std::endl;
+    //     std::cout << "Camera: (" << camera.Position.x << ", " << camera.Position.y << ", " << camera.Position.z << ")" << std::endl;
+    //     std::cout << "Player1 Position: (" << playerPos.x << ", " << playerPos.y << ", " << playerPos.z << ")" << std::endl;
+    //     characterBBox = BoundingBox(
+    //         player.position - glm::vec3(player.playerradius, 0.0f, player.playerradius),
+    //         player.position + glm::vec3(player.playerradius, 3.0f, player.playerradius));
+    //     std::cout << "Character BBox: Min(" << characterBBox.minCorner.x << ", " << characterBBox.minCorner.y << ", " << characterBBox.minCorner.z
+    //               << ") Max(" << characterBBox.maxCorner.x << ", " << characterBBox.maxCorner.y << ", " << characterBBox.maxCorner.z << ")" << std::endl;
+    //     std::cout << "==================\n"
+    //               << std::endl;
+    //     std::cout << "\n--- Camera Constructor Code ---" << std::endl;
+    //     std::cout << "Camera camera(glm::vec3("
+    //               << camera.Position.x << "f, "
+    //               << camera.Position.y << "f, "
+    //               << camera.Position.z << "f), glm::vec3(0.0f, 1.5f, 0.0f), "
+    //               << camera.Yaw << "f, "
+    //               << camera.Pitch << "f);" << std::endl;
+    //     std::cout << "-------------------------------" << std::endl;
 
-        std::cout << "==================\n"
-                  << std::endl;
-    }
-    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_RELEASE)
-        pKeyPressed = false;
+    //     std::cout << "==================\n"
+    //               << std::endl;
+    // }
+    // if (glfwGetKey(window, GLFW_KEY_P) == GLFW_RELEASE)
+    //     pKeyPressed = false;
 }
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
