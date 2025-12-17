@@ -4,6 +4,10 @@ This repository is a cross-platform version of **LearnOpenGL** project.
 It contains GLAD, stb_image, and CMake configuration to build all tutorials
 without relying on Visual Studio project files.
 
+## Demo clip video
+
+https://github.com/user-attachments/assets/48993d46-a070-433c-9679-1475dc478a92
+
 ## 🧩 Requirements
 
 - CMake >= 3.0
